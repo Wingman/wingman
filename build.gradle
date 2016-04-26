@@ -1,0 +1,39 @@
+plugins {
+    id "us.kirchmeier.capsule" version "1.0.2"
+}
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.7
+mainClassName = "com.wingman.client.Main"
+
+compileJava {
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.google.guava:guava:19.0'
+    compile 'org.reflections:reflections:0.9.10'
+    compile 'org.ow2.asm:asm-debug-all:5.1'
+    compile 'org.jetbrains:annotations:13.0'
+    compile 'ch.qos.logback:logback-classic:1.1.7'
+    compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
+    compile 'com.squareup.okhttp:okhttp:2.7.5'
+    compile 'com.squareup.okio:okio:1.7.0'
+    compile 'com.github.insubstantial:substance:7.3'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}
+
+task fatCapsule(type: FatCapsule) {
+    def stringsFile = new File("src/main/resources/version.properties")
+    stringsFile.write(System.getenv("TRAVIS_TAG") ?: System.getenv("BUILD_NUMBER") ?: "Developer")
+    applicationClass mainClassName
+}
