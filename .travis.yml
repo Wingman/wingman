@@ -2,8 +2,6 @@ language: java
 
 before_install:
  - chmod +x gradlew
- - mkdir -p src/main/resources
- - echo "" > src/main/resources/version.properties
  
 script:
  - ./gradlew clean check test fatCapsule
