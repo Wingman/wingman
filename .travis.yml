@@ -27,6 +27,8 @@ deploy:
     tags: true
 
 after_deploy:
+ - git config --global user.name "WingmanUpdater"
+ - git config --global user.email "wingmanosrs@gmail.com"
  - git clone https://github.com/Wingman/wingman.github.io.git
  - cd wingman.github.io
  - git remote rm origin
