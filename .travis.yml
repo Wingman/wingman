@@ -13,6 +13,7 @@ before_deploy:
  - unzip Wingman-api.jar
  - zip -d Wingman-api.jar \*
  - zip -r Wingman-api.jar com/wingman/client/api/*
+ - cd ../..
 
 deploy:
   skip_cleanup: true
@@ -20,6 +21,7 @@ deploy:
   api_key:
     secure: "PLmAomRzcW3qT6hl+cFZT5rGyxmpMVqnK05gb32/uTeI3Z7hWHkfgZeuSLhEb69/G22QBP4gedDjXdjuxXxpXosguHczZh7dsOlb80R94YJf4zPMoI5fydBZOesqY5/wl3NYHjJqbptk4z4mog2R7eSvdHy1f5KmD0YrWfsI+D8qqc5QQH7hHC1npw1ST3uL1LXMHU6tD+x+1ST2WmTXJh9jbDBdp9HZxvVMNchgadAwJcb6Gxk2qVF1fJPdcG78nqndOC5wfzIgUwixd+VWyRNX/0o8oUC4MISHbVR7a/MdBoA3bNOxUELEUEwOFCJoAV5U8FhmlVMn5VEbdh5hIXNLf73DvcOrJtuTCjgniD/n0ZKGMXFIbxlVZUIhWUcW/LFjMLq1Ugb/M/MuoYDnKRQTKdzve71RbFhF26DXBTqJIXPfoUfvpaad2JVgB5Tg1gfHE0515P8mYDiOYQw1oJFlSTrAkwzVh8Z8ma7+NtzKHu8KLpSafcvHWMKGRQiy9sbV49eXtgMjiitfcuIbQ+EtmRYrRXWVkYSr+S4OKVjuPdFCEDJn7339NO7nuP5u5FPyrmF5dEwyv7hEhfrFJJkOTyChNr8AA9qG13K6/Pl2G/0XffompEOK6PA+JpywTv/PQ6xny9+/i1KzQIH+ugaM+qzHyGgxaIaFkqevz38="
   file:
+    - "build/libs/Wingman.jar"
     - "build/libs/Wingman-api.jar"
   on:
     tags: true
