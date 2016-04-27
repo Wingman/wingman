@@ -4,7 +4,7 @@ before_install:
  - chmod +x gradlew
  
 script:
- - ./gradlew clean check test fatCapsule
+ - ./gradlew clean check test javadoc fatCapsule
  
 before_deploy:
  - cd build/libs
@@ -25,3 +25,19 @@ deploy:
     - "build/libs/Wingman-api.jar"
   on:
     tags: true
+
+after_deploy:
+ - git clone https://github.com/Wingman/wingman.github.io.git
+ - cd wingman.github.io
+ - git remote rm origin
+ - git remote add origin https://wingmanupdater:$GH_TOKEN@github.com/Wingman/wingman.github.io.git
+ - mkdir javadoc
+ - git rm javadoc/*
+ - cp -R ../build/docs/javadoc/* javadoc
+ - git add javadoc/*
+ - git commit -m "Update Javadoc"
+ - git push -fq origin master
+ 
+env:
+  global:
+    secure: O9wqaX3BD+8sOVXKgtCGo4+Sr6Rl6DFQv/fh9T3pqW9JQOmpOCrhNCe/IkV3fftd1zMPV2wxXJiPgfwP9Nl49l3tCxtRciJ+wHGQvivfyoOEiHRBcueTfQgLcuFwaP72IFOgMuGt2rdOWaiFs+1KytJpWGp6RrZh7plrp7Z/YLDvqqjH98AUGNfIIg4iV7qDd0hza/4J5fyl/GHErIGmfgjrbNSRB8Q9Ey99g++4wVK+4KBCt6CJFLtuf3FWqJ3GFa20d8YDNlvFCbJ6o9/xoihD2UNm86juxu7YlszQC6sUSZ8K53d1RZLXgOM+qAlGCOSR9wwic7sS51UdGg6E4W9B38Rv5YfEPkorAJHVU3fVp8cKH11J6neVj2Pb0JvL2eK8sfVqGnvEw5lYCvj0sb1GFj7sWqZVhSg0s7L2x9HenEiuqOLLDkcAYaBhPmw8mrtLbJ8ioRgs0aB8Dznia4Hi1pNNwFMtTye3YlAdlsWZZAD7IUOUXQl6SZT8+E3zgpKDbOMeauHU4g186fKcOxo8ivGCZDTw81R5FkCHnJWzofRWMNJhZR9OoEDb/gMZzEfUHRYV7RNDAbvhyrUHsQf+m7XKzKpPogTPQB5MWiBhKiGhQJUHilZTl2tz3lxOL/N28fqmswh5Hw3fafXyjzxzun6fXDVNUPJsrvMkiS0=
