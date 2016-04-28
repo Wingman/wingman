@@ -2,6 +2,7 @@
 [![LGPLv3](http://img.shields.io/badge/license-LGPLv3-blue.svg)](https://www.gnu.org/licenses/lgpl.html)
 [![Releases](https://img.shields.io/github/release/Wingman/wingman.svg)](https://github.com/Wingman/wingman/releases)
 ![Travis-CI](https://travis-ci.org/Wingman/wingman.svg)
+[![Slack Status](http://wingman-slack.herokuapp.com/badge.svg)](http://wingman-slack.herokuapp.com)
 
 Wingman is an open source Oldschool RuneScape client.
 
