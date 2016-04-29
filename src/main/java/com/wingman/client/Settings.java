@@ -21,7 +21,7 @@ public class Settings {
     public static final Path PLUGINS_DIR = HOME_DIR.resolve("plugins");
     public static final Path APPLET_JAR_FILE = HOME_DIR.resolve("gamepack.jar");
     public static final String LOGGING_FILE = HOME_DIR.resolve("wingman.log").toString();
-    public static final File CLIENT_SETTINGS_FILE = HOME_DIR.resolve("settings.properties").toFile();
+    public static final File CLIENT_SETTINGS_FILE = HOME_DIR.resolve("wingman.properties").toFile();
 
     public static final Dimension APPLET_INITIAL_SIZE = new Dimension(765, 503);
 
