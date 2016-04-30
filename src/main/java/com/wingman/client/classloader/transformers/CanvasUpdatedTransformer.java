@@ -1,6 +1,7 @@
 package com.wingman.client.classloader.transformers;
 
 import com.wingman.client.api.events.rendering.RenderHook;
+import com.wingman.client.api.mapping.FieldInfo;
 import com.wingman.client.api.mapping.MappingsHelper;
 import com.wingman.client.api.mapping.MethodInfo;
 import com.wingman.client.api.transformer.Transformer;
@@ -23,51 +24,83 @@ public class CanvasUpdatedTransformer implements Transformer {
         }
     }
 
-    private MethodInfo drawTitleGraphics;
-    private MethodInfo drawGameGraphics;
+    private MethodInfo drawFullGameImage;
+    private FieldInfo gameDrawingMode;
+
+    private String primaryGraphicsBuffer
+            = MappingsHelper.deobfClasses.get("PrimaryGraphicsBuffer");
+
+    private String secondaryGraphicsBuffer
+            = MappingsHelper.deobfClasses.get("SecondaryGraphicsBuffer");
 
     @Override
     public boolean canTransform(String name) {
-        return name.equals(MappingsHelper.deobfClasses.get("PrimaryGraphicsBuffer"))
-                || name.equals(MappingsHelper.deobfClasses.get("SecondaryGraphicsBuffer"));
+        return name.equals(gameDrawingMode.owner)
+                || name.equals(primaryGraphicsBuffer)
+                || name.equals(secondaryGraphicsBuffer);
     }
 
     @Override
     public ClassNode transform(ClassNode clazz) {
-        if (drawTitleGraphics != null && drawGameGraphics != null) {
-            for (MethodNode m : clazz.methods) {
-                if (!m.name.equals(drawTitleGraphics.name)
-                        && !m.name.equals(drawGameGraphics.name)) {
-                    continue;
+        if (drawFullGameImage != null) {
+            if (clazz.name.equals(gameDrawingMode.owner)) {
+                for (MethodNode m : clazz.methods) {
+                    if (!m.name.equals("<clinit>")) {
+                        continue;
+                    }
+
+                    Iterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
+                    while (nodeIterator.hasNext()) {
+                        try {
+                            InsnNode i = (InsnNode) nodeIterator.next();
+
+                            FieldInsnNode i2 = (FieldInsnNode) i.getNext();
+                            if (i2.getOpcode() != Opcodes.PUTSTATIC
+                                    || !i2.owner.equals(gameDrawingMode.owner)
+                                    || !i2.name.equals(gameDrawingMode.name)) {
+                                continue;
+                            }
+
+                            m.instructions.set(i, new InsnNode(Opcodes.ICONST_1));
+                            break;
+                        } catch (ClassCastException | NullPointerException e) {
+                            //swallow
+                        }
+                    }
                 }
-
-                Iterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
-                while (nodeIterator.hasNext()) {
-                    AbstractInsnNode i = nodeIterator.next();
-                    if (i.getOpcode() != Opcodes.GETFIELD) {
+            } else {
+                for (MethodNode m : clazz.methods) {
+                    if (!m.name.equals(drawFullGameImage.name)) {
                         continue;
                     }
 
-                    FieldInsnNode fieldInsnNode = (FieldInsnNode) i;
-                    if (!fieldInsnNode.desc.equals("Ljava/awt/Image;")) {
-                        continue;
-                    }
+                    Iterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
+                    while (nodeIterator.hasNext()) {
+                        try {
+                            FieldInsnNode fieldInsnNode = (FieldInsnNode) nodeIterator.next();
+                            if (!fieldInsnNode.desc.equals("Ljava/awt/Image;")) {
+                                continue;
+                            }
 
-                    InsnList insnList = new InsnList();
-                    MappingsHelper.addInstructions(insnList,
-                            new IntInsnNode(Opcodes.ALOAD, 0),
-                            new FieldInsnNode(Opcodes.GETFIELD,
-                                    clazz.name,
-                                    fieldInsnNode.name,
-                                    fieldInsnNode.desc),
-                            new MethodInsnNode(Opcodes.INVOKESTATIC,
-                                    this.getClass().getName().replace(".", "/"),
-                                    "runHook",
-                                    "(Ljava/awt/Image;)V",
-                                    false)
-                    );
-                    m.instructions.insertBefore(fieldInsnNode.getPrevious().getPrevious(), insnList);
-                    break;
+                            InsnList insnList = new InsnList();
+                            MappingsHelper.addInstructions(insnList,
+                                    new IntInsnNode(Opcodes.ALOAD, 0),
+                                    new FieldInsnNode(Opcodes.GETFIELD,
+                                            clazz.name,
+                                            fieldInsnNode.name,
+                                            fieldInsnNode.desc),
+                                    new MethodInsnNode(Opcodes.INVOKESTATIC,
+                                            this.getClass().getName().replace(".", "/"),
+                                            "runHook",
+                                            "(Ljava/awt/Image;)V",
+                                            false)
+                            );
+                            m.instructions.insertBefore(fieldInsnNode.getPrevious().getPrevious(), insnList);
+                            break;
+                        } catch (ClassCastException | NullPointerException e) {
+                            //swallow
+                        }
+                    }
                 }
             }
         }
@@ -76,7 +109,7 @@ public class CanvasUpdatedTransformer implements Transformer {
     }
 
     public CanvasUpdatedTransformer() {
-        this.drawTitleGraphics = MappingsHelper.deobfMethods.get("AbstractGraphicsBuffer.drawTitleGraphics");
-        this.drawGameGraphics = MappingsHelper.deobfMethods.get("AbstractGraphicsBuffer.drawGameGraphics");
+        this.drawFullGameImage = MappingsHelper.deobfMethods.get("AbstractGraphicsBuffer.drawFullGameImage");
+        this.gameDrawingMode = MappingsHelper.deobfFields.get("gameDrawingMode");
     }
 }
