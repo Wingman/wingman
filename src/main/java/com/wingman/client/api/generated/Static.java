@@ -106,6 +106,11 @@ public abstract class Static {
     }
 
     @Contract
+    public static int getGameDrawingMode() {
+        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+    }
+
+    @Contract
     public static GameEngine getGameEngine() {
         throw new RuntimeException("This incomplete method should have been finished by the transformers!");
     }
@@ -484,6 +489,11 @@ public abstract class Static {
 
         @Contract
         public static void setFriendsSize(int value) {
+            throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+        }
+
+        @Contract
+        public static void setGameDrawingMode(int value) {
             throw new RuntimeException("This incomplete method should have been finished by the transformers!");
         }
 

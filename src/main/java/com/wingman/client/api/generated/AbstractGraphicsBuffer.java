@@ -10,9 +10,9 @@ public interface AbstractGraphicsBuffer {
 
     void createRasterizer();
 
-    void drawGameGraphics(Graphics arg0, int arg1, int arg2, int arg3, int arg4, byte arg5);
+    void drawFullGameImage(Graphics arg0, int arg1, int arg2, int arg3);
 
-    void drawTitleGraphics(Graphics arg0, int arg1, int arg2, int arg3);
+    void drawGameImageSection(Graphics arg0, int arg1, int arg2, int arg3, int arg4, byte arg5);
 
     @SuppressWarnings("all")
     interface Unsafe {
