@@ -47,8 +47,12 @@ public class TransformingClassLoader extends URLClassLoader {
 
         LinkedList<Transformer> transformers = new LinkedList<>();
         for (Transformer transformer : Transformers.TRANSFORMERS) {
-            if (transformer.canTransform(name)) {
-                transformers.add(transformer);
+            try {
+                if (transformer.canTransform(name)) {
+                    transformers.add(transformer);
+                }
+            } catch (Exception e) {
+                Throwables.propagate(e);
             }
         }
 
