@@ -40,8 +40,8 @@ public class Settings {
         }
 
         Map<String, Object> defaultProperties = ImmutableMap.<String, Object>builder()
-                .put("notifications_enabled", "true")
-                .put("preferred_world", "311")
+                .put(NOTIFICATIONS_ENABLED, "true")
+                .put(PREFERRED_WORLD, "311")
                 .build();
 
         if (properties.isEmpty()) {
