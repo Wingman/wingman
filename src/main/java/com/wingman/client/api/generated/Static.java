@@ -286,6 +286,11 @@ public abstract class Static {
     }
 
     @Contract
+    public static boolean getResizableMode() {
+        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+    }
+
+    @Contract
     public static int getRevision() {
         throw new RuntimeException("This incomplete method should have been finished by the transformers!");
     }
@@ -331,7 +336,17 @@ public abstract class Static {
     }
 
     @Contract
+    public static int getViewPortHeight() {
+        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+    }
+
+    @Contract
     public static int getViewPortScale() {
+        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+    }
+
+    @Contract
+    public static int getViewPortWidth() {
         throw new RuntimeException("This incomplete method should have been finished by the transformers!");
     }
 
@@ -673,6 +688,11 @@ public abstract class Static {
         }
 
         @Contract
+        public static void setResizableMode(boolean value) {
+            throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+        }
+
+        @Contract
         public static void setRevision(int value) {
             throw new RuntimeException("This incomplete method should have been finished by the transformers!");
         }
@@ -718,7 +738,17 @@ public abstract class Static {
         }
 
         @Contract
+        public static void setViewPortHeight(int value) {
+            throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+        }
+
+        @Contract
         public static void setViewPortScale(int value) {
+            throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+        }
+
+        @Contract
+        public static void setViewPortWidth(int value) {
             throw new RuntimeException("This incomplete method should have been finished by the transformers!");
         }
 
