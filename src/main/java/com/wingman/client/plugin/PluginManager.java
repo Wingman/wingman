@@ -337,8 +337,9 @@ public class PluginManager {
                         plugin.pluginData.name(),
                         plugin.pluginData.id(),
                         plugin.pluginData.version()));
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                Throwables.propagate(new PluginLoadingException(plugin.pluginData.id(), e.toString()));
+            } catch (Exception e) {
+                new PluginLoadingException(plugin.pluginData.id(), e.toString())
+                        .printStackTrace();
             }
         }
     }
