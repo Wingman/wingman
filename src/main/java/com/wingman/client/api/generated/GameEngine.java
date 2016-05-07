@@ -11,7 +11,7 @@ public interface GameEngine {
 
     void processGameLoop();
 
-    void processLogic(int arg0);
+    void processLogic(byte arg0);
 
     void processRendering(int arg0);
 

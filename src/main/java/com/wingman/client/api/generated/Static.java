@@ -206,6 +206,11 @@ public abstract class Static {
     }
 
     @Contract
+    public static int getMenuHeight() {
+        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+    }
+
+    @Contract
     public static String[] getMenuOptions() {
         throw new RuntimeException("This incomplete method should have been finished by the transformers!");
     }
@@ -217,6 +222,11 @@ public abstract class Static {
 
     @Contract
     public static int getMenuWidth() {
+        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+    }
+
+    @Contract
+    public static int getMenuX() {
         throw new RuntimeException("This incomplete method should have been finished by the transformers!");
     }
 
@@ -296,11 +306,6 @@ public abstract class Static {
     }
 
     @Contract
-    public static int getRights() {
-        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
-    }
-
-    @Contract
     public static int getRunEnergy() {
         throw new RuntimeException("This incomplete method should have been finished by the transformers!");
     }
@@ -362,6 +367,11 @@ public abstract class Static {
 
     @Contract
     public static World[] getWorlds() {
+        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+    }
+
+    @Contract
+    public static void drawRightClickMenu() {
         throw new RuntimeException("This incomplete method should have been finished by the transformers!");
     }
 
@@ -608,6 +618,11 @@ public abstract class Static {
         }
 
         @Contract
+        public static void setMenuHeight(int value) {
+            throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+        }
+
+        @Contract
         public static void setMenuOptions(String[] value) {
             throw new RuntimeException("This incomplete method should have been finished by the transformers!");
         }
@@ -619,6 +634,11 @@ public abstract class Static {
 
         @Contract
         public static void setMenuWidth(int value) {
+            throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+        }
+
+        @Contract
+        public static void setMenuX(int value) {
             throw new RuntimeException("This incomplete method should have been finished by the transformers!");
         }
 
@@ -694,11 +714,6 @@ public abstract class Static {
 
         @Contract
         public static void setRevision(int value) {
-            throw new RuntimeException("This incomplete method should have been finished by the transformers!");
-        }
-
-        @Contract
-        public static void setRights(int value) {
             throw new RuntimeException("This incomplete method should have been finished by the transformers!");
         }
 
