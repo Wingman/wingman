@@ -79,7 +79,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.MethodInfo("createRasterizer", "bo", "ad", "V", "V", "(B)V", "()V", false, true, 0),
         new com.wingman.client.api.mapping.MethodInfo("drawFullGameImage", "bo", "j", "V", "V", "(Ljava/awt/Graphics;III)V", "(Ljava/awt/Graphics;III)V", false, false, 0),
         new com.wingman.client.api.mapping.MethodInfo("drawGameImageSection", "bo", "p", "V", "V", "(Ljava/awt/Graphics;IIIIS)V", "(Ljava/awt/Graphics;IIIIS)V", false, false, 0),
-        new com.wingman.client.api.mapping.MethodInfo("processLogic", "client", "o", "V", "V", "(B)V", "()V", false, true, 0),
+        new com.wingman.client.api.mapping.MethodInfo("processLogic", "client", "o", "V", "V", "(B)V", "()V", false, true, 1),
         new com.wingman.client.api.mapping.MethodInfo("processRendering", "client", "b", "V", "V", "(I)V", "()V", false, true, -1347490764),
         new com.wingman.client.api.mapping.MethodInfo("deleteDual", "gv", "fw", "V", "V", "()V", "()V", false, false, 0),
         new com.wingman.client.api.mapping.MethodInfo("clear", "gi", "x", "V", "V", "()V", "()V", false, false, 0),
