@@ -78,8 +78,8 @@ public class FrameTitleBar extends OnyxTitleBar {
             exit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (Client.tray != null) {
-                        Client.tray.detach();
+                    if (Client.clientTrayIcon != null) {
+                        Client.clientTrayIcon.detach();
                     }
                     Client.settings.save();
                     PluginManager.deactivatePlugins();

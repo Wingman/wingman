@@ -39,7 +39,7 @@ public class Client {
     public static SettingsScreen settingsScreen = new SettingsScreen();
 
     public static Settings settings = new Settings();
-    public static Tray tray;
+    public static ClientTrayIcon clientTrayIcon;
 
     public Client() {
         SubstanceLookAndFeel.setFontPolicy(new SkinFontPolicy());
@@ -47,7 +47,11 @@ public class Client {
         addListeners();
 
         if (settings.getBoolean(Settings.NOTIFICATIONS_ENABLED)) {
-            tray = new Tray();
+            try {
+                clientTrayIcon = new ClientTrayIcon();
+            } catch (IOException | AWTException e) {
+                e.printStackTrace();
+            }
         }
 
         framePanel.setLayout(new BorderLayout());
