@@ -38,6 +38,5 @@ public class Transformers {
             /**
              * Code patches:
             */
-            new OpenMenuFpsIncreaseTransformer(),
     });
 }
