@@ -8,6 +8,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
+import java.text.MessageFormat;
 import java.util.Set;
 
 /**
@@ -212,19 +213,28 @@ public class RSMemberInjector implements Transformer {
                     );
                 }
 
-                if (f.multiplier != 1) {
+                try {
+                    if (f.multiplier != 1) {
+                        MappingsHelper.addInstructions(insnList,
+                                new LdcInsnNode(MappingsHelper.getMMI(f.multiplier)),
+                                new InsnNode(Opcodes.IMUL)
+                        );
+                    }
+
                     MappingsHelper.addInstructions(insnList,
-                            new LdcInsnNode(MappingsHelper.getMMI(f.multiplier)),
-                            new InsnNode(Opcodes.IMUL)
+                            new FieldInsnNode((f.isStatic ? Opcodes.PUTSTATIC : Opcodes.PUTFIELD), f.owner, f.name, obfType.toString()),
+                            new InsnNode(Opcodes.RETURN)
                     );
+
+                    clazz.methods.add(setter);
+                } catch (ArithmeticException e) {
+                    System.out.println(MessageFormat.format("Multiplier {0} for {1}.{2} ({3}) is broken - {4}",
+                            f.multiplier,
+                            f.owner,
+                            f.name,
+                            f.cleanName,
+                            e.getMessage()));
                 }
-
-                MappingsHelper.addInstructions(insnList,
-                        new FieldInsnNode((f.isStatic ? Opcodes.PUTSTATIC : Opcodes.PUTFIELD), f.owner, f.name, obfType.toString()),
-                        new InsnNode(Opcodes.RETURN)
-                );
-
-                clazz.methods.add(setter);
             }
         }
     }
