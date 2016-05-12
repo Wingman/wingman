@@ -5,7 +5,7 @@ import com.wingman.client.Util;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.ui.Client;
 import com.wingman.client.ui.buttons.HoverButton;
-import com.wingman.client.ui.style.OnyxSkin;
+import com.wingman.client.ui.style.OnyxStyleFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -64,7 +64,7 @@ public class FrameTitleBar extends OnyxTitleBar {
                             parent.setExtendedState(parent.getExtendedState() | JFrame.MAXIMIZED_BOTH);
                             maximize.setIcon(maximizeIcon2);
                         } else {
-                            parent.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxSkin.VERY_DARK_BLACK));
+                            parent.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.VERY_DARK_BLACK));
                             parent.setExtendedState(JFrame.NORMAL);
                             maximize.setIcon(maximizeIcon);
                         }
@@ -88,14 +88,16 @@ public class FrameTitleBar extends OnyxTitleBar {
                 }
             });
 
-            this.add(Box.createHorizontalStrut(4));
+            this.add(Box.createHorizontalStrut(3));
             this.add(icon);
             this.add(Box.createHorizontalStrut(73));
             this.add(Box.createHorizontalGlue());
             this.add(title);
             this.add(Box.createHorizontalGlue());
             this.add(minimize);
+            this.add(Box.createHorizontalStrut(10));
             this.add(maximize);
+            this.add(Box.createHorizontalStrut(10));
             this.add(exit);
 
             this.addMouseListener(new MouseAdapter() {

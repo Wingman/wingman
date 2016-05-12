@@ -1,12 +1,13 @@
 package com.wingman.client.ui;
 
 import com.wingman.client.api.ui.SettingsBar;
-import com.wingman.client.ui.style.OnyxSkin;
+import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.SettingsTitleBar;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class SettingsScreen extends JDialog {
     public JPanel settingsBarPanel = new JPanel();
 
     public SettingsScreen() {
-        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxSkin.VERY_DARK_BLACK));
+        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.VERY_DARK_BLACK));
         this.setUndecorated(true);
         this.setJMenuBar(new SettingsTitleBar(this));
         this.setAlwaysOnTop(true);
@@ -39,16 +40,20 @@ public class SettingsScreen extends JDialog {
                 }
             }
         });
-        buttonList.setBackground(OnyxSkin.VERY_DARK_BLACK);
 
         JScrollPane buttonScrollPane = new JScrollPane();
         buttonScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         buttonScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        buttonScrollPane.setBackground(OnyxSkin.VERY_DARK_BLACK);
+        buttonScrollPane.setBackground(OnyxStyleFactory.VERY_DARK_BLACK);
         buttonScrollPane.getViewport().add(buttonList);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS) {
+            @Override
+            public Dimension preferredLayoutSize(Container target) {
+                return new Dimension(700, 500);
+            }
+        });
 
         panel.add(buttonScrollPane);
         panel.add(settingsBarPanel);

@@ -8,12 +8,12 @@ import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.common.base.Throwables;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.style.OnyxSkin;
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
+import com.wingman.client.ui.style.OnyxStyleFactory;
 import org.slf4j.LoggerFactory;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import javax.swing.*;
+import javax.swing.plaf.synth.SynthLookAndFeel;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -73,13 +73,12 @@ public class RelaunchedMain {
      * Sets up the Look and Feel of the client.
      */
     private static void setupLookAndFeel() {
-        UIManager.put(SubstanceLookAndFeel.WINDOW_ROUNDED_CORNERS, Boolean.FALSE);
-        UIManager.put(SubstanceLookAndFeel.FLAT_PROPERTY, Boolean.TRUE);
-        UIManager.put(SubstanceLookAndFeel.BUTTON_PAINT_NEVER_PROPERTY, Boolean.TRUE);
-        UIManager.put(SubstanceLookAndFeel.COLORIZATION_FACTOR, 1.0);
-        UIManager.put("jgoodies.popupDropShadowEnabled", "false");
-
-        SubstanceLookAndFeel.setSkin(new OnyxSkin());
+        try {
+            UIManager.setLookAndFeel(new SynthLookAndFeel());
+            SynthLookAndFeel.setStyleFactory(new OnyxStyleFactory());
+        } catch (UnsupportedLookAndFeelException e) {
+            Throwables.propagate(e);
+        }
 
         // Prevent the applet from overlapping the menus
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);

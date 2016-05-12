@@ -1,17 +1,14 @@
 package com.wingman.client.ui;
 
-import com.google.common.base.Throwables;
 import com.wingman.client.Settings;
 import com.wingman.client.Util;
 import com.wingman.client.api.ui.SettingsBar;
 import com.wingman.client.api.ui.SettingsBarDesigner;
 import com.wingman.client.rs.GameDownloader;
-import com.wingman.client.ui.style.OnyxSkin;
-import com.wingman.client.ui.style.SkinFontPolicy;
+import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
 import com.wingman.client.ui.toolbars.FrameToolbar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -42,7 +39,6 @@ public class Client {
     public static ClientTrayIcon clientTrayIcon;
 
     public Client() {
-        SubstanceLookAndFeel.setFontPolicy(new SkinFontPolicy());
         addClientSettings();
         addListeners();
 
@@ -55,8 +51,8 @@ public class Client {
         }
 
         framePanel.setLayout(new BorderLayout());
-        framePanel.setForeground(OnyxSkin.VERY_LIGHT_WHITE);
-        framePanel.setBackground(OnyxSkin.VERY_DARK_BLACK);
+        framePanel.setForeground(OnyxStyleFactory.VERY_LIGHT_WHITE);
+        framePanel.setBackground(OnyxStyleFactory.VERY_DARK_BLACK);
 
         try {
             ArrayList<Image> icons = new ArrayList<>();
@@ -72,7 +68,7 @@ public class Client {
             e.printStackTrace();
         }
 
-        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxSkin.VERY_DARK_BLACK));
+        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.VERY_DARK_BLACK));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.setTitle("Wingman");
@@ -114,11 +110,11 @@ public class Client {
         SettingsBar settingsBar = new SettingsBar();
         settingsBar.sideText = "Wingman";
 
-        ArrayList<ArrayList<JComponent>> settingsList = new ArrayList<>();
+        ArrayList<JPanel> settingsList = new ArrayList<>();
 
-        JLabel preferredWorldLabel = new JLabel("Preferred world");
         final JTextField preferredWorld = new JTextField(settings.get(Settings.PREFERRED_WORLD));
-        preferredWorld.setMaximumSize(new Dimension(40, 25));
+        preferredWorld.setPreferredSize(new Dimension(30, 25));
+        preferredWorld.setMaximumSize(new Dimension(20, 25));
         preferredWorld.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -134,14 +130,13 @@ public class Client {
             public void changedUpdate(DocumentEvent e) {
             }
         });
+        JPanel worldSettings = SettingsBarDesigner
+                .createSettingsRow("Preferred world", preferredWorld);
 
-        ArrayList<JComponent> worldSettings = new ArrayList<>();
-        worldSettings.add(preferredWorldLabel);
-        worldSettings.add(preferredWorld);
         settingsList.add(worldSettings);
 
-        JLabel notificationsEnabledLabel = new JLabel("Enable notifications API");
         JCheckBox notificationsEnabled = new JCheckBox();
+        notificationsEnabled.setMargin(new Insets(0, 10, 0, 0));
         notificationsEnabled.setSelected(settings.getBoolean(Settings.NOTIFICATIONS_ENABLED));
         notificationsEnabled.addItemListener(new ItemListener() {
             @Override
@@ -150,14 +145,13 @@ public class Client {
                 settings.update(Settings.NOTIFICATIONS_ENABLED, newState);
             }
         });
+        JPanel notificationsApi = SettingsBarDesigner
+                .createSettingsRow("Enable notifications API", notificationsEnabled);
 
-        ArrayList<JComponent> notificationSettings = new ArrayList<>();
-        notificationSettings.add(notificationsEnabledLabel);
-        notificationSettings.add(notificationsEnabled);
-        settingsList.add(notificationSettings);
+        settingsList.add(notificationsApi);
 
         SettingsBarDesigner.designSettingsBar(settingsBar, settingsList, true);
-        settingsBar.panel.add(Box.createVerticalStrut(100));
+        settingsBar.panel.add(Box.createVerticalGlue());
         settingsBar.register();
     }
 }

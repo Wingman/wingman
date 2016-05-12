@@ -22,7 +22,8 @@ public class SettingsBar {
             if (Client.settingsScreen.settingsBarPanel.getComponents().length == 0) {
                 Client.settingsScreen.settingsBarPanel.add(panel);
                 Client.settingsScreen.buttonList.setSelectedIndex(0);
-                Client.settingsScreen.pack();
+                Client.settingsScreen.settingsBarPanel.revalidate();
+                Client.settingsScreen.settingsBarPanel.repaint();
                 Client.settingsScreen.setLocationRelativeTo(null);
             }
         }
@@ -33,8 +34,8 @@ public class SettingsBar {
             Client.settingsScreen.settingsBars.remove(sideText);
             Client.settingsScreen.buttonListModel.removeElement(sideText);
             Client.settingsScreen.settingsBarPanel.remove(panel);
-            Client.settingsScreen.settingsBarPanel.repaint();
             Client.settingsScreen.settingsBarPanel.revalidate();
+            Client.settingsScreen.settingsBarPanel.repaint();
         }
     }
 }
