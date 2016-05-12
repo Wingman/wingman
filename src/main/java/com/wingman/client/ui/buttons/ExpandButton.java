@@ -1,6 +1,5 @@
 package com.wingman.client.ui.buttons;
 
-import com.google.common.base.Throwables;
 import com.wingman.client.Util;
 import com.wingman.client.ui.Client;
 
@@ -17,11 +16,9 @@ public class ExpandButton extends HoverButton {
         try {
             this.setIcon(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/expand.png"))));
         } catch (IOException e) {
-            Throwables.propagate(e);
+            e.printStackTrace();
         }
-        this.setMargin(new Insets(0, 0, 0, 0));
-        this.setBorder(null);
-        this.setFocusPainted(false);
+        this.setMargin(new Insets(3, 0, 3, 0));
 
         this.addActionListener(new ActionListener() {
             @Override
@@ -45,8 +42,6 @@ public class ExpandButton extends HoverButton {
                 Client.frame.repaint();
             }
         });
-
-        this.setMaximumSize(new Dimension(16, 16));
     }
 
     @Override

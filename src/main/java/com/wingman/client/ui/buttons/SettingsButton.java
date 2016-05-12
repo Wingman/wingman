@@ -19,9 +19,7 @@ public class SettingsButton extends HoverButton {
         } catch (IOException e) {
             Throwables.propagate(e);
         }
-        this.setMargin(new Insets(0, 0, 0, 0));
-        this.setBorder(null);
-        this.setFocusPainted(false);
+        this.setMargin(new Insets(3, 3, 3, 3));
 
         this.addActionListener(new ActionListener() {
             @Override
@@ -33,7 +31,5 @@ public class SettingsButton extends HoverButton {
                 }
             }
         });
-
-        this.setMaximumSize(new Dimension(16, 16));
     }
 }
