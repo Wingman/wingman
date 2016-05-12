@@ -23,7 +23,7 @@ public class Main {
                     .getMethods()[0]
                     .invoke(null, new Object[]{args});
         } catch (IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            throw Throwables.propagate(e);
+            Throwables.propagate(e);
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.wingman.client;
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 
 import java.awt.*;
@@ -35,7 +34,7 @@ public class Settings {
             try {
                 properties.load(new FileReader(CLIENT_SETTINGS_FILE));
             } catch (IOException e) {
-                Throwables.propagate(e);
+                e.printStackTrace();
             }
         }
 
@@ -72,7 +71,7 @@ public class Settings {
         try {
             properties.store(new FileWriter(CLIENT_SETTINGS_FILE), "Wingman client settings");
         } catch (IOException e) {
-            Throwables.propagate(e);
+            e.printStackTrace();
         }
     }
 

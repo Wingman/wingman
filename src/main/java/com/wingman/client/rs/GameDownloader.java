@@ -104,7 +104,7 @@ public class GameDownloader {
                 world = Integer.parseInt(tempWorld);
             }
         } catch (NumberFormatException e) {
-            Throwables.propagate(e);
+            e.printStackTrace();
         }
 
         return world;
@@ -198,7 +198,7 @@ public class GameDownloader {
 
                     responseBody.close();
                 } catch (IOException e) {
-                    throw Throwables.propagate(e);
+                    Throwables.propagate(e);
                 }
             }
         }).start();

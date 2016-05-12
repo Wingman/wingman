@@ -65,7 +65,7 @@ public class Client {
             JLabel loadingImage = new JLabel(new ImageIcon(Util.getFileAsBytes("/images/loading.png")));
             framePanel.add(loadingImage, BorderLayout.CENTER);
         } catch (IOException e) {
-            Throwables.propagate(e);
+            e.printStackTrace();
         }
 
         frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxSkin.VERY_DARK_BLACK));

@@ -41,7 +41,7 @@ public class SettingsTitleBar extends OnyxTitleBar {
             this.add(Box.createHorizontalGlue());
             this.add(close);
         } catch (IOException e) {
-            throw Throwables.propagate(e);
+            Throwables.propagate(e);
         }
     }
 }

@@ -2,8 +2,8 @@ package com.wingman.client.plugin;
 
 import com.google.common.base.Throwables;
 import com.wingman.client.api.plugin.Plugin;
-import com.wingman.client.api.plugin.PluginDependency;
 import com.wingman.client.api.plugin.PluginDependencies;
+import com.wingman.client.api.plugin.PluginDependency;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +33,7 @@ public class PluginContainer {
      * @param clazz a {@link Plugin} annotated class
      */
     public PluginContainer(Class clazz) {
-            try {
+        try {
             pluginData = (Plugin) clazz.getAnnotation(Plugin.class);
 
             if (clazz.isAnnotationPresent(PluginDependencies.class)) {

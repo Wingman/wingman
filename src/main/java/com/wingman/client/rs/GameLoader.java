@@ -71,7 +71,7 @@ public class GameLoader {
             Static.getCanvas().addMouseListener(new CanvasMouseListener());
         } catch (MalformedURLException | ClassNotFoundException
                 | InstantiationException | IllegalAccessException e) {
-            throw Throwables.propagate(e);
+            Throwables.propagate(e);
         }
     }
 }

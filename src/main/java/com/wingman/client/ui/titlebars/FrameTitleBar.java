@@ -34,7 +34,7 @@ public class FrameTitleBar extends OnyxTitleBar {
             } catch (NullPointerException e)  {
                 //swallow
             } catch (IOException e) {
-                Throwables.propagate(e);
+                e.printStackTrace();
             }
             JLabel title = new JLabel("Wingman " + version);
             title.setAlignmentX(CENTER_ALIGNMENT);

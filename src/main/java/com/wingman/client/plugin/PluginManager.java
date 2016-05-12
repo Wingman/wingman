@@ -292,7 +292,8 @@ public class PluginManager {
             try {
                 plugin.invokeSetupMethod();
             } catch (InvocationTargetException | IllegalAccessException e) {
-                Throwables.propagate(new PluginSetupException(plugin.pluginData.id(), e.toString()));
+                new PluginSetupException(plugin.pluginData.id(), e.toString())
+                        .printStackTrace();
             }
         }
     }
@@ -315,7 +316,8 @@ public class PluginManager {
                         plugin.pluginData.id(),
                         plugin.pluginData.version()));
             } catch (InvocationTargetException | IllegalAccessException e) {
-                Throwables.propagate(new PluginLoadingException(plugin.pluginData.id(), e.toString()));
+                new PluginLoadingException(plugin.pluginData.id(), e.toString())
+                        .printStackTrace();
             }
         }
     }
@@ -353,7 +355,8 @@ public class PluginManager {
             try {
                 plugin.invokeRefreshMethod();
             } catch (InvocationTargetException | IllegalAccessException e) {
-                Throwables.propagate(new PluginRefreshingException(plugin.pluginData.id(), e.toString()));
+                new PluginRefreshingException(plugin.pluginData.id(), e.toString())
+                        .printStackTrace();
             }
         }
     }
