@@ -19,7 +19,7 @@ public class ClientBridge {
      */
     public static void displayTrayNotification(String caption, String text, TrayIcon.MessageType messageType) {
         if (Client.clientTrayIcon != null) {
-            Client.clientTrayIcon.icon.displayMessage(caption, text, messageType);
+            Client.clientTrayIcon.displayMessage(caption, text, messageType);
         }
     }
 
