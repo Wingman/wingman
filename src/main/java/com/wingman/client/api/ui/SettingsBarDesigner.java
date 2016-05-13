@@ -14,25 +14,31 @@ import java.util.ArrayList;
  */
 public class SettingsBarDesigner {
 
-    public static JPanel createSettingsRow(String description, Object jComponent) {
+    public static JPanel createSettingsRow(String description, Object... jComponent) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS) {
             @Override
+            public Dimension minimumLayoutSize(Container target) {
+                return new Dimension(Integer.MAX_VALUE, 34);
+            }
+
+            @Override
+            public Dimension preferredLayoutSize(Container target) {
+                return new Dimension(Integer.MAX_VALUE, 34);
+            }
+
+            @Override
             public Dimension maximumLayoutSize(Container target) {
-                return new Dimension(700, 20);
+                return new Dimension(Integer.MAX_VALUE, 34);
             }
         });
-        panel.add(Box.createHorizontalStrut(5));
+        panel.add(Box.createHorizontalStrut(10));
         panel.add(new JLabel(description));
         panel.add(Box.createHorizontalGlue());
-        if (((JComponent) jComponent).getInsets() == null) {
-            if (jComponent instanceof AbstractButton) {
-                ((AbstractButton) jComponent).setMargin(new Insets(0, 10, 0, 5));
-            } else  if (jComponent instanceof JTextComponent) {
-                ((JTextComponent) jComponent).setMargin(new Insets(0, 10, 0, 5));
-            }
+        for (Object o : jComponent) {
+            panel.add((JComponent) o);
         }
-        panel.add((JComponent) jComponent);
+        panel.add(Box.createHorizontalStrut(10));
         return panel;
     }
 
@@ -41,7 +47,7 @@ public class SettingsBarDesigner {
         for (JPanel setting : settingPanels) {
             if (alternateColor) {
                 if (i++ % 2 == 1) {
-                    setting.setBackground(OnyxStyleFactory.VERY_DARK_BLACK);
+                    setting.setBackground(OnyxStyleFactory.DARK_BLACK);
                 }
             }
             currentSettingsBar.panel.add(setting);

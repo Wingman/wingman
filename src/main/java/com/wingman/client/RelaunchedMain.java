@@ -28,7 +28,6 @@ public class RelaunchedMain {
     public static void main(String[] args) {
         setupConsoleLogging();
         createDirectories();
-        setupLookAndFeel();
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -67,22 +66,6 @@ public class RelaunchedMain {
         root.addAppender(logFileAppender);
 
         SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
-    }
-
-    /**
-     * Sets up the Look and Feel of the client.
-     */
-    private static void setupLookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(new SynthLookAndFeel());
-            SynthLookAndFeel.setStyleFactory(new OnyxStyleFactory());
-        } catch (UnsupportedLookAndFeelException e) {
-            Throwables.propagate(e);
-        }
-
-        // Prevent the applet from overlapping the menus
-        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
     }
 
     /**

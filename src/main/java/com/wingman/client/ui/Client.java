@@ -1,19 +1,21 @@
 package com.wingman.client.ui;
 
+import com.google.common.base.Throwables;
 import com.wingman.client.Settings;
 import com.wingman.client.Util;
 import com.wingman.client.api.ui.SettingsBar;
 import com.wingman.client.api.ui.SettingsBarDesigner;
 import com.wingman.client.rs.GameDownloader;
+import com.wingman.client.ui.style.OnyxComboBoxUI;
+import com.wingman.client.ui.style.OnyxScrollBarUI;
 import com.wingman.client.ui.style.OnyxStyleFactory;
+import com.wingman.client.ui.style.OnyxTabbedPaneUI;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
-import com.wingman.client.ui.toolbars.FrameToolbar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.plaf.synth.SynthLookAndFeel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -27,18 +29,28 @@ import java.util.ArrayList;
  */
 public class Client {
 
-    public static JFrame frame = new JFrame();
+    public static JFrame frame;
+    public static JPanel framePanel;
+    public static SideBarBox sideBarBox;
 
-    public static JPanel framePanel = new JPanel();
-    public static FrameToolbar frameToolbar = new FrameToolbar();
-    public static SideBarBox sideBarBox = new SideBarBox();
+    public static SettingsScreen settingsScreen;
 
-    public static SettingsScreen settingsScreen = new SettingsScreen();
-
-    public static Settings settings = new Settings();
     public static ClientTrayIcon clientTrayIcon;
 
+    public static Settings settings = new Settings();
+
     public Client() {
+        setupLookAndFeel();
+        frame = new JFrame();
+
+        UIManager.put("ScrollBarUI", OnyxScrollBarUI.class.getName());
+        UIManager.put("TabbedPaneUI", OnyxTabbedPaneUI.class.getName());
+        UIManager.put("ComboBoxUI", OnyxComboBoxUI.class.getName());
+        SwingUtilities.updateComponentTreeUI(frame);
+
+        sideBarBox = new SideBarBox();
+        settingsScreen = new SettingsScreen();
+
         addClientSettings();
         addListeners();
 
@@ -50,9 +62,9 @@ public class Client {
             }
         }
 
-        framePanel.setLayout(new BorderLayout());
-        framePanel.setForeground(OnyxStyleFactory.VERY_LIGHT_WHITE);
-        framePanel.setBackground(OnyxStyleFactory.VERY_DARK_BLACK);
+        framePanel = new JPanel(new BorderLayout());
+        framePanel.setForeground(OnyxStyleFactory.LIGHT_WHITE);
+        framePanel.setBackground(OnyxStyleFactory.DARK_BLACK);
 
         try {
             ArrayList<Image> icons = new ArrayList<>();
@@ -68,7 +80,7 @@ public class Client {
             e.printStackTrace();
         }
 
-        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.VERY_DARK_BLACK));
+        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.DARK_BLACK));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.setTitle("Wingman");
@@ -77,11 +89,27 @@ public class Client {
         frame.setContentPane(framePanel);
         frame.setSize(Settings.APPLET_INITIAL_SIZE);
         frame.setLocationRelativeTo(null);
-        frame.setResizable(true);
         frame.setVisible(true);
         frame.toFront();
 
         new GameDownloader();
+    }
+
+    /**
+     * Sets up the Look and Feel of the client.
+     */
+    private static void setupLookAndFeel() {
+        try {
+            SynthLookAndFeel synthLookAndFeel = new SynthLookAndFeel();
+            UIManager.setLookAndFeel(synthLookAndFeel);
+            SynthLookAndFeel.setStyleFactory(new OnyxStyleFactory());
+        } catch (UnsupportedLookAndFeelException  e) {
+            Throwables.propagate(e);
+        }
+
+        // Prevent the applet from overlapping the menus
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
     }
 
     /**
@@ -112,29 +140,42 @@ public class Client {
 
         ArrayList<JPanel> settingsList = new ArrayList<>();
 
-        final JTextField preferredWorld = new JTextField(settings.get(Settings.PREFERRED_WORLD));
-        preferredWorld.setPreferredSize(new Dimension(30, 25));
-        preferredWorld.setMaximumSize(new Dimension(20, 25));
-        preferredWorld.getDocument().addDocumentListener(new DocumentListener() {
+        // PREFERRED WORLD
+        JComboBox<Integer> preferredWorld = new JComboBox<Integer>() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                settings.update(Settings.PREFERRED_WORLD, preferredWorld.getText());
+            public Dimension getMaximumSize() {
+                return new Dimension(80, 20);
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                settings.update(Settings.PREFERRED_WORLD, preferredWorld.getText());
+            public Dimension getPreferredSize() {
+                return new Dimension(80, 20);
             }
-
+        };
+        for (int i = 301; i <= 399; i++) {
+            preferredWorld.addItem(i);
+        }
+        int settingsPreferredWorld = 311;
+        try {
+            settingsPreferredWorld = Integer.parseInt(settings.get(Settings.PREFERRED_WORLD));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            settings.update(Settings.PREFERRED_WORLD, settingsPreferredWorld);
+        }
+        preferredWorld.setSelectedItem(settingsPreferredWorld);
+        preferredWorld.addItemListener(new ItemListener() {
             @Override
-            public void changedUpdate(DocumentEvent e) {
+            public void itemStateChanged(ItemEvent e) {
+                settings.update(Settings.PREFERRED_WORLD, "" + (int) e.getItem());
             }
         });
+
         JPanel worldSettings = SettingsBarDesigner
                 .createSettingsRow("Preferred world", preferredWorld);
 
         settingsList.add(worldSettings);
 
+        // ENABLE NOTIFICATIONS API
         JCheckBox notificationsEnabled = new JCheckBox();
         notificationsEnabled.setMargin(new Insets(0, 10, 0, 0));
         notificationsEnabled.setSelected(settings.getBoolean(Settings.NOTIFICATIONS_ENABLED));
@@ -145,6 +186,7 @@ public class Client {
                 settings.update(Settings.NOTIFICATIONS_ENABLED, newState);
             }
         });
+
         JPanel notificationsApi = SettingsBarDesigner
                 .createSettingsRow("Enable notifications API", notificationsEnabled);
 

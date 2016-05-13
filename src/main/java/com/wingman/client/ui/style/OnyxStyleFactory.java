@@ -10,14 +10,31 @@ import java.io.IOException;
 
 public class OnyxStyleFactory extends SynthStyleFactory {
 
-    public static final Color VERY_DARK_BLACK = new Color(15, 15, 15);
-    public static final Color DARK_BLACK = new Color(21, 21, 21);
-    public static final Color VERY_LIGHT_WHITE = new Color(216, 216, 216);
-    public static final Color LIGHT_BROWN = new Color(199, 173, 129);
-    public static final Color LIGHT_BLUE = new Color(0, 157, 230);
-    public static final Color DARK_GRAY = new Color(91, 89, 82);
+    public static final Color DARK_BLACK = new Color(15, 15, 15);
+    public static final Color MID_BLACK = new Color(21, 21, 21);
+    public static final Color LIGHT_BLACK = new Color(30, 30, 30);
 
-    private static Font defaultFont = new Font("Helvetica", Font.PLAIN, 12);
+    public static final Color LIGHT_WHITE = new Color(216, 216, 216);
+
+    public static final Color DARK_GRAY = new Color(91, 89, 82);
+    public static final Color LIGHT_GRAY = new Color(180, 180, 185);
+
+    public static final Color LIGHT_BROWN = new Color(199, 173, 129);
+
+    public static final Color LIGHT_BLUE = new Color(34, 167, 240);
+
+    public static final Font ROBOTO_REGULAR = new Font("Roboto", Font.PLAIN, 12);
+    public static final Font ROBOTO_MEDIUM = new Font("Roboto Medium", Font.PLAIN, 12);
+
+    public OnyxStyleFactory() {
+        GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        try {
+            graphicsEnvironment.registerFont(Font.createFont(Font.TRUETYPE_FONT, Util.getFile("/fonts/Roboto-Regular.ttf")));
+            graphicsEnvironment.registerFont(Font.createFont(Font.TRUETYPE_FONT, Util.getFile("/fonts/Roboto-Medium.ttf")));
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+    }
 
     private static SynthStyle defaultStyle = new SynthStyle() {
         @Override
@@ -27,7 +44,7 @@ public class OnyxStyleFactory extends SynthStyleFactory {
                     || type == ColorType.TEXT_FOREGROUND) {
                 Color contextForeground = component.getForeground();
                 if (contextForeground == null) {
-                    return VERY_LIGHT_WHITE;
+                    return LIGHT_GRAY;
                 }
                 return contextForeground;
             } else if (type == ColorType.BACKGROUND
@@ -35,17 +52,17 @@ public class OnyxStyleFactory extends SynthStyleFactory {
                 Color contextBackground = component.getBackground();
                 if (contextBackground == null) {
                     if (component instanceof JPanel) {
-                        return DARK_BLACK;
+                        return MID_BLACK;
                     } else if (component instanceof JLabel) {
                         if (component.getParent() != null) {
                             return component.getParent().getBackground();
                         }
                     }
-                    return VERY_DARK_BLACK;
+                    return DARK_BLACK;
                 }
                 return contextBackground;
             }
-            return DARK_BLACK;
+            return MID_BLACK;
         }
 
         @Override
@@ -54,7 +71,7 @@ public class OnyxStyleFactory extends SynthStyleFactory {
             if (contextFont != null) {
                 return contextFont;
             }
-            return defaultFont;
+            return ROBOTO_REGULAR;
         }
     };
 
@@ -65,6 +82,9 @@ public class OnyxStyleFactory extends SynthStyleFactory {
         } else if (c instanceof JButton) {
             c.setOpaque(false);
         } else if (c instanceof JCheckBox) {
+            if (c.getBorder() == null) {
+                c.setBorder(BorderFactory.createLineBorder(LIGHT_BLACK));
+            }
             try {
                 ((JCheckBox) c).setRolloverEnabled(false);
                 ((JCheckBox) c).setIcon(new ImageIcon(Util.getFileAsBytes("/images/icons/unchecked.png")));
@@ -73,15 +93,21 @@ public class OnyxStyleFactory extends SynthStyleFactory {
                 e.printStackTrace();
             }
         } else if (c instanceof JTextComponent) {
-            JComponent parent = (JComponent) c.getParent();
-            if (parent != null) {
-                if (parent.getBackground() == VERY_DARK_BLACK) {
-                    c.setBackground(DARK_BLACK);
-                    c.setBorder(BorderFactory.createLineBorder(DARK_GRAY));
-                } else if (parent.getBackground() == DARK_BLACK) {
-                    c.setBackground(VERY_DARK_BLACK);
-                    c.setBorder(BorderFactory.createLineBorder(DARK_GRAY));
+            if (c.getBorder() == null) {
+                JComponent parent = (JComponent) c.getParent();
+                if (parent != null) {
+                    if (parent.getBackground() == DARK_BLACK) {
+                        c.setBackground(MID_BLACK);
+                        c.setBorder(BorderFactory.createLineBorder(LIGHT_BLACK));
+                    } else if (parent.getBackground() == MID_BLACK) {
+                        c.setBackground(DARK_BLACK);
+                        c.setBorder(BorderFactory.createLineBorder(LIGHT_BLACK));
+                    }
                 }
+            }
+        } else if (c instanceof JList) {
+            if (c.getBackground() == null) {
+                c.setBackground(MID_BLACK);
             }
         }
         return defaultStyle;

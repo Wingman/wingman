@@ -3,6 +3,7 @@ package com.wingman.client.ui.titlebars;
 import com.google.common.base.Throwables;
 import com.wingman.client.Util;
 import com.wingman.client.ui.buttons.HoverButton;
+import com.wingman.client.ui.style.OnyxStyleFactory;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,8 +22,8 @@ public class SettingsTitleBar extends OnyxTitleBar {
             icon.setIcon(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/icon_16x16.png"))));
 
             // TITLE LABEL
-            JLabel title = new JLabel("Wingman/Plugin Settings");
-            title.setAlignmentX(CENTER_ALIGNMENT);
+            JLabel titleLabel = new JLabel("Wingman/Plugin Settings");
+            titleLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
 
             // CLOSE BUTTON
             HoverButton close = new HoverButton();
@@ -37,7 +38,7 @@ public class SettingsTitleBar extends OnyxTitleBar {
             this.add(Box.createHorizontalStrut(4));
             this.add(icon);
             this.add(Box.createHorizontalGlue());
-            this.add(title);
+            this.add(titleLabel);
             this.add(Box.createHorizontalGlue());
             this.add(close);
         } catch (IOException e) {

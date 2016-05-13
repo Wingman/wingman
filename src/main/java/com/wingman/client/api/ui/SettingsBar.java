@@ -22,8 +22,7 @@ public class SettingsBar {
             if (Client.settingsScreen.settingsBarPanel.getComponents().length == 0) {
                 Client.settingsScreen.settingsBarPanel.add(panel);
                 Client.settingsScreen.buttonList.setSelectedIndex(0);
-                Client.settingsScreen.settingsBarPanel.revalidate();
-                Client.settingsScreen.settingsBarPanel.repaint();
+                Client.settingsScreen.pack();
                 Client.settingsScreen.setLocationRelativeTo(null);
             }
         }

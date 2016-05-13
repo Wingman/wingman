@@ -48,7 +48,6 @@ public class GameLoader {
             applet.start();
 
             Client.framePanel.removeAll();
-            Client.framePanel.add(Client.frameToolbar, BorderLayout.NORTH);
             Client.framePanel.add(applet, BorderLayout.CENTER);
             Client.framePanel.add(Client.sideBarBox, BorderLayout.EAST);
             Client.frame.pack();

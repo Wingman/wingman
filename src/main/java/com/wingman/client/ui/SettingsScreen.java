@@ -1,8 +1,10 @@
 package com.wingman.client.ui;
 
 import com.wingman.client.api.ui.SettingsBar;
+import com.wingman.client.ui.style.OnyxListCellRenderer;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.SettingsTitleBar;
+import com.wingman.client.ui.util.ComponentBorderResizer;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -21,14 +23,16 @@ public class SettingsScreen extends JDialog {
     public JPanel settingsBarPanel = new JPanel();
 
     public SettingsScreen() {
-        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.VERY_DARK_BLACK));
+        new ComponentBorderResizer(this);
+
+        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.DARK_BLACK));
         this.setUndecorated(true);
         this.setJMenuBar(new SettingsTitleBar(this));
         this.setAlwaysOnTop(true);
-        this.setResizable(false);
 
         settingsBarPanel.setLayout(new BoxLayout(settingsBarPanel, BoxLayout.Y_AXIS));
 
+        buttonList.setCellRenderer(new OnyxListCellRenderer<String>());
         buttonList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -36,7 +40,8 @@ public class SettingsScreen extends JDialog {
                 if (selectedSettingsBar != null) {
                     settingsBarPanel.removeAll();
                     settingsBarPanel.add(selectedSettingsBar.panel);
-                    Client.settingsScreen.pack();
+                    Client.settingsScreen.settingsBarPanel.revalidate();
+                    Client.settingsScreen.settingsBarPanel.repaint();
                 }
             }
         });
@@ -44,19 +49,23 @@ public class SettingsScreen extends JDialog {
         JScrollPane buttonScrollPane = new JScrollPane();
         buttonScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         buttonScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        buttonScrollPane.setBackground(OnyxStyleFactory.VERY_DARK_BLACK);
         buttonScrollPane.getViewport().add(buttonList);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS) {
+        panel.setLayout(new BorderLayout() {
+            @Override
+            public Dimension minimumLayoutSize(Container target) {
+                return new Dimension(750, 450);
+            }
+
             @Override
             public Dimension preferredLayoutSize(Container target) {
-                return new Dimension(700, 500);
+                return new Dimension(750, 450);
             }
         });
 
-        panel.add(buttonScrollPane);
-        panel.add(settingsBarPanel);
+        panel.add(buttonScrollPane, BorderLayout.WEST);
+        panel.add(settingsBarPanel, BorderLayout.CENTER);
 
         this.setContentPane(panel);
     }

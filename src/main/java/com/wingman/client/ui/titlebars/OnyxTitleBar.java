@@ -8,7 +8,7 @@ import java.awt.event.MouseMotionAdapter;
 
 public class OnyxTitleBar extends JMenuBar {
 
-    Point initialClick;
+    private Point initialClick;
 
     public OnyxTitleBar(final Component parent) {
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS) {
