@@ -7,30 +7,30 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SideBar  {
+public class SideBar {
 
     public JPanel panel;
-    public JButton paneButton;
-    public ActionListener paneButtonActionListener;
+    public JButton button;
+    public ActionListener buttonActionListener;
 
     public SideBar() {
         panel = new JPanel(new BorderLayout() {
             @Override
             public Dimension minimumLayoutSize(Container target) {
-                return new Dimension(200, 0);
+                return new Dimension(200, Integer.MAX_VALUE);
             }
 
             @Override
             public Dimension preferredLayoutSize(Container target) {
-                return new Dimension(200, 0);
+                return new Dimension(200, Integer.MAX_VALUE);
             }
         });
     }
 
     public void register() {
-        if (paneButton != null) {
-            if (paneButtonActionListener == null) {
-                paneButtonActionListener = new ActionListener() {
+        if (button != null) {
+            if (buttonActionListener == null) {
+                buttonActionListener = new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         if (panel != null) {
@@ -42,23 +42,21 @@ public class SideBar  {
                     }
                 };
             }
-            paneButton.addActionListener(paneButtonActionListener);
+            button.addActionListener(buttonActionListener);
+            button.setAlignmentX(JButton.CENTER_ALIGNMENT);
+            Client.sideBarBox.buttonPanel.add(button);
 
             if (panel != null) {
                 if (Client.sideBarBox.sideBarPanel.getComponents().length == 0) {
                     Client.sideBarBox.sideBarPanel.add(panel);
                 }
             }
-
-            paneButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-
-            Client.sideBarBox.buttonPanel.add(paneButton);
         }
     }
 
     public void unregister() {
-        if (paneButton != null) {
-            Client.sideBarBox.buttonPanel.remove(paneButton);
+        if (button != null) {
+            Client.sideBarBox.buttonPanel.remove(button);
             if (panel != null) {
                 Client.sideBarBox.sideBarPanel.remove(panel);
             }
