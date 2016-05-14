@@ -11,6 +11,12 @@ public class HoverButton extends JButton {
 
     boolean hovering = false;
 
+    public HoverButton(ImageIcon imageIcon) {
+        this();
+        this.setIcon(imageIcon);
+        this.setBorderPainted(false);
+    }
+
     public HoverButton() {
         this.addMouseListener(new MouseAdapter() {
             @Override

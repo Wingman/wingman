@@ -65,8 +65,7 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeExpandButton() throws IOException {
-        HoverButton hoverButton = new HoverButton();
-        hoverButton.setIcon(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/expand.png"))));
+        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/expand.png"))));
         hoverButton.setMargin(new Insets(3, 0, 3, 0));
         hoverButton.addActionListener(new ActionListener() {
             @Override
@@ -94,8 +93,7 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeSettingsButton() throws IOException {
-        HoverButton hoverButton = new HoverButton();
-        hoverButton.setIcon(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/settings.png"))));
+        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/settings.png"))));
         hoverButton.setMargin(new Insets(3, 3, 3, 3));
         hoverButton.addActionListener(new ActionListener() {
             @Override
@@ -125,8 +123,7 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeMinimizeButton() throws IOException {
-        HoverButton hoverButton = new HoverButton();
-        hoverButton.setIcon(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/minimize.png"))));
+        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/minimize.png"))));
         hoverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,8 +137,7 @@ public class FrameTitleBar extends OnyxTitleBar {
         final ImageIcon maximizeIcon = new ImageIcon(ImageIO.read(Util.getFile("/images/icons/maximize.png")));
         final ImageIcon maximizeIcon2 = new ImageIcon(ImageIO.read(Util.getFile("/images/icons/unmaximize.png")));
 
-        final HoverButton hoverButton = new HoverButton();
-        hoverButton.setIcon(maximizeIcon);
+        final HoverButton hoverButton = new HoverButton(maximizeIcon);
         hoverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -162,8 +158,7 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeExitButton() throws IOException {
-        HoverButton hoverButton = new HoverButton();
-        hoverButton.setIcon(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/exit.png"))));
+        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/exit.png"))));
         hoverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

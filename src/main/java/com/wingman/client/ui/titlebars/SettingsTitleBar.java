@@ -18,16 +18,14 @@ public class SettingsTitleBar extends OnyxTitleBar {
 
         try {
             // WINGMAN ICON
-            JLabel icon = new JLabel();
-            icon.setIcon(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/icon_16x16.png"))));
+            JLabel icon = new JLabel(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/icon_16x16.png"))));
 
             // TITLE LABEL
             JLabel titleLabel = new JLabel("Wingman/Plugin Settings");
             titleLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
 
             // CLOSE BUTTON
-            HoverButton close = new HoverButton();
-            close.setIcon(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/exit.png"))));
+            HoverButton close = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/exit.png"))));
             close.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

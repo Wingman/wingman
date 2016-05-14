@@ -81,6 +81,9 @@ public class OnyxStyleFactory extends SynthStyleFactory {
             c.setOpaque(false);
         } else if (c instanceof JButton) {
             c.setOpaque(false);
+            if (c.getBorder() == null) {
+                c.setBorder(BorderFactory.createLineBorder(LIGHT_BLACK));
+            }
         } else if (c instanceof JCheckBox) {
             if (c.getBorder() == null) {
                 c.setBorder(BorderFactory.createLineBorder(LIGHT_BLACK));

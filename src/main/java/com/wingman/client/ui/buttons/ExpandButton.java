@@ -12,12 +12,8 @@ import java.io.IOException;
 
 public class ExpandButton extends HoverButton {
 
-    public ExpandButton() {
-        try {
-            this.setIcon(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/expand.png"))));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ExpandButton() throws IOException {
+        super(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/expand.png"))));
         this.setMargin(new Insets(3, 0, 3, 0));
 
         this.addActionListener(new ActionListener() {
