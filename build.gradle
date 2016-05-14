@@ -6,6 +6,7 @@ apply plugin: 'application'
 
 sourceCompatibility = 1.7
 mainClassName = "com.wingman.client.Main"
+jar.archiveName = "Wingman-core.jar"
 
 compileJava {
     options.compilerArgs << "-Xlint:unchecked"
@@ -32,7 +33,15 @@ task wrapper(type: Wrapper) {
 }
 
 task fatCapsule(type: FatCapsule) {
+	archiveName = "Wingman.jar"
     def stringsFile = new File("src/main/resources/version.properties")
     stringsFile.write(System.getenv("TRAVIS_TAG") ?: System.getenv("BUILD_NUMBER") ?: "Developer")
     applicationClass mainClassName
+}
+
+task apiJar(type: Jar) {  
+    from(sourceSets.main.output) {  
+		archiveName = "Wingman-api.jar"
+        include "com/wingman/client/api/**"
+    }  
 }

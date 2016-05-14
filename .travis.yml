@@ -5,15 +5,6 @@ before_install:
  
 script:
  - ./gradlew clean check test javadoc fatCapsule
- 
-before_deploy:
- - cd build/libs
- - mv Wingman.jar Wingman-api.jar
- - mv Wingman-capsule.jar Wingman.jar
- - unzip Wingman-api.jar
- - zip -d Wingman-api.jar \*
- - zip -r Wingman-api.jar com/wingman/client/api/*
- - cd ../..
 
 deploy:
   skip_cleanup: true
@@ -23,6 +14,7 @@ deploy:
   file:
     - "build/libs/Wingman.jar"
     - "build/libs/Wingman-api.jar"
+    - "build/libs/Wingman-core.jar"
   on:
     tags: true
 
