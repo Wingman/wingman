@@ -7,13 +7,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SideBar {
+public class SideBarSection {
 
     public JPanel panel;
     public JButton button;
     public ActionListener buttonActionListener;
 
-    public SideBar() {
+    public SideBarSection() {
         panel = new JPanel(new BorderLayout() {
             @Override
             public Dimension minimumLayoutSize(Container target) {
