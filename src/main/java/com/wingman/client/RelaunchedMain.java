@@ -75,5 +75,11 @@ public class RelaunchedMain {
                 throw Throwables.propagate(new IOException("Couldn't create directory " + ClientSettings.PLUGINS_DIR));
             }
         }
+
+        if (!ClientSettings.SETTINGS_DIR.toFile().exists()) {
+            if (!ClientSettings.SETTINGS_DIR.toFile().mkdirs()) {
+                throw Throwables.propagate(new IOException("Couldn't create directory " + ClientSettings.SETTINGS_DIR));
+            }
+        }
     }
 }

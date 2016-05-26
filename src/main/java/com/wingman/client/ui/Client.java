@@ -3,8 +3,9 @@ package com.wingman.client.ui;
 import com.google.common.base.Throwables;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.Util;
-import com.wingman.client.api.ui.SettingsBar;
-import com.wingman.client.api.ui.SettingsBarDesigner;
+import com.wingman.client.api.settings.PropertiesSettings;
+import com.wingman.client.api.ui.SettingsSection;
+import com.wingman.client.api.ui.SettingsSectionDesigner;
 import com.wingman.client.rs.GameDownloader;
 import com.wingman.client.ui.style.OnyxComboBoxUI;
 import com.wingman.client.ui.style.OnyxScrollBarUI;
@@ -36,7 +37,7 @@ public class Client {
 
     public static ClientTrayIcon clientTrayIcon;
 
-    public static ClientSettings clientSettings = new ClientSettings();
+    public static PropertiesSettings clientSettings;
 
     public Client() {
         setupLookAndFeel();
@@ -48,6 +49,11 @@ public class Client {
 
         sideBarBox = new SideBarBox();
         settingsScreen = new SettingsScreen();
+        try {
+            clientSettings = new ClientSettings();
+        } catch (IOException e) {
+            Throwables.propagate(e);
+        }
 
         addClientSettings();
         addListeners();
@@ -130,11 +136,11 @@ public class Client {
     }
 
     /**
-     * Registers a {@link SettingsBar} with client related settings.
+     * Registers a {@link SettingsSection} with client related settings.
      */
     private void addClientSettings() {
-        SettingsBar settingsBar = new SettingsBar();
-        settingsBar.sideText = "Wingman";
+        SettingsSection settingsSection = new SettingsSection();
+        settingsSection.sideText = "Wingman";
 
         ArrayList<JPanel> settingsList = new ArrayList<>();
 
@@ -168,7 +174,7 @@ public class Client {
             }
         });
 
-        JPanel worldSettings = SettingsBarDesigner
+        JPanel worldSettings = SettingsSectionDesigner
                 .createSettingsRow("Preferred world", preferredWorld);
 
         settingsList.add(worldSettings);
@@ -185,13 +191,13 @@ public class Client {
             }
         });
 
-        JPanel notificationsApi = SettingsBarDesigner
+        JPanel notificationsApi = SettingsSectionDesigner
                 .createSettingsRow("Enable notifications API", notificationsEnabled);
 
         settingsList.add(notificationsApi);
 
-        SettingsBarDesigner.designSettingsBar(settingsBar, settingsList, true);
-        settingsBar.panel.add(Box.createVerticalGlue());
-        settingsBar.register();
+        SettingsSectionDesigner.design(settingsSection, settingsList, true);
+        settingsSection.panel.add(Box.createVerticalGlue());
+        settingsSection.register();
     }
 }

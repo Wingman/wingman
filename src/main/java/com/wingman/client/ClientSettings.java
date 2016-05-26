@@ -1,20 +1,17 @@
 package com.wingman.client;
 
 import com.google.common.collect.ImmutableMap;
+import com.wingman.client.api.settings.PropertiesSettings;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
-public class ClientSettings {
+public class ClientSettings extends PropertiesSettings {
 
     public static final Path HOME_DIR = Paths.get(System.getProperty("user.home")).resolve("Wingman");
     public static final Path PLUGINS_DIR = HOME_DIR.resolve("plugins");
@@ -22,24 +19,18 @@ public class ClientSettings {
 
     public static final Path APPLET_JAR_FILE = HOME_DIR.resolve("gamepack.jar");
     public static final String LOGGING_FILE = HOME_DIR.resolve("wingman.log").toString();
-    public static final File CLIENT_SETTINGS_FILE = HOME_DIR.resolve("wingman.properties").toFile();
 
     public static final Dimension APPLET_INITIAL_SIZE = new Dimension(765, 503);
 
     public static final String NOTIFICATIONS_ENABLED = "notifications_enabled";
     public static final String PREFERRED_WORLD = "preferred_world";
 
-    private Properties properties = new Properties();
+    public ClientSettings() throws IOException {
+        super("Wingman.properties", "Wingman client settings");
+    }
 
-    public ClientSettings() {
-        if (CLIENT_SETTINGS_FILE.exists()) {
-            try {
-                properties.load(new FileReader(CLIENT_SETTINGS_FILE));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+    @Override
+    public void checkKeys() {
         Map<String, Object> defaultProperties = ImmutableMap.<String, Object>builder()
                 .put(NOTIFICATIONS_ENABLED, "true")
                 .put(PREFERRED_WORLD, "311")
@@ -67,29 +58,5 @@ public class ClientSettings {
                 properties.remove(k);
             }
         }
-    }
-
-    public void save() {
-        try {
-            properties.store(new FileWriter(CLIENT_SETTINGS_FILE), "Wingman client settings");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void update(String key, Object value) {
-        properties.put(key, value);
-    }
-
-    public String get(String key) {
-        return (String) properties.get(key);
-    }
-
-    public boolean getBoolean(String key) {
-        return properties.get(key).equals("true");
-    }
-
-    public int getInteger(String key) {
-        return Integer.parseInt((String) properties.get(key));
     }
 }
