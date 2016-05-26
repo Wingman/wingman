@@ -14,10 +14,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-public class Settings {
+public class ClientSettings {
 
     public static final Path HOME_DIR = Paths.get(System.getProperty("user.home")).resolve("Wingman");
     public static final Path PLUGINS_DIR = HOME_DIR.resolve("plugins");
+    public static final Path SETTINGS_DIR = HOME_DIR.resolve("settings");
+
     public static final Path APPLET_JAR_FILE = HOME_DIR.resolve("gamepack.jar");
     public static final String LOGGING_FILE = HOME_DIR.resolve("wingman.log").toString();
     public static final File CLIENT_SETTINGS_FILE = HOME_DIR.resolve("wingman.properties").toFile();
@@ -29,7 +31,7 @@ public class Settings {
 
     private Properties properties = new Properties();
 
-    public Settings() {
+    public ClientSettings() {
         if (CLIENT_SETTINGS_FILE.exists()) {
             try {
                 properties.load(new FileReader(CLIENT_SETTINGS_FILE));

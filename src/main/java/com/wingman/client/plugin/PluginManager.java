@@ -2,7 +2,7 @@ package com.wingman.client.plugin;
 
 import com.google.common.base.Throwables;
 import com.google.common.io.Files;
-import com.wingman.client.Settings;
+import com.wingman.client.ClientSettings;
 import com.wingman.client.api.event.Event;
 import com.wingman.client.api.event.EventCallback;
 import com.wingman.client.api.event.EventListener;
@@ -51,16 +51,16 @@ public class PluginManager {
     }
 
     /**
-     * Adds all folders in {@link Settings#PLUGINS_DIR}, and all of its containing JARs to a {@link PluginClassLoader}.
+     * Adds all folders in {@link ClientSettings#PLUGINS_DIR}, and all of its containing JARs to a {@link PluginClassLoader}.
      *
-     * @return a class loader with the supposed plugins within {@link Settings#PLUGINS_DIR}
+     * @return a class loader with the supposed plugins within {@link ClientSettings#PLUGINS_DIR}
      * @throws IOException
      */
     private static PluginClassLoader getPluginClassLoader() throws IOException {
         Set<URL> pluginUrls = new HashSet<>();
 
         // Search for folders in the root path
-        File[] pluginsRootFolderFiles = Settings.PLUGINS_DIR.toFile().listFiles();
+        File[] pluginsRootFolderFiles = ClientSettings.PLUGINS_DIR.toFile().listFiles();
         if (pluginsRootFolderFiles != null) {
             for (File file : pluginsRootFolderFiles) {
                 if (file.isDirectory()) {
@@ -70,7 +70,7 @@ public class PluginManager {
         }
 
         // Search for JARed files
-        for (File file : Files.fileTreeTraverser().preOrderTraversal(Settings.PLUGINS_DIR.toFile())) {
+        for (File file : Files.fileTreeTraverser().preOrderTraversal(ClientSettings.PLUGINS_DIR.toFile())) {
             if (Files.getFileExtension(file.getName()).equalsIgnoreCase("jar")) {
                 pluginUrls.add(new URL("jar:" + file.toURI().toString() + "!/"));
             }

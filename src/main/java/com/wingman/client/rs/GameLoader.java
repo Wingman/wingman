@@ -1,7 +1,7 @@
 package com.wingman.client.rs;
 
 import com.google.common.base.Throwables;
-import com.wingman.client.Settings;
+import com.wingman.client.ClientSettings;
 import com.wingman.client.api.generated.Static;
 import com.wingman.client.classloader.TransformingClassLoader;
 import com.wingman.client.plugin.PluginManager;
@@ -23,7 +23,7 @@ public class GameLoader {
         try {
             TransformingClassLoader classLoader = (TransformingClassLoader) getClass().getClassLoader();
 
-            classLoader.addURL(Settings.APPLET_JAR_FILE.toUri().toURL());
+            classLoader.addURL(ClientSettings.APPLET_JAR_FILE.toUri().toURL());
 
             applet = (Applet) classLoader.loadClass("client").newInstance();
             applet.setStub(new GameAppletStub());
@@ -31,18 +31,18 @@ public class GameLoader {
             applet.setLayout(new BorderLayout() {
                 @Override
                 public Dimension minimumLayoutSize(Container target) {
-                    return Settings.APPLET_INITIAL_SIZE;
+                    return ClientSettings.APPLET_INITIAL_SIZE;
                 }
 
                 @Override
                 public Dimension preferredLayoutSize(Container target) {
                     if (target.getWidth() == 0 || target.getHeight() == 0) {
-                        return Settings.APPLET_INITIAL_SIZE;
+                        return ClientSettings.APPLET_INITIAL_SIZE;
                     }
                     return target.getSize();
                 }
             });
-            applet.setSize(Settings.APPLET_INITIAL_SIZE);
+            applet.setSize(ClientSettings.APPLET_INITIAL_SIZE);
 
             applet.init();
             applet.start();

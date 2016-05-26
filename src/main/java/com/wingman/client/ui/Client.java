@@ -1,7 +1,7 @@
 package com.wingman.client.ui;
 
 import com.google.common.base.Throwables;
-import com.wingman.client.Settings;
+import com.wingman.client.ClientSettings;
 import com.wingman.client.Util;
 import com.wingman.client.api.ui.SettingsBar;
 import com.wingman.client.api.ui.SettingsBarDesigner;
@@ -9,7 +9,6 @@ import com.wingman.client.rs.GameDownloader;
 import com.wingman.client.ui.style.OnyxComboBoxUI;
 import com.wingman.client.ui.style.OnyxScrollBarUI;
 import com.wingman.client.ui.style.OnyxStyleFactory;
-import com.wingman.client.ui.style.OnyxTabbedPaneUI;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
 
@@ -37,7 +36,7 @@ public class Client {
 
     public static ClientTrayIcon clientTrayIcon;
 
-    public static Settings settings = new Settings();
+    public static ClientSettings clientSettings = new ClientSettings();
 
     public Client() {
         setupLookAndFeel();
@@ -53,7 +52,7 @@ public class Client {
         addClientSettings();
         addListeners();
 
-        if (settings.getBoolean(Settings.NOTIFICATIONS_ENABLED)) {
+        if (clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED)) {
             try {
                 clientTrayIcon = new ClientTrayIcon();
             } catch (IOException | AWTException e) {
@@ -86,7 +85,7 @@ public class Client {
         frame.setUndecorated(true);
         frame.setJMenuBar(new FrameTitleBar(frame));
         frame.setContentPane(framePanel);
-        frame.setSize(Settings.APPLET_INITIAL_SIZE);
+        frame.setSize(ClientSettings.APPLET_INITIAL_SIZE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.toFront();
@@ -119,8 +118,8 @@ public class Client {
             @Override
             public void windowStateChanged(WindowEvent e) {
                 if (sideBarBox.isVisible()) {
-                    if (frame.getWidth() < Settings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth()) {
-                        frame.setSize(new Dimension(Settings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth() + 8, frame.getHeight()));
+                    if (frame.getWidth() < ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth()) {
+                        frame.setSize(new Dimension(ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth() + 8, frame.getHeight()));
                         frame.revalidate();
                     }
                 }
@@ -156,16 +155,16 @@ public class Client {
         }
         int settingsPreferredWorld = 311;
         try {
-            settingsPreferredWorld = Integer.parseInt(settings.get(Settings.PREFERRED_WORLD));
+            settingsPreferredWorld = Integer.parseInt(clientSettings.get(ClientSettings.PREFERRED_WORLD));
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            settings.update(Settings.PREFERRED_WORLD, settingsPreferredWorld);
+            clientSettings.update(ClientSettings.PREFERRED_WORLD, settingsPreferredWorld);
         }
         preferredWorld.setSelectedItem(settingsPreferredWorld);
         preferredWorld.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                settings.update(Settings.PREFERRED_WORLD, "" + (int) e.getItem());
+                clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + (int) e.getItem());
             }
         });
 
@@ -177,12 +176,12 @@ public class Client {
         // ENABLE NOTIFICATIONS API
         JCheckBox notificationsEnabled = new JCheckBox();
         notificationsEnabled.setMargin(new Insets(0, 10, 0, 0));
-        notificationsEnabled.setSelected(settings.getBoolean(Settings.NOTIFICATIONS_ENABLED));
+        notificationsEnabled.setSelected(clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED));
         notificationsEnabled.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 String newState = e.getStateChange() == ItemEvent.SELECTED ? "true" : "false";
-                settings.update(Settings.NOTIFICATIONS_ENABLED, newState);
+                clientSettings.update(ClientSettings.NOTIFICATIONS_ENABLED, newState);
             }
         });
 

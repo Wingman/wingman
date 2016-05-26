@@ -8,12 +8,10 @@ import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.common.base.Throwables;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.style.OnyxStyleFactory;
 import org.slf4j.LoggerFactory;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import javax.swing.*;
-import javax.swing.plaf.synth.SynthLookAndFeel;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -38,7 +36,7 @@ public class RelaunchedMain {
 
     /**
      * Sets up SLF4J logging for {@link System#out} and {@link System#err} at INFO level. <br>
-     * The logger also logs to {@link Settings#LOGGING_FILE}, with the same format as for the console.
+     * The logger also logs to {@link ClientSettings#LOGGING_FILE}, with the same format as for the console.
      */
     private static void setupConsoleLogging() {
         Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
@@ -57,7 +55,7 @@ public class RelaunchedMain {
         encoder.start();
 
         FileAppender<ILoggingEvent> logFileAppender = new FileAppender<>();
-        logFileAppender.setFile(Settings.LOGGING_FILE);
+        logFileAppender.setFile(ClientSettings.LOGGING_FILE);
         logFileAppender.setContext(root.getLoggerContext());
         logFileAppender.setEncoder(encoder);
         logFileAppender.setAppend(false);
@@ -72,9 +70,9 @@ public class RelaunchedMain {
      * Creates file directories required for the operation of the client.
      */
     private static void createDirectories(){
-        if (!Settings.PLUGINS_DIR.toFile().exists()) {
-            if (!Settings.PLUGINS_DIR.toFile().mkdirs()) {
-                throw Throwables.propagate(new IOException("Couldn't create directory " + Settings.PLUGINS_DIR));
+        if (!ClientSettings.PLUGINS_DIR.toFile().exists()) {
+            if (!ClientSettings.PLUGINS_DIR.toFile().mkdirs()) {
+                throw Throwables.propagate(new IOException("Couldn't create directory " + ClientSettings.PLUGINS_DIR));
             }
         }
     }

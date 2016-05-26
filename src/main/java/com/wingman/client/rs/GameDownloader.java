@@ -4,7 +4,7 @@ import com.google.common.base.Throwables;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
-import com.wingman.client.Settings;
+import com.wingman.client.ClientSettings;
 import com.wingman.client.net.HttpClient;
 import com.wingman.client.ui.Client;
 
@@ -83,18 +83,18 @@ public class GameDownloader {
     }
 
     /**
-     * Tries to parse the {@link Settings#properties} value for the key {@link Settings#PREFERRED_WORLD}. <br>
+     * Tries to parse the {@link ClientSettings#properties} value for the key {@link ClientSettings#PREFERRED_WORLD}. <br>
      * If the parsed value begins with 3, the 3 will be omitted before returning the value. <br>
      * If the parsing of the value as a number fails, the default world "11" (311) will be returned.
      *
-     * @return the saved (and preferred) world from {@link Settings},
+     * @return the saved (and preferred) world from {@link ClientSettings},
      *         or 11 (world 311) if the lookup failed
      */
     private int getWorldFromSettings() {
         int world = 11;
 
         try {
-            String tempWorld = Client.settings.get(Settings.PREFERRED_WORLD);
+            String tempWorld = Client.clientSettings.get(ClientSettings.PREFERRED_WORLD);
 
             System.out.println("Attempting to load world " + tempWorld);
 
@@ -129,7 +129,7 @@ public class GameDownloader {
 
             response.body().close();
 
-            return Settings.APPLET_JAR_FILE
+            return ClientSettings.APPLET_JAR_FILE
                     .toFile()
                     .length() == remoteArchiveSize;
         } catch (IOException e) {
@@ -161,7 +161,7 @@ public class GameDownloader {
                     if (response.isSuccessful()) {
                         try (InputStream input = responseBody.byteStream()) {
                             if (input != null) {
-                                FileOutputStream output = new FileOutputStream(Settings.APPLET_JAR_FILE.toFile());
+                                FileOutputStream output = new FileOutputStream(ClientSettings.APPLET_JAR_FILE.toFile());
 
                                 final int[] totalRead = {0};
                                 final int[] read = {0};
