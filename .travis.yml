@@ -4,7 +4,7 @@ before_install:
  - chmod +x gradlew
  
 script:
- - ./gradlew clean check test javadoc fatCapsule
+ - ./gradlew clean check test javadoc fatCapsule apiJar
 
 deploy:
   skip_cleanup: true
