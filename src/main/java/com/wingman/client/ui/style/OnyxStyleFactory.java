@@ -21,7 +21,7 @@ public class OnyxStyleFactory extends SynthStyleFactory {
 
     public static final Color LIGHT_BROWN = new Color(199, 173, 129);
 
-    public static final Color LIGHT_BLUE = new Color(34, 167, 240);
+    public static final Color LIGHT_BLUE = new Color(34, 140, 219);
 
     public static final Font ROBOTO_REGULAR = new Font("Roboto", Font.PLAIN, 12);
     public static final Font ROBOTO_MEDIUM = new Font("Roboto Medium", Font.PLAIN, 12);
