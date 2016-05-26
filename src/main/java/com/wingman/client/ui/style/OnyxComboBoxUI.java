@@ -28,6 +28,6 @@ public class OnyxComboBoxUI extends SynthComboBoxUI {
 
     @Override
     protected ListCellRenderer createRenderer() {
-        return new OnyxListCellRenderer();
+        return new OnyxListCellRenderer(true);
     }
 }
