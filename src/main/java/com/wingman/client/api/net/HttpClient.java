@@ -1,4 +1,4 @@
-package com.wingman.client.net;
+package com.wingman.client.api.net;
 
 import com.google.common.base.Throwables;
 import com.squareup.okhttp.Callback;

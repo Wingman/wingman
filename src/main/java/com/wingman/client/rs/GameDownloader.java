@@ -5,7 +5,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 import com.wingman.client.ClientSettings;
-import com.wingman.client.net.HttpClient;
+import com.wingman.client.api.net.HttpClient;
 import com.wingman.client.ui.Client;
 
 import javax.swing.*;
