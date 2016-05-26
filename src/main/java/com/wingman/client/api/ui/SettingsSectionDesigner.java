@@ -3,16 +3,15 @@ package com.wingman.client.api.ui;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
 
 
 /**
- * {@link SettingsBarDesigner} provides methods that could be in help when creating a {@link SettingsBar}. <br>
+ * {@link SettingsSectionDesigner} provides methods that could be in help when creating a {@link SettingsSection}. <br>
  * It is not at all required to use this class to design settings, but it is useful for consistency across different plugins.
  */
-public class SettingsBarDesigner {
+public class SettingsSectionDesigner {
 
     public static JPanel createSettingsRow(String description, Object... jComponent) {
         JPanel panel = new JPanel();
@@ -42,7 +41,7 @@ public class SettingsBarDesigner {
         return panel;
     }
 
-    public static SettingsBar designSettingsBar(SettingsBar currentSettingsBar, ArrayList<JPanel> settingPanels, boolean alternateColor) {
+    public static SettingsSection design(SettingsSection currentSettingsSection, ArrayList<JPanel> settingPanels, boolean alternateColor) {
         int i = 0;
         for (JPanel setting : settingPanels) {
             if (alternateColor) {
@@ -50,8 +49,8 @@ public class SettingsBarDesigner {
                     setting.setBackground(OnyxStyleFactory.DARK_BLACK);
                 }
             }
-            currentSettingsBar.panel.add(setting);
+            currentSettingsSection.panel.add(setting);
         }
-        return currentSettingsBar;
+        return currentSettingsSection;
     }
 }

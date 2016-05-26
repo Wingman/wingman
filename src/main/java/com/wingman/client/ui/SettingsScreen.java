@@ -1,6 +1,6 @@
 package com.wingman.client.ui;
 
-import com.wingman.client.api.ui.SettingsBar;
+import com.wingman.client.api.ui.SettingsSection;
 import com.wingman.client.ui.style.OnyxListCellRenderer;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.SettingsTitleBar;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class SettingsScreen extends JDialog {
 
-    public Map<String, SettingsBar> settingsBars = new HashMap<>();
+    public Map<String, SettingsSection> settingsBars = new HashMap<>();
 
     public DefaultListModel<String> buttonListModel = new DefaultListModel<>();
     public final JList<String> buttonList = new JList<>(buttonListModel);
@@ -37,10 +37,10 @@ public class SettingsScreen extends JDialog {
         buttonList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                SettingsBar selectedSettingsBar = settingsBars.get(buttonList.getSelectedValue());
-                if (selectedSettingsBar != null) {
+                SettingsSection selectedSettingsSection = settingsBars.get(buttonList.getSelectedValue());
+                if (selectedSettingsSection != null) {
                     settingsBarPanel.removeAll();
-                    settingsBarPanel.add(selectedSettingsBar.panel);
+                    settingsBarPanel.add(selectedSettingsSection.panel);
                     Client.settingsScreen.settingsBarPanel.revalidate();
                     Client.settingsScreen.settingsBarPanel.repaint();
                 }

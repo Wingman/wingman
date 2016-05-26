@@ -4,12 +4,12 @@ import com.wingman.client.ui.Client;
 
 import javax.swing.*;
 
-public class SettingsBar {
+public class SettingsSection {
 
     public JPanel panel;
     public String sideText;
 
-    public SettingsBar() {
+    public SettingsSection() {
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     }
