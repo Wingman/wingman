@@ -33,6 +33,7 @@ public class SettingsScreen extends JDialog {
         settingsBarPanel.setLayout(new BoxLayout(settingsBarPanel, BoxLayout.Y_AXIS));
 
         buttonList.setCellRenderer(new OnyxListCellRenderer<String>(true));
+        buttonList.setFixedCellHeight(30);
         buttonList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {

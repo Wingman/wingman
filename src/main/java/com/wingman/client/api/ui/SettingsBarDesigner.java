@@ -19,17 +19,17 @@ public class SettingsBarDesigner {
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS) {
             @Override
             public Dimension minimumLayoutSize(Container target) {
-                return new Dimension(Integer.MAX_VALUE, 34);
+                return new Dimension(Integer.MAX_VALUE, 30);
             }
 
             @Override
             public Dimension preferredLayoutSize(Container target) {
-                return new Dimension(Integer.MAX_VALUE, 34);
+                return new Dimension(Integer.MAX_VALUE, 30);
             }
 
             @Override
             public Dimension maximumLayoutSize(Container target) {
-                return new Dimension(Integer.MAX_VALUE, 34);
+                return new Dimension(Integer.MAX_VALUE, 30);
             }
         });
         panel.add(Box.createHorizontalStrut(10));
@@ -38,7 +38,7 @@ public class SettingsBarDesigner {
         for (Object o : jComponent) {
             panel.add((JComponent) o);
         }
-        panel.add(Box.createHorizontalStrut(10));
+        panel.add(Box.createHorizontalStrut(5));
         return panel;
     }
 
