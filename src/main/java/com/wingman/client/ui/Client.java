@@ -44,7 +44,6 @@ public class Client {
         frame = new JFrame();
 
         UIManager.put("ScrollBarUI", OnyxScrollBarUI.class.getName());
-        UIManager.put("TabbedPaneUI", OnyxTabbedPaneUI.class.getName());
         UIManager.put("ComboBoxUI", OnyxComboBoxUI.class.getName());
         SwingUtilities.updateComponentTreeUI(frame);
 
