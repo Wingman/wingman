@@ -12,8 +12,6 @@ public interface Widget extends Node {
 
     int getHeight();
 
-    int getId();
-
     int getIdx();
 
     int getInsetX();
@@ -29,8 +27,6 @@ public interface Widget extends Node {
     int getItemQuantity();
 
     String getName();
-
-    int getQuantity();
 
     String getText();
 
@@ -48,8 +44,6 @@ public interface Widget extends Node {
 
         void setHeight(int value);
 
-        void setId(int value);
-
         void setIdx(int value);
 
         void setInsetX(int value);
@@ -65,8 +59,6 @@ public interface Widget extends Node {
         void setItemQuantity(int value);
 
         void setName(String value);
-
-        void setQuantity(int value);
 
         void setText(String value);
 
