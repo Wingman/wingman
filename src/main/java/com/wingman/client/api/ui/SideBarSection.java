@@ -17,12 +17,12 @@ public class SideBarSection {
         panel = new JPanel(new BorderLayout() {
             @Override
             public Dimension minimumLayoutSize(Container target) {
-                return new Dimension(200, Integer.MAX_VALUE);
+                return new Dimension(250, Integer.MAX_VALUE);
             }
 
             @Override
             public Dimension preferredLayoutSize(Container target) {
-                return new Dimension(200, Integer.MAX_VALUE);
+                return new Dimension(250, Integer.MAX_VALUE);
             }
         });
     }

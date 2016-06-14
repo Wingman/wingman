@@ -37,4 +37,9 @@ public class SideBarBox extends JPanel {
         this.add(sideBarPanel, BorderLayout.WEST);
         this.add(buttonPanel, BorderLayout.EAST);
     }
+
+    public void redraw() {
+        this.revalidate();
+        this.repaint();
+    }
 }

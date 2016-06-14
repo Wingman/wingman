@@ -23,6 +23,8 @@ public class OnyxStyleFactory extends SynthStyleFactory {
 
     public static final Color LIGHT_BLUE = new Color(34, 140, 219);
 
+    public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
+
     public static final Font ROBOTO_REGULAR = new Font("Roboto", Font.PLAIN, 12);
     public static final Font ROBOTO_MEDIUM = new Font("Roboto Medium", Font.PLAIN, 12);
 
@@ -44,7 +46,7 @@ public class OnyxStyleFactory extends SynthStyleFactory {
                     || type == ColorType.TEXT_FOREGROUND) {
                 Color contextForeground = component.getForeground();
                 if (contextForeground == null) {
-                    return LIGHT_GRAY;
+                    return Color.WHITE;
                 }
                 return contextForeground;
             } else if (type == ColorType.BACKGROUND
@@ -82,7 +84,7 @@ public class OnyxStyleFactory extends SynthStyleFactory {
         } else if (c instanceof JButton) {
             c.setOpaque(false);
             if (c.getBorder() == null) {
-                c.setBorder(BorderFactory.createLineBorder(LIGHT_BLACK));
+                c.setBorder(BorderFactory.createLineBorder(DARK_BLACK));
             }
         } else if (c instanceof JCheckBox) {
             if (c.getBorder() == null) {
@@ -97,6 +99,8 @@ public class OnyxStyleFactory extends SynthStyleFactory {
             }
         } else if (c instanceof JTextComponent) {
             if (c.getBorder() == null) {
+                ((JTextComponent) c).setSelectionColor(LIGHT_WHITE);
+                ((JTextComponent) c).setSelectedTextColor(DARK_BLACK);
                 JComponent parent = (JComponent) c.getParent();
                 if (parent != null) {
                     if (parent.getBackground() == DARK_BLACK) {
@@ -112,6 +116,8 @@ public class OnyxStyleFactory extends SynthStyleFactory {
             if (c.getBackground() == null) {
                 c.setBackground(MID_BLACK);
             }
+        } else if (c instanceof JSeparator) {
+            c.setBackground(OnyxStyleFactory.LIGHT_BLACK);
         }
         return defaultStyle;
     }

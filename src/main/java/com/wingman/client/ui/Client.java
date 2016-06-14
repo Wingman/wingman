@@ -8,6 +8,7 @@ import com.wingman.client.api.ui.SettingsSection;
 import com.wingman.client.api.ui.SettingsSectionDesigner;
 import com.wingman.client.rs.GameDownloader;
 import com.wingman.client.ui.style.OnyxComboBoxUI;
+import com.wingman.client.ui.style.OnyxOptionPaneUI;
 import com.wingman.client.ui.style.OnyxScrollBarUI;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
@@ -45,6 +46,7 @@ public class Client {
 
         UIManager.put("ScrollBarUI", OnyxScrollBarUI.class.getName());
         UIManager.put("ComboBoxUI", OnyxComboBoxUI.class.getName());
+        UIManager.put("OptionPaneUI", OnyxOptionPaneUI.class.getName());
         SwingUtilities.updateComponentTreeUI(frame);
 
         sideBarBox = new SideBarBox();
@@ -181,7 +183,6 @@ public class Client {
 
         // ENABLE NOTIFICATIONS API
         JCheckBox notificationsEnabled = new JCheckBox();
-        notificationsEnabled.setMargin(new Insets(0, 10, 0, 0));
         notificationsEnabled.setSelected(clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED));
         notificationsEnabled.addItemListener(new ItemListener() {
             @Override

@@ -4,7 +4,7 @@ import com.google.common.base.Throwables;
 import com.wingman.client.Util;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.buttons.HoverButton;
+import com.wingman.client.ui.components.buttons.HoverButton;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 
 import javax.imageio.ImageIO;
@@ -118,6 +118,7 @@ public class FrameTitleBar extends OnyxTitleBar {
             e.printStackTrace();
         }
         JLabel titleLabel = new JLabel("Wingman " + version);
+        titleLabel.setForeground(OnyxStyleFactory.LIGHT_GRAY);
         titleLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
         return titleLabel;
     }

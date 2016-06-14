@@ -1,4 +1,4 @@
-package com.wingman.client.ui.buttons;
+package com.wingman.client.ui.components.buttons;
 
 import com.wingman.client.Util;
 import com.wingman.client.ui.Client;
