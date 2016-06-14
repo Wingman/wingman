@@ -3,7 +3,10 @@ package com.wingman.client.api.settings;
 import com.google.common.base.Throwables;
 import com.wingman.client.ClientSettings;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Properties;
 
 public class PropertiesSettings extends Settings {

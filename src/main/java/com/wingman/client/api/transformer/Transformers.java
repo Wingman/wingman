@@ -34,6 +34,7 @@ public class Transformers {
             new MessageReceivedTransformer(),
             new ItemDefinitionCachedTransformer(),
             new WidgetOpenedTransformer(),
+            new ExperienceGainedTransformer(),
 
             /**
              * Code patches:
