@@ -39,5 +39,6 @@ public class Transformers {
             /**
              * Code patches:
             */
+            new PreserveExceptionInfoTransformer(),
     });
 }
