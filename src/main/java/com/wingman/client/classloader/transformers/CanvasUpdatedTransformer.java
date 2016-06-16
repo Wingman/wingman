@@ -17,8 +17,12 @@ public class CanvasUpdatedTransformer implements Transformer {
         Iterator<RenderHook> it = RenderHook.renderHooks.iterator();
         while (it.hasNext()) {
             Graphics g = image.getGraphics().create();
-            if (it.next().render(g)) {
-                it.remove();
+            try {
+                if (it.next().render(g)) {
+                    it.remove();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             g.dispose();
         }
