@@ -386,12 +386,22 @@ public abstract class Static {
     }
 
     @Contract
+    public static boolean loadWidget(int arg0) {
+        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+    }
+
+    @Contract
+    public static void openWidget(int arg0) {
+        throw new RuntimeException("This incomplete method should have been finished by the transformers!");
+    }
+
+    @Contract
     public static void processLoginStages() {
         throw new RuntimeException("This incomplete method should have been finished by the transformers!");
     }
 
     @Contract
-    public static void pushMessage(int arg0, String arg1, String arg2, String arg3, byte arg4) {
+    public static void pushMessage(int arg0, String arg1, String arg2, String arg3) {
         throw new RuntimeException("This incomplete method should have been finished by the transformers!");
     }
 
