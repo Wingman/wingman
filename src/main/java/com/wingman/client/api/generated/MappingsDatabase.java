@@ -129,7 +129,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.MethodInfo("set", "di", "g", "V", "V", "([BI)V", "([B)V", false, true, 0),
         new com.wingman.client.api.mapping.MethodInfo("drawRightClickMenu", "ge", "bv", "V", "V", "(S)V", "()V", true, true, 4108),
         new com.wingman.client.api.mapping.MethodInfo("executeRuneScript", "cq", "g", "V", "V", "(Lb;IB)V", "(Lcom/wingman/client/api/generated/RuneScript;I)V", true, true, -2),
-        new com.wingman.client.api.mapping.MethodInfo("getItemDefinition", "ac", "b", "Lap;", "Lcom/wingman/client/api/generated/ItemDefinition;", "(IB)Lap;", "(I)Lcom/wingman/client/api/generated/ItemDefinition;", true, true, -1),
+        new com.wingman.client.api.mapping.MethodInfo("getItemDefinition", "ac", "b", "Lap;", "Lcom/wingman/client/api/generated/ItemDefinition;", "(IB)Lap;", "(I)Lcom/wingman/client/api/generated/ItemDefinition;", true, true, 1),
         new com.wingman.client.api.mapping.MethodInfo("getVarbitValue", "c", "b", "I", "I", "(IB)I", "(I)I", true, true, 4),
         new com.wingman.client.api.mapping.MethodInfo("getVarpForId", "f", "b", "Lbc;", "Lcom/wingman/client/api/generated/Varp;", "(II)Lbc;", "(I)Lcom/wingman/client/api/generated/Varp;", true, true, 2013873435),
         new com.wingman.client.api.mapping.MethodInfo("loadWidget", "cm", "d", "Z", "Z", "(II)Z", "(I)Z", true, true, -621199650),
