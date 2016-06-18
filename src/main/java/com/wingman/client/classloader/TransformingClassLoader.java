@@ -28,6 +28,7 @@ public class TransformingClassLoader extends URLClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
+        // Only transform com.wingman.* and classes without a package (e.g gamepack classes)
         if (!name.startsWith("com.wingman") && name.contains(".")) {
             throw new ClassNotFoundException();
         }
@@ -69,7 +70,9 @@ public class TransformingClassLoader extends URLClassLoader {
         ClassReader reader = new ClassReader(classCode);
         reader.accept(classNode, ClassReader.SKIP_DEBUG);
 
-        classNode.access = classNode.access | Opcodes.ACC_PUBLIC;
+        if (!name.contains(".")) {
+            classNode.access = classNode.access | Opcodes.ACC_PUBLIC;
+        }
 
         for (Transformer transformer : transformers) {
             try {
