@@ -7,7 +7,7 @@ import com.squareup.okhttp.ResponseBody;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.net.HttpClient;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.components.DownloadProgressBar;
+import com.wingman.client.ui.components.StartProgressBar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,14 +23,23 @@ import java.util.regex.Pattern;
  * {@link GameDownloader} handles keeping the RuneScape game pack up to date. <br>
  * It also downloads the RuneScape page source for feeding the game applet with the expected parameters.
  */
-public class GameDownloader {
+public class GameDownloader extends SwingWorker<Void, Integer>{
 
     static String runeScapeUrl = null;
     static String pageSource = null;
     static String archiveName = null;
     private static int remoteArchiveSize = 0;
 
+    private static StartProgressBar progressBar = new StartProgressBar();
+
     public GameDownloader() {
+        progressBar.setMode(StartProgressBar.Mode.CHECKING_FOR_UPDATES);
+        Client.framePanel.add(progressBar, BorderLayout.SOUTH);
+        execute();
+    }
+
+    @Override
+    protected Void doInBackground() throws Exception {
         pageSource = getPageSource(getWorldFromSettings(), false);
 
         Matcher archiveMatcher = Pattern
@@ -42,12 +52,28 @@ public class GameDownloader {
             if (!checkGamePackUpToDate()) {
                 startUpdatingGamePack();
             } else {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        new GameLoader();
-                    }
-                });
+                progressBar.setMode(StartProgressBar.Mode.NO_UPDATES);
+                new GameLoader();
             }
+        }
+        return null;
+    }
+
+    @Override
+    protected void process(List<Integer> chunks) {
+        super.process(chunks);
+        if(chunks.size() > 0){
+            progressBar.setValue(chunks.get(0));
+        }
+    }
+
+    @Override
+    protected void done() {
+        super.done();
+        // If this method is called and the last mode was DOWNLOADING,
+        // assume that downloading is finished.
+        if(progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING){
+            progressBar.setMode(StartProgressBar.Mode.DOWNLOADING_FINISHED);
         }
     }
 
@@ -141,67 +167,56 @@ public class GameDownloader {
     private void startUpdatingGamePack() {
         System.out.println(MessageFormat.format("Updating the gamepack, remote size: {0}, remote archive name: {1}", remoteArchiveSize, archiveName));
 
-        final JProgressBar progressBar = new DownloadProgressBar(0, remoteArchiveSize);
-        Client.framePanel.add(progressBar, BorderLayout.SOUTH);
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(remoteArchiveSize);
+        progressBar.setMode(StartProgressBar.Mode.DOWNLOADING);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Request request = HttpClient
-                            .getRealisticRequestBuilder()
-                            .url(runeScapeUrl + archiveName)
-                            .build();
+        try {
+            Request request = HttpClient
+                    .getRealisticRequestBuilder()
+                    .url(runeScapeUrl + archiveName)
+                    .build();
 
-                    Response response = HttpClient.httpClient
-                            .newCall(request)
-                            .execute();
+            Response response = HttpClient.httpClient
+                    .newCall(request)
+                    .execute();
 
-                    ResponseBody responseBody = response.body();
+            ResponseBody responseBody = response.body();
 
-                    if (response.isSuccessful()) {
-                        try (InputStream input = responseBody.byteStream()) {
-                            if (input != null) {
-                                FileOutputStream output = new FileOutputStream(ClientSettings.APPLET_JAR_FILE.toFile());
+            if (response.isSuccessful()) {
+                try (InputStream input = responseBody.byteStream()) {
+                    if (input != null) {
+                        FileOutputStream output = new FileOutputStream(ClientSettings.APPLET_JAR_FILE.toFile());
 
-                                final int[] totalRead = {0};
-                                final int[] read = {0};
-                                byte[] data = new byte[4096];
+                        final int[] totalRead = {0};
+                        final int[] read = {0};
+                        byte[] data = new byte[4096];
 
-                                while ((read[0] = input.read(data, 0, data.length)) != -1) {
-                                    totalRead[0] += read[0];
-                                    output.write(data, 0, read[0]);
+                        while ((read[0] = input.read(data, 0, data.length)) != -1) {
+                            totalRead[0] += read[0];
+                            output.write(data, 0, read[0]);
 
-                                    SwingUtilities.invokeLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            progressBar.setValue(totalRead[0]);
-                                        }
-                                    });
-                                }
-
-                                input.close();
-                                output.close();
-                            }
+                            publish(totalRead[0]);
                         }
 
-                        responseBody.close();
+                        publish(remoteArchiveSize);
 
-                        System.out.println("Done updating the gamepack");
-
-                        SwingUtilities.invokeLater(new Runnable() {
-                            public void run() {
-                                Client.framePanel.remove(progressBar);
-                                new GameLoader();
-                            }
-                        });
+                        input.close();
+                        output.close();
                     }
-
-                    responseBody.close();
-                } catch (IOException e) {
-                    Throwables.propagate(e);
                 }
+
+                responseBody.close();
+
+                System.out.println("Done updating the gamepack");
+
+                new GameLoader();
             }
-        }).start();
+
+            responseBody.close();
+        } catch (IOException e) {
+            Throwables.propagate(e);
+        }
+
     }
 }
