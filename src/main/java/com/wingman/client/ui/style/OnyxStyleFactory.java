@@ -118,6 +118,8 @@ public class OnyxStyleFactory extends SynthStyleFactory {
             }
         } else if (c instanceof JSeparator) {
             c.setBackground(OnyxStyleFactory.LIGHT_BLACK);
+        } else if(c instanceof JProgressBar){
+            c.setForeground(LIGHT_BLUE);
         }
         return defaultStyle;
     }

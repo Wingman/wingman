@@ -7,6 +7,7 @@ import com.squareup.okhttp.ResponseBody;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.net.HttpClient;
 import com.wingman.client.ui.Client;
+import com.wingman.client.ui.components.DownloadProgressBar;
 
 import javax.swing.*;
 import java.awt.*;
@@ -140,8 +141,8 @@ public class GameDownloader {
     private void startUpdatingGamePack() {
         System.out.println(MessageFormat.format("Updating the gamepack, remote size: {0}, remote archive name: {1}", remoteArchiveSize, archiveName));
 
-        final JLabel progressLabel = new JLabel("Downloading Oldschool Runescape 0%", SwingConstants.CENTER);
-        Client.framePanel.add(progressLabel, BorderLayout.SOUTH);
+        final JProgressBar progressBar = new DownloadProgressBar(0, remoteArchiveSize);
+        Client.framePanel.add(progressBar, BorderLayout.SOUTH);
 
         new Thread(new Runnable() {
             @Override
@@ -172,9 +173,9 @@ public class GameDownloader {
                                     output.write(data, 0, read[0]);
 
                                     SwingUtilities.invokeLater(new Runnable() {
+                                        @Override
                                         public void run() {
-                                            progressLabel.setText("Downloading Oldschool Runescape "
-                                                    + String.format("%.1f%%", ((float) totalRead[0] / (float) remoteArchiveSize) * 100));
+                                            progressBar.setValue(totalRead[0]);
                                         }
                                     });
                                 }
@@ -190,7 +191,7 @@ public class GameDownloader {
 
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
-                                Client.framePanel.remove(progressLabel);
+                                Client.framePanel.remove(progressBar);
                                 new GameLoader();
                             }
                         });
