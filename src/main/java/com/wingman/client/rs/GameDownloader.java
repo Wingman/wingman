@@ -33,8 +33,17 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
     private static StartProgressBar progressBar = new StartProgressBar();
 
     public GameDownloader() {
-        progressBar.setMode(StartProgressBar.Mode.CHECKING_FOR_UPDATES);
-        Client.framePanel.add(progressBar, BorderLayout.SOUTH);
+
+        // Make sure GUI modifications take place on the Event Dispatch Thread.
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setMode(StartProgressBar.Mode.CHECKING_FOR_UPDATES);
+                Client.framePanel.add(progressBar, BorderLayout.SOUTH);
+                Client.framePanel.validate();
+            }
+        });
+
         execute();
     }
 
@@ -52,7 +61,13 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
             if (!checkGamePackUpToDate()) {
                 startUpdatingGamePack();
             } else {
-                progressBar.setMode(StartProgressBar.Mode.NO_UPDATES);
+                // GUI modifications should take place on the Event Dispatch Thread.
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setMode(StartProgressBar.Mode.NO_UPDATES);
+                    }
+                });
                 new GameLoader();
             }
         }
