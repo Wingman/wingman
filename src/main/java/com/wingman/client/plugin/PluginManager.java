@@ -115,7 +115,9 @@ public class PluginManager {
             pluginContainerMap.put(pluginContainer.pluginData.id(), pluginContainer);
         }
 
-        for (PluginContainer pluginContainer : plugins) {
+        Iterator<PluginContainer> pluginIterator = plugins.iterator();
+        while (pluginIterator.hasNext()) {
+            PluginContainer pluginContainer = pluginIterator.next();
             try {
                 for (PluginDependency pluginDependency : pluginContainer.originalDependencies) {
                     try {
@@ -155,7 +157,8 @@ public class PluginManager {
                     }
                 }
             } catch (PluginLoadingException e) {
-                Throwables.propagate(e);
+                e.printStackTrace();
+                pluginIterator.remove();
             }
         }
 
