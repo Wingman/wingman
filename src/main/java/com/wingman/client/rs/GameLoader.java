@@ -8,15 +8,21 @@ import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.rs.listeners.CanvasMouseListener;
 import com.wingman.client.ui.Client;
 
+import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
 import java.net.MalformedURLException;
 
-public class GameLoader {
+public class GameLoader extends SwingWorker<Void, Void>{
 
     public static Applet applet = null;
 
     public GameLoader() {
+        execute();
+    }
+
+    @Override
+    protected Void doInBackground() throws Exception {
         PluginManager.findAndSetupPlugins();
 
         System.out.println("Loading the game");
@@ -47,17 +53,7 @@ public class GameLoader {
             applet.init();
             applet.start();
 
-            Client.framePanel.removeAll();
-            Client.framePanel.add(applet, BorderLayout.CENTER);
-            Client.framePanel.add(Client.sideBarBox, BorderLayout.EAST);
-            Client.frame.pack();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    PluginManager.activatePlugins();
-                }
-            }).start();
+            PluginManager.activatePlugins();
 
             while (Static.getCanvas() == null) {
                 try {
@@ -72,5 +68,16 @@ public class GameLoader {
                 | InstantiationException | IllegalAccessException e) {
             Throwables.propagate(e);
         }
+
+        return null;
+    }
+
+    @Override
+    protected void done() {
+        super.done();
+        Client.framePanel.removeAll();
+        Client.framePanel.add(applet, BorderLayout.CENTER);
+        Client.framePanel.add(Client.sideBarBox, BorderLayout.EAST);
+        Client.frame.pack();
     }
 }
