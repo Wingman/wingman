@@ -33,7 +33,6 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
     private static StartProgressBar progressBar = new StartProgressBar();
 
     public GameDownloader() {
-
         // Make sure GUI modifications take place on the Event Dispatch Thread.
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -61,13 +60,14 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
             if (!checkGamePackUpToDate()) {
                 startUpdatingGamePack();
             } else {
-                // GUI modifications should take place on the Event Dispatch Thread.
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
                         progressBar.setMode(StartProgressBar.Mode.NO_UPDATES);
                     }
                 });
+
+                // Begin the game loading phase
                 new GameLoader();
             }
         }
@@ -77,7 +77,7 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
     @Override
     protected void process(List<Integer> chunks) {
         super.process(chunks);
-        if(chunks.size() > 0){
+        if(chunks.size() > 0) {
             progressBar.setValue(chunks.get(0));
         }
     }
@@ -87,7 +87,7 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
         super.done();
         // If this method is called and the last mode was DOWNLOADING,
         // assume that downloading is finished.
-        if(progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING){
+        if(progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING) {
             progressBar.setMode(StartProgressBar.Mode.DOWNLOADING_FINISHED);
         }
     }
@@ -110,14 +110,7 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
                     .string();
         } catch (IOException e) {
             if (!failedOnce) {
-                String errorMessage = "Wingman couldn't load the world it's configured to use. Falling back onto W311.";
-                System.out.println(errorMessage);
-
-                JLabel errorLabel = new JLabel(errorMessage, SwingConstants.CENTER);
-                Client.framePanel.add(errorLabel, BorderLayout.SOUTH);
-                Client.frame.revalidate();
-
-                return getPageSource(11, true);
+                return getPageSource(1, true);
             } else {
                 throw Throwables.propagate(e);
             }
@@ -127,13 +120,13 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
     /**
      * Tries to parse the {@link ClientSettings#properties} value for the key {@link ClientSettings#PREFERRED_WORLD}. <br>
      * If the parsed value begins with 3, the 3 will be omitted before returning the value. <br>
-     * If the parsing of the value as a number fails, the default world "11" (311) will be returned.
+     * If the parsing of the value as a number fails, the default world "1" (301) will be returned.
      *
      * @return the saved (and preferred) world from {@link ClientSettings},
-     *         or 11 (world 311) if the lookup failed
+     *         or 1 (world 301) if the lookup failed
      */
     private int getWorldFromSettings() {
-        int world = 11;
+        int world = 1;
 
         try {
             String tempWorld = Client.clientSettings.get(ClientSettings.PREFERRED_WORLD);
@@ -159,79 +152,68 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
      * @return {@code true} if the game pack is of the latest version,
      *         {@code false} if it is not
      */
-    private static boolean checkGamePackUpToDate() {
-        try {
-            System.out.println("Checking for gamepack updates");
+    private static boolean checkGamePackUpToDate() throws IOException {
+        Response response = HttpClient
+                .downloadUrlSync(runeScapeUrl + archiveName);
 
-            Response response = HttpClient
-                    .downloadUrlSync(runeScapeUrl + archiveName);
+        remoteArchiveSize = Integer
+                .parseInt(response.header("Content-Length"));
 
-            remoteArchiveSize = Integer
-                    .parseInt(response.header("Content-Length"));
+        response.body().close();
 
-            response.body().close();
-
-            return ClientSettings.APPLET_JAR_FILE
-                    .toFile()
-                    .length() == remoteArchiveSize;
-        } catch (IOException e) {
-            throw Throwables.propagate(e);
-        }
+        return ClientSettings.APPLET_JAR_FILE
+                .toFile()
+                .length() == remoteArchiveSize;
     }
 
-    private void startUpdatingGamePack() {
-        System.out.println(MessageFormat.format("Updating the gamepack, remote size: {0}, remote archive name: {1}", remoteArchiveSize, archiveName));
+    private void startUpdatingGamePack() throws IOException {
+        System.out.println(MessageFormat.format("Updating the gamepack, remote size: {0}, remote archive name: {1}",
+                remoteArchiveSize,
+                archiveName));
 
         progressBar.setMinimum(0);
         progressBar.setMaximum(remoteArchiveSize);
         progressBar.setMode(StartProgressBar.Mode.DOWNLOADING);
 
-        try {
-            Request request = HttpClient
-                    .getRealisticRequestBuilder()
-                    .url(runeScapeUrl + archiveName)
-                    .build();
+        Request request = HttpClient
+                .getRealisticRequestBuilder()
+                .url(runeScapeUrl + archiveName)
+                .build();
 
-            Response response = HttpClient.httpClient
-                    .newCall(request)
-                    .execute();
+        Response response = HttpClient.httpClient
+                .newCall(request)
+                .execute();
 
-            ResponseBody responseBody = response.body();
+        ResponseBody responseBody = response.body();
 
-            if (response.isSuccessful()) {
-                try (InputStream input = responseBody.byteStream()) {
-                    if (input != null) {
-                        FileOutputStream output = new FileOutputStream(ClientSettings.APPLET_JAR_FILE.toFile());
+        if (response.isSuccessful()) {
+            try (InputStream input = responseBody.byteStream()) {
+                if (input != null) {
+                    FileOutputStream output = new FileOutputStream(ClientSettings.APPLET_JAR_FILE.toFile());
 
-                        final int[] totalRead = {0};
-                        final int[] read = {0};
-                        byte[] data = new byte[4096];
+                    final int[] totalRead = {0};
+                    final int[] read = {0};
+                    byte[] data = new byte[4096];
 
-                        while ((read[0] = input.read(data, 0, data.length)) != -1) {
-                            totalRead[0] += read[0];
-                            output.write(data, 0, read[0]);
+                    while ((read[0] = input.read(data, 0, data.length)) != -1) {
+                        totalRead[0] += read[0];
+                        output.write(data, 0, read[0]);
 
-                            publish(totalRead[0]);
-                        }
-
-                        publish(remoteArchiveSize);
-
-                        input.close();
-                        output.close();
+                        publish(totalRead[0]);
                     }
+
+                    publish(remoteArchiveSize);
+
+                    input.close();
+                    output.close();
                 }
-
-                responseBody.close();
-
-                System.out.println("Done updating the gamepack");
-
-                new GameLoader();
             }
 
             responseBody.close();
-        } catch (IOException e) {
-            Throwables.propagate(e);
+            new GameLoader();
+        } else {
+            responseBody.close();
+            throw new IOException("Failed to download the gamepack");
         }
-
     }
 }

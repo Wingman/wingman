@@ -1,4 +1,4 @@
-package com.wingman.client.ui.components.buttons;
+package com.wingman.client.ui.components;
 
 import javax.swing.*;
 import java.awt.*;

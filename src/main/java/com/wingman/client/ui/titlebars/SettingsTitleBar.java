@@ -2,7 +2,7 @@ package com.wingman.client.ui.titlebars;
 
 import com.google.common.base.Throwables;
 import com.wingman.client.Util;
-import com.wingman.client.ui.components.buttons.HoverButton;
+import com.wingman.client.ui.components.HoverButton;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 
 import javax.imageio.ImageIO;

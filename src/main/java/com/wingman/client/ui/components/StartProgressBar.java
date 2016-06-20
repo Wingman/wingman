@@ -17,7 +17,7 @@ public class StartProgressBar extends JProgressBar {
     private Mode mode;
     private UI ui;
 
-    static{
+    static {
         DOWNLOAD_PROGRESS_MESSAGE = "Downloading Oldschool Runescape %.1f%%";
         DOWNLOAD_COMPLETE_MESSAGE = "Download complete. Launching Oldschool Runescape...";
         UPDATE_CHECK_MESSAGE = "Checking for updates...";
@@ -27,10 +27,10 @@ public class StartProgressBar extends JProgressBar {
     /**
      * Modes the progress bar can be in.
      */
-    public enum Mode{
-        CHECKING_FOR_UPDATES,
+    public enum Mode {
         DOWNLOADING,
         DOWNLOADING_FINISHED,
+        CHECKING_FOR_UPDATES,
         NO_UPDATES
     }
 
@@ -38,12 +38,11 @@ public class StartProgressBar extends JProgressBar {
      * Custom BasicProgressBarUI. Implements a custom indeterminate animation and sets the
      * color of text when the bar is/isn't overlapping.
      */
-    private class UI extends BasicProgressBarUI{
+    private class UI extends BasicProgressBarUI {
         int animationCount = 0;
         boolean finalFrame = false;
 
         static final int INDETERMINATE_START_FULL_COUNT = 1;
-        static final int INDETERMINATE_START_EMPTY_COUNT = 0;
 
         @Override
         protected Color getSelectionBackground() {
@@ -66,18 +65,17 @@ public class StartProgressBar extends JProgressBar {
             // Ratio of animation completion
             double ratio = (double) getAnimationIndex()/getFrameCount();
 
-            if((animationCount & 1) == 0){
+            if((animationCount & 1) == 0) {
                 box.setLocation(0,0);
                 box.setSize((int) (progressBar.getWidth() * ratio), (int) box.getHeight());
-            } else{
+            } else {
                 box.setLocation((int) (progressBar.getWidth() * ratio), 0);
                 box.setSize((int) (progressBar.getWidth() * (1 - ratio)), (int) box.getHeight());
             }
 
-            if(getAnimationIndex() + 1 == getFrameCount()){
+            if(getAnimationIndex() + 1 == getFrameCount()) {
                 finalFrame = true;
-            }
-            else if(finalFrame && getAnimationIndex() + 1 < getFrameCount()){
+            } else if(finalFrame && getAnimationIndex() + 1 < getFrameCount()) {
                 ++animationCount;
                 finalFrame = false;
             }
@@ -86,7 +84,7 @@ public class StartProgressBar extends JProgressBar {
         }
     }
 
-    public StartProgressBar(int min, int max){
+    public StartProgressBar(int min, int max) {
         super(min, max);
         setStringPainted(true);
 
@@ -96,7 +94,7 @@ public class StartProgressBar extends JProgressBar {
         setUI(ui);
     }
 
-    public StartProgressBar(){
+    public StartProgressBar() {
         this(0,0);
     }
 
@@ -104,9 +102,9 @@ public class StartProgressBar extends JProgressBar {
     public void setValue(int n) {
         super.setValue(n);
 
-        if(n < getMaximum()){
+        if(n < getMaximum()) {
             setString(String.format(DOWNLOAD_PROGRESS_MESSAGE, getPercentComplete() * 100));
-        } else{
+        } else {
             setMode(Mode.DOWNLOADING_FINISHED);
         }
     }
@@ -116,8 +114,8 @@ public class StartProgressBar extends JProgressBar {
      *
      * @param mode The mode.
      */
-    public void setMode(Mode mode){
-        switch(mode){
+    public void setMode(Mode mode) {
+        switch(mode) {
             case CHECKING_FOR_UPDATES:
                 super.setValue(0); // change progress without changing string.
                 setString(UPDATE_CHECK_MESSAGE);
@@ -141,7 +139,7 @@ public class StartProgressBar extends JProgressBar {
         this.mode = mode;
     }
 
-    public Mode getMode(){
+    public Mode getMode() {
         return mode;
     }
 }

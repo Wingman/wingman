@@ -1,6 +1,5 @@
 package com.wingman.client.ui;
 
-import com.google.common.base.Throwables;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.Util;
 import com.wingman.client.api.settings.PropertiesSettings;
@@ -16,7 +15,6 @@ import com.wingman.client.ui.util.ComponentBorderResizer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.plaf.synth.SynthLookAndFeel;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -32,29 +30,25 @@ public class Client {
 
     public static JFrame frame;
     public static JPanel framePanel;
-    public static SideBarBox sideBarBox;
 
     public static SettingsScreen settingsScreen;
+    public static PropertiesSettings clientSettings;
+
+    public static SideBarBox sideBarBox;
 
     public static ClientTrayIcon clientTrayIcon;
 
-    public static PropertiesSettings clientSettings;
-
     public Client() {
-        setupLookAndFeel();
         frame = new JFrame();
 
-        UIManager.put("ScrollBarUI", OnyxScrollBarUI.class.getName());
-        UIManager.put("ComboBoxUI", OnyxComboBoxUI.class.getName());
-        UIManager.put("OptionPaneUI", OnyxOptionPaneUI.class.getName());
-        SwingUtilities.updateComponentTreeUI(frame);
+        skinUIComponents();
 
         sideBarBox = new SideBarBox();
         settingsScreen = new SettingsScreen();
         try {
             clientSettings = new ClientSettings();
         } catch (IOException e) {
-            Throwables.propagate(e);
+            e.printStackTrace();
         }
 
         addClientSettings();
@@ -101,40 +95,11 @@ public class Client {
         new GameDownloader();
     }
 
-    /**
-     * Sets up the Look and Feel of the client.
-     */
-    private static void setupLookAndFeel() {
-        try {
-            SynthLookAndFeel synthLookAndFeel = new SynthLookAndFeel();
-            UIManager.setLookAndFeel(synthLookAndFeel);
-            SynthLookAndFeel.setStyleFactory(new OnyxStyleFactory());
-        } catch (UnsupportedLookAndFeelException  e) {
-            Throwables.propagate(e);
-        }
-
-        // Prevent the applet from overlapping the menus
-        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-    }
-
-    /**
-     * Adds the default client frame/program listeners.
-     */
-    private void addListeners() {
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowStateChanged(WindowEvent e) {
-                if (sideBarBox.isVisible()) {
-                    if (frame.getWidth() < ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth()) {
-                        frame.setSize(new Dimension(ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth() + 8, frame.getHeight()));
-                        frame.revalidate();
-                    }
-                }
-            }
-        });
-
-        new ComponentBorderResizer(frame);
+    private void skinUIComponents() {
+        UIManager.put("ScrollBarUI", OnyxScrollBarUI.class.getName());
+        UIManager.put("ComboBoxUI", OnyxComboBoxUI.class.getName());
+        UIManager.put("OptionPaneUI", OnyxOptionPaneUI.class.getName());
+        SwingUtilities.updateComponentTreeUI(frame);
     }
 
     /**
@@ -200,5 +165,24 @@ public class Client {
         SettingsSectionDesigner.design(settingsSection, settingsList, true);
         settingsSection.panel.add(Box.createVerticalGlue());
         settingsSection.register();
+    }
+
+    /**
+     * Adds the default client frame/program listeners.
+     */
+    private void addListeners() {
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+                if (sideBarBox.isVisible()) {
+                    if (frame.getWidth() < ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth()) {
+                        frame.setSize(new Dimension(ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth() + 8, frame.getHeight()));
+                        frame.revalidate();
+                    }
+                }
+            }
+        });
+
+        new ComponentBorderResizer(frame);
     }
 }

@@ -8,10 +8,13 @@ import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.common.base.Throwables;
 import com.wingman.client.ui.Client;
+import com.wingman.client.ui.style.OnyxStyleFactory;
 import org.slf4j.LoggerFactory;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import javax.swing.*;
+import javax.swing.plaf.synth.SynthLookAndFeel;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -25,13 +28,17 @@ public class RelaunchedMain {
      */
     public static void main(String[] args) {
         setupConsoleLogging();
-        createDirectories();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new Client();
-            }
-        });
+        try {
+            createDirectory(ClientSettings.PLUGINS_DIR.toFile());
+            createDirectory(ClientSettings.SETTINGS_DIR.toFile());
+        } catch (IOException e) {
+            Throwables.propagate(e);
+        }
+
+        setupLookAndFeel();
+
+        new Client();
     }
 
     /**
@@ -66,20 +73,28 @@ public class RelaunchedMain {
         SysOutOverSLF4J.sendSystemOutAndErrToSLF4J();
     }
 
-    /**
-     * Creates file directories required for the operation of the client.
-     */
-    private static void createDirectories(){
-        if (!ClientSettings.PLUGINS_DIR.toFile().exists()) {
-            if (!ClientSettings.PLUGINS_DIR.toFile().mkdirs()) {
-                throw Throwables.propagate(new IOException("Couldn't create directory " + ClientSettings.PLUGINS_DIR));
+    private static void createDirectory(File directory) throws IOException {
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
+                throw new IOException("Couldn't create directory " + directory);
             }
+        }
+    }
+
+    /**
+     * Sets up the Look and Feel of the client.
+     */
+    private static void setupLookAndFeel() {
+        try {
+            SynthLookAndFeel synthLookAndFeel = new SynthLookAndFeel();
+            UIManager.setLookAndFeel(synthLookAndFeel);
+            SynthLookAndFeel.setStyleFactory(new OnyxStyleFactory());
+        } catch (UnsupportedLookAndFeelException  e) {
+            Throwables.propagate(e);
         }
 
-        if (!ClientSettings.SETTINGS_DIR.toFile().exists()) {
-            if (!ClientSettings.SETTINGS_DIR.toFile().mkdirs()) {
-                throw Throwables.propagate(new IOException("Couldn't create directory " + ClientSettings.SETTINGS_DIR));
-            }
-        }
+        // Prevent the applet from overlapping the menus
+        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
     }
 }

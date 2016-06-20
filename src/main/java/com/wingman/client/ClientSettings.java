@@ -33,7 +33,7 @@ public class ClientSettings extends PropertiesSettings {
     public void checkKeys() {
         Map<String, Object> defaultProperties = ImmutableMap.<String, Object>builder()
                 .put(NOTIFICATIONS_ENABLED, "true")
-                .put(PREFERRED_WORLD, "311")
+                .put(PREFERRED_WORLD, "301")
                 .build();
 
         if (properties.isEmpty()) {

@@ -4,7 +4,7 @@ import com.google.common.base.Throwables;
 import com.wingman.client.Util;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.components.buttons.HoverButton;
+import com.wingman.client.ui.components.HoverButton;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 
 import javax.imageio.ImageIO;
@@ -35,7 +35,6 @@ public class FrameTitleBar extends OnyxTitleBar {
             this.add(new JLabel(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/icon_16x16.png")))));
             this.add(Box.createHorizontalStrut(7));
 
-            //this.add(Box.createHorizontalGlue());
             this.add(makeTitleText());
             this.add(Box.createHorizontalGlue());
 

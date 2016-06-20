@@ -1,6 +1,5 @@
 package com.wingman.client.api.settings;
 
-import com.google.common.base.Throwables;
 import com.wingman.client.ClientSettings;
 
 import java.io.File;
@@ -19,7 +18,7 @@ public class PropertiesSettings extends Settings {
         this.file = ClientSettings.SETTINGS_DIR.resolve(settingsFileName).toFile();
         if (!this.file.exists()) {
             if (!this.file.createNewFile()) {
-                throw Throwables.propagate(new IOException("Couldn't create file " + file));
+                throw new IOException("Couldn't create file " + file);
             }
         }
         this.fileComments = fileComments;
