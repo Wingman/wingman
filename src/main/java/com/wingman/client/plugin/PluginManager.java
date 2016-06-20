@@ -224,7 +224,7 @@ public class PluginManager {
                         .get(null);
                 eventListenerList.bake();
             } catch (NoSuchFieldException | IllegalAccessException e) {
-                Throwables.propagate(e);
+                e.printStackTrace();
             }
         }
     }
