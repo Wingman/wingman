@@ -35,19 +35,15 @@ public class PluginManager {
      * Loads all plugins annotated with {@link Plugin} found by the client and plugin class loader. <br>
      * This method should only be called once ever.
      */
-    public static void findAndSetupPlugins() {
-        try {
-            System.out.println("Finding and setting up plugins");
+    public static void findAndSetupPlugins() throws Exception {
+        System.out.println("Finding and setting up plugins");
 
-            Set<Class<?>> pluginClasses = new Reflections(getPluginClassLoader()).getTypesAnnotatedWith(Plugin.class);
-            plugins = parsePlugins(pluginClasses);
-            plugins = parsePluginDependencies(plugins);
-            plugins = sortPlugins(plugins);
-            setupPlugins();
-            bakeEventListeners();
-        } catch (IOException e) {
-            Throwables.propagate(e);
-        }
+        Set<Class<?>> pluginClasses = new Reflections(getPluginClassLoader()).getTypesAnnotatedWith(Plugin.class);
+        plugins = parsePlugins(pluginClasses);
+        plugins = parsePluginDependencies(plugins);
+        plugins = sortPlugins(plugins);
+        setupPlugins();
+        bakeEventListeners();
     }
 
     /**

@@ -23,7 +23,11 @@ public class GameLoader extends SwingWorker<Void, Void>{
 
     @Override
     protected Void doInBackground() throws Exception {
-        PluginManager.findAndSetupPlugins();
+        try {
+            PluginManager.findAndSetupPlugins();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Loading the game");
         try {
