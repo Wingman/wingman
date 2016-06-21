@@ -24,17 +24,19 @@ public class GameLoader extends SwingWorker<Void, Void>{
 
     @Override
     protected Void doInBackground() throws Exception {
+        TransformingClassLoader classLoader = (TransformingClassLoader) getClass().getClassLoader();
+        classLoader.setRestrict(false);
+
         try {
             PluginManager.findAndSetupPlugins();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         Transformers.removeUnusedTransformers();
 
         System.out.println("Loading the game");
         try {
-            TransformingClassLoader classLoader = (TransformingClassLoader) getClass().getClassLoader();
-
             classLoader.addURL(ClientSettings.APPLET_JAR_FILE.toUri().toURL());
 
             applet = (Applet) classLoader.loadClass("client").newInstance();

@@ -22,15 +22,19 @@ import java.util.LinkedList;
  */
 public class TransformingClassLoader extends URLClassLoader {
 
+    private boolean restrictPackage = true;
+
     public TransformingClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
     }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        // Only transform com.wingman.* and classes without a package (e.g gamepack classes)
-        if (!name.startsWith("com.wingman") && name.contains(".")) {
-            throw new ClassNotFoundException();
+        if (restrictPackage) {
+            // Only transform com.wingman.* and classes without a package (e.g gamepack classes)
+            if (!name.startsWith("com.wingman") && name.contains(".")) {
+                throw new ClassNotFoundException();
+            }
         }
 
         // Do not transform self
@@ -124,6 +128,17 @@ public class TransformingClassLoader extends URLClassLoader {
     @Override
     public void addURL(URL url) {
         super.addURL(url);
+    }
+
+    /**
+     * Enables specifying whether to restrict transforming to classes under com.wingman. <br>
+     * This method does not restrict gamepack class transforming.
+     *
+     * @param state {@code true} to restrict class transforming to com.wingman.*,
+     *              {@code false} to remove the restriction
+     */
+    public void setRestrict(boolean state) {
+        this.restrictPackage = state;
     }
 
     static {
