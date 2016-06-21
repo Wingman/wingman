@@ -8,11 +8,7 @@ import java.net.URLClassLoader;
  */
 public class PluginClassLoader extends URLClassLoader {
 
-    public PluginClassLoader(URL[] urls, TransformingClassLoader parent) {
+    public PluginClassLoader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
-
-        for (URL url : urls) {
-            parent.addURL(url);
-        }
     }
 }

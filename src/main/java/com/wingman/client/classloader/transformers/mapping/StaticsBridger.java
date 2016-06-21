@@ -8,38 +8,29 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * {@link StaticsBridger} handles bridging the client API with members injected into the game. <br>
-
- * It replaces the static API methods in {@link com.wingman.client.api.generated.Static}.
- *
- * @see RSMemberInjector
  */
 public class StaticsBridger implements Transformer {
 
-    final String STATIC_GETTER_CLASS = "com.wingman.client.api.generated.Static";
-    final String STATIC_SETTER_CLASS = "com.wingman.client.api.generated.Static$Unsafe";
-
-    final Set<FieldInfo> fields = new HashSet<>();
-    final Set<MethodInfo> methods = new HashSet<>();
+    private final Set<FieldInfo> fields = new HashSet<>();
+    private final Set<MethodInfo> methods = new HashSet<>();
 
     @Override
     public boolean canTransform(String name) {
-        return name.equals(STATIC_GETTER_CLASS)
-                || name.equals(STATIC_SETTER_CLASS);
+        return name.equals("client");
     }
 
     @Override
     public ClassNode transform(ClassNode clazz) {
-        clazz.methods.clear();
+        clazz.interfaces.add("com/wingman/client/api/generated/Static");
+        clazz.interfaces.add("com/wingman/client/api/generated/Static$Unsafe");
 
-        if (clazz.name.replace("/", ".").equals(STATIC_GETTER_CLASS)) {
-            transformMethods(clazz);
-        }
-
+        transformMethods(clazz);
         transformFields(clazz);
 
         return clazz;
@@ -52,106 +43,168 @@ public class StaticsBridger implements Transformer {
 
     private void transformMethods(ClassNode clazz) {
         for (MethodInfo m : methods) {
-            InsnList insnList = new InsnList();
-
+            Type obfType = Type.getType(m.obfType);
+            Type obfDesc = Type.getType(m.desc);
+            Type deobfType = Type.getType(m.deobfType);
             Type deobfDesc = Type.getType(m.cleanDesc);
 
-            int index = 0;
-            Type[] args = deobfDesc.getArgumentTypes();
-            for (Type arg : args) {
-                MappingsHelper.addInstructions(insnList,
-                        new VarInsnNode(arg.getOpcode(Opcodes.ILOAD), index)
-                );
-                if (arg.getDescriptor().equals("J") || arg.getDescriptor().equals("D")) {
-                    index++;
-                }
-                index++;
-            }
-
-            MethodNode methodNode = new MethodNode(
+            MethodNode method = new MethodNode(
                     Opcodes.ASM5,
-                    Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
+                    Opcodes.ACC_PUBLIC,
                     m.cleanName,
                     deobfDesc.toString(),
                     null,
-                    new String[]{}
-            );
+                    new String[]{});
+
+            InsnList insnList = method.instructions;
+
+            int index = 1;
+
+            Type[] obfArgs = obfDesc.getArgumentTypes();
+            Type[] deobfArgs = deobfDesc.getArgumentTypes();
+            for (int i = 0; i < deobfArgs.length; i++) {
+                Type obfArg = obfArgs[i];
+                Type deobfArg = deobfArgs[i];
+
+                MappingsHelper.addInstructions(insnList,
+                        new VarInsnNode(deobfArg.getOpcode(Opcodes.ILOAD), index++)
+                );
+
+                if (deobfArg.getDescriptor().equals("J") || deobfArg.getDescriptor().equals("D")) {
+                    index++;
+                }
+
+                if (!obfArg.equals(deobfArg)) {
+                    MappingsHelper.addInstructions(insnList,
+                            new TypeInsnNode(Opcodes.CHECKCAST, obfArg.getInternalName())
+                    );
+                }
+            }
+
+            if (m.hasDummy) {
+                MappingsHelper.addInstructions(insnList,
+                        new LdcInsnNode(m.dummy)
+                );
+            }
 
             MappingsHelper.addInstructions(insnList,
                     new MethodInsnNode(
                             Opcodes.INVOKESTATIC,
                             m.owner,
-                            m.cleanName + "_M__STATIC_WINGMANCLIENT",
-                            deobfDesc.toString(),
-                            false
-                    ),
-                    new InsnNode(Type.getType(m.deobfType).getOpcode(Opcodes.IRETURN))
+                            m.name,
+                            m.desc,
+                            false)
             );
 
-            methodNode.instructions = insnList;
-            clazz.methods.add(methodNode);
+            if (!obfType.equals(deobfType)) {
+                MappingsHelper.addInstructions(insnList,
+                        new TypeInsnNode(Opcodes.CHECKCAST, deobfType.getInternalName())
+                );
+            }
+
+            MappingsHelper.addInstructions(insnList,
+                    new InsnNode(obfType.getOpcode(Opcodes.IRETURN))
+            );
+
+            clazz.methods.add(method);
         }
     }
 
     private void transformFields(ClassNode clazz) {
         for (FieldInfo f : fields) {
-            InsnList insnList = new InsnList();
-
+            Type obfType = Type.getType(f.obfType);
             Type deobfType = Type.getType(f.deobfType);
 
-            String suffix = MappingsHelper.upperCaseify(f.cleanName);
-            String destination = suffix + "_F__STATIC";
+            boolean needsCast = !f.obfType.equals(f.deobfType);
+            String cleanName = MappingsHelper.upperCaseify(f.cleanName);
 
-            MethodNode m;
-            if (clazz.name.replace("/", ".").equals(STATIC_GETTER_CLASS)) {
+            {
                 Type getterType = Type.getMethodType(deobfType);
 
-                m = new MethodNode(
+                MethodNode getter = new MethodNode(
                         Opcodes.ASM5,
-                        Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
-                        "get" + suffix,
+                        Opcodes.ACC_PUBLIC,
+                        "get" + cleanName,
                         getterType.toString(),
                         null,
-                        new String[]{}
-                );
+                        new String[]{});
+
+                InsnList insnList = getter.instructions;
 
                 MappingsHelper.addInstructions(insnList,
-                        new MethodInsnNode(
-                                Opcodes.INVOKESTATIC,
+                        new FieldInsnNode(
+                                Opcodes.GETSTATIC,
                                 f.owner,
-                                "get" + destination + "_WINGMANCLIENT",
-                                getterType.toString(),
-                                false
-                        ),
+                                f.name,
+                                obfType.toString())
+                );
+
+                if (needsCast) {
+                    MappingsHelper.addInstructions(insnList,
+                            new TypeInsnNode(Opcodes.CHECKCAST, deobfType.getInternalName())
+                    );
+                }
+
+                if (f.multiplier != 1) {
+                    MappingsHelper.addInstructions(insnList,
+                            new LdcInsnNode(f.multiplier),
+                            new InsnNode(Opcodes.IMUL)
+                    );
+                }
+
+                MappingsHelper.addInstructions(insnList,
                         new InsnNode(deobfType.getOpcode(Opcodes.IRETURN))
                 );
-            } else {
-                Type setterType = Type.getMethodType(Type.VOID_TYPE, deobfType);
 
-                m = new MethodNode(
-                        Opcodes.ASM5,
-                        Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC,
-                        "set" + suffix,
-                        setterType.toString(),
-                        null,
-                        new String[]{}
-                );
-
-                MappingsHelper.addInstructions(insnList,
-                        new VarInsnNode(deobfType.getOpcode(Opcodes.ILOAD), 0),
-                        new MethodInsnNode(
-                                Opcodes.INVOKESTATIC,
-                                f.owner,
-                                "set" + destination + "_WINGMANCLIENT",
-                                setterType.toString(),
-                                false
-                        ),
-                        new InsnNode(Opcodes.RETURN)
-                );
+                clazz.methods.add(getter);
             }
 
-            m.instructions = insnList;
-            clazz.methods.add(m);
+            {
+                Type setterType = Type.getMethodType(Type.VOID_TYPE, deobfType);
+
+                MethodNode setter = new MethodNode(
+                        Opcodes.ASM5,
+                        Opcodes.ACC_PUBLIC,
+                        "set" + cleanName,
+                        setterType.toString(),
+                        null,
+                        new String[]{});
+
+                InsnList insnList = setter.instructions;
+
+                MappingsHelper.addInstructions(insnList,
+                        new VarInsnNode(deobfType.getOpcode(Opcodes.ILOAD), 1)
+                );
+
+                if (needsCast) {
+                    MappingsHelper.addInstructions(insnList,
+                            new TypeInsnNode(Opcodes.CHECKCAST, obfType.getInternalName())
+                    );
+                }
+
+                try {
+                    if (f.multiplier != 1) {
+                        MappingsHelper.addInstructions(insnList,
+                                new LdcInsnNode(MappingsHelper.getMMI(f.multiplier)),
+                                new InsnNode(Opcodes.IMUL)
+                        );
+                    }
+
+                    MappingsHelper.addInstructions(insnList,
+                            new FieldInsnNode(Opcodes.PUTSTATIC, f.owner, f.name, obfType.toString()),
+                            new InsnNode(Opcodes.RETURN)
+                    );
+
+                    clazz.methods.add(setter);
+                } catch (ArithmeticException e) {
+                    System.out.println(MessageFormat.format("Multiplier {0} for {1}.{2} ({3}) is broken - {4}",
+                            f.multiplier,
+                            f.owner,
+                            f.name,
+                            f.cleanName,
+                            e.getMessage()));
+                }
+            }
         }
     }
 

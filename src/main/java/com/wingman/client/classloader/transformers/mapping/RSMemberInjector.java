@@ -14,10 +14,7 @@ import java.util.Set;
 /**
  * {@link RSMemberInjector} injects members into the game for access through the client. <br>
  *
- * Instanced field getters and setters are injected like "type getFieldName()" or "void setFieldName(value)". <br>
- * Static field getters and setters are injected like "type getFieldName_F__STATIC_WINGMANCLIENT()" or "void setFieldName_F__STATIC_WINGMANCLIENT(value)". <br>
- *
- * Method invokers are injected like "returnType methodName_M__STATIC_WINGMANCLIENT(args...)".
+ * Instanced field getters and setters are injected like "type getFieldName()" or "void setFieldName(value)".
  */
 public class RSMemberInjector implements Transformer {
 
@@ -55,6 +52,10 @@ public class RSMemberInjector implements Transformer {
         }
 
         for (MethodInfo m : methods) {
+            if (m.isStatic) {
+                continue;
+            }
+
             Type obfType = Type.getType(m.obfType);
             Type obfDesc = Type.getType(m.desc);
             Type deobfType = Type.getType(m.deobfType);
@@ -62,8 +63,8 @@ public class RSMemberInjector implements Transformer {
 
             MethodNode method = new MethodNode(
                     Opcodes.ASM5,
-                    Opcodes.ACC_PUBLIC | (m.isStatic ? Opcodes.ACC_STATIC : 0),
-                    m.cleanName + (m.isStatic ? "_M__STATIC_WINGMANCLIENT" : ""),
+                    Opcodes.ACC_PUBLIC,
+                    m.cleanName,
                     deobfDesc.toString(),
                     null,
                     new String[]{});
@@ -71,11 +72,9 @@ public class RSMemberInjector implements Transformer {
             InsnList insnList = method.instructions;
 
             int index = 0;
-            if (!m.isStatic) {
-                MappingsHelper.addInstructions(insnList,
-                        new VarInsnNode(Opcodes.ALOAD, index++)
-                );
-            }
+            MappingsHelper.addInstructions(insnList,
+                    new VarInsnNode(Opcodes.ALOAD, index++)
+            );
 
             Type[] obfArgs = obfDesc.getArgumentTypes();
             Type[] deobfArgs = deobfDesc.getArgumentTypes();
@@ -87,7 +86,8 @@ public class RSMemberInjector implements Transformer {
                         new VarInsnNode(deobfArg.getOpcode(Opcodes.ILOAD), index++)
                 );
 
-                if (deobfArg.getDescriptor().equals("J") || deobfArg.getDescriptor().equals("D")) {
+                if (deobfArg.getDescriptor().equals("J")
+                        || deobfArg.getDescriptor().equals("D")) {
                     index++;
                 }
 
@@ -106,7 +106,7 @@ public class RSMemberInjector implements Transformer {
 
             MappingsHelper.addInstructions(insnList,
                     new MethodInsnNode(
-                            (m.isStatic ? Opcodes.INVOKESTATIC : Opcodes.INVOKEVIRTUAL),
+                            Opcodes.INVOKEVIRTUAL,
                             m.owner,
                             m.name,
                             m.desc,
@@ -135,6 +135,10 @@ public class RSMemberInjector implements Transformer {
         }
 
         for (FieldInfo f : fields) {
+            if (f.isStatic) {
+                continue;
+            }
+
             Type obfType = Type.getType(f.obfType);
             Type deobfType = Type.getType(f.deobfType);
 
@@ -146,23 +150,21 @@ public class RSMemberInjector implements Transformer {
 
                 MethodNode getter = new MethodNode(
                         Opcodes.ASM5,
-                        Opcodes.ACC_PUBLIC | (f.isStatic ? Opcodes.ACC_STATIC : 0),
-                        "get" + cleanName + (f.isStatic ? "_F__STATIC_WINGMANCLIENT" : ""),
+                        Opcodes.ACC_PUBLIC,
+                        "get" + cleanName,
                         getterType.toString(),
                         null,
                         new String[]{});
 
                 InsnList insnList = getter.instructions;
 
-                if (!f.isStatic) {
-                    MappingsHelper.addInstructions(insnList,
-                            new VarInsnNode(Opcodes.ALOAD, 0)
-                    );
-                }
+                MappingsHelper.addInstructions(insnList,
+                        new VarInsnNode(Opcodes.ALOAD, 0)
+                );
 
                 MappingsHelper.addInstructions(insnList,
                         new FieldInsnNode(
-                                (f.isStatic ? Opcodes.GETSTATIC : Opcodes.GETFIELD),
+                                Opcodes.GETFIELD,
                                 f.owner,
                                 f.name,
                                 obfType.toString())
@@ -193,8 +195,8 @@ public class RSMemberInjector implements Transformer {
 
                 MethodNode setter = new MethodNode(
                         Opcodes.ASM5,
-                        Opcodes.ACC_PUBLIC | (f.isStatic ? Opcodes.ACC_STATIC : 0),
-                        "set" + cleanName + (f.isStatic ? "_F__STATIC_WINGMANCLIENT" : ""),
+                        Opcodes.ACC_PUBLIC,
+                        "set" + cleanName,
                         setterType.toString(),
                         null,
                         new String[]{});
@@ -202,11 +204,9 @@ public class RSMemberInjector implements Transformer {
                 InsnList insnList = setter.instructions;
 
                 int index = 0;
-                if (!f.isStatic) {
-                    MappingsHelper.addInstructions(insnList,
-                            new VarInsnNode(Opcodes.ALOAD, index++)
-                    );
-                }
+                MappingsHelper.addInstructions(insnList,
+                        new VarInsnNode(Opcodes.ALOAD, index++)
+                );
 
                 MappingsHelper.addInstructions(insnList,
                         new VarInsnNode(deobfType.getOpcode(Opcodes.ILOAD), index)
@@ -227,7 +227,7 @@ public class RSMemberInjector implements Transformer {
                     }
 
                     MappingsHelper.addInstructions(insnList,
-                            new FieldInsnNode((f.isStatic ? Opcodes.PUTSTATIC : Opcodes.PUTFIELD), f.owner, f.name, obfType.toString()),
+                            new FieldInsnNode(Opcodes.PUTFIELD, f.owner, f.name, obfType.toString()),
                             new InsnNode(Opcodes.RETURN)
                     );
 

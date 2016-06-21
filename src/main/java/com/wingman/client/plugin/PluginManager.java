@@ -10,7 +10,6 @@ import com.wingman.client.api.event.EventListenerList;
 import com.wingman.client.api.plugin.Plugin;
 import com.wingman.client.api.plugin.PluginDependency;
 import com.wingman.client.classloader.PluginClassLoader;
-import com.wingman.client.classloader.TransformingClassLoader;
 import com.wingman.client.plugin.exceptions.PluginLoadingException;
 import com.wingman.client.plugin.exceptions.PluginRefreshingException;
 import com.wingman.client.plugin.exceptions.PluginSetupException;
@@ -73,7 +72,7 @@ public class PluginManager {
         }
 
         return new PluginClassLoader(pluginUrls.toArray(new URL[pluginUrls.size()]),
-                (TransformingClassLoader) Plugin.class.getClassLoader());
+                Plugin.class.getClassLoader());
     }
 
     /**

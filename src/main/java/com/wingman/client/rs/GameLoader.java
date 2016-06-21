@@ -2,6 +2,7 @@ package com.wingman.client.rs;
 
 import com.google.common.base.Throwables;
 import com.wingman.client.ClientSettings;
+import com.wingman.client.api.generated.GameApi;
 import com.wingman.client.api.generated.Static;
 import com.wingman.client.api.transformer.Transformers;
 import com.wingman.client.classloader.TransformingClassLoader;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 public class GameLoader extends SwingWorker<Void, Void>{
 
@@ -24,9 +26,6 @@ public class GameLoader extends SwingWorker<Void, Void>{
 
     @Override
     protected Void doInBackground() throws Exception {
-        TransformingClassLoader classLoader = (TransformingClassLoader) getClass().getClassLoader();
-        classLoader.setRestrict(false);
-
         try {
             PluginManager.findAndSetupPlugins();
         } catch (Exception e) {
@@ -37,9 +36,17 @@ public class GameLoader extends SwingWorker<Void, Void>{
 
         System.out.println("Loading the game");
         try {
-            classLoader.addURL(ClientSettings.APPLET_JAR_FILE.toUri().toURL());
+            TransformingClassLoader classLoader = new TransformingClassLoader(
+                    new URL[]{ClientSettings.APPLET_JAR_FILE.toUri().toURL()},
+                    this.getClass().getClassLoader()
+            );
 
-            applet = (Applet) classLoader.loadClass("client").newInstance();
+            Object clientInstance = classLoader.loadClass("client").newInstance();
+
+            GameApi.getterInstance = (Static) clientInstance;
+            GameApi.Unsafe.setterInstance = (Static.Unsafe) clientInstance;
+
+            applet = (Applet) clientInstance;
             applet.setStub(new GameAppletStub());
 
             applet.setLayout(new BorderLayout() {
@@ -63,7 +70,7 @@ public class GameLoader extends SwingWorker<Void, Void>{
 
             PluginManager.activatePlugins();
 
-            while (Static.getCanvas() == null) {
+            while (GameApi.getCanvas() == null) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -71,7 +78,7 @@ public class GameLoader extends SwingWorker<Void, Void>{
                 }
             }
 
-            Static.getCanvas().addMouseListener(new CanvasMouseListener());
+            GameApi.getCanvas().addMouseListener(new CanvasMouseListener());
         } catch (MalformedURLException | ClassNotFoundException
                 | InstantiationException | IllegalAccessException e) {
             Throwables.propagate(e);
