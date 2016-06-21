@@ -45,6 +45,11 @@ public class StaticsBridger implements Transformer {
         return clazz;
     }
 
+    @Override
+    public boolean isUsed() {
+        return true;
+    }
+
     private void transformMethods(ClassNode clazz) {
         for (MethodInfo m : methods) {
             InsnList insnList = new InsnList();

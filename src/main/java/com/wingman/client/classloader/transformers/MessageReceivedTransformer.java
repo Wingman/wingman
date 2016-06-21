@@ -68,6 +68,11 @@ public class MessageReceivedTransformer implements Transformer {
         return clazz;
     }
 
+    @Override
+    public boolean isUsed() {
+        return MessageReceivedEvent.eventListenerList.listeners != null;
+    }
+
     public MessageReceivedTransformer() {
         this.addMessage = MappingsHelper.deobfMethods.get("MessageContainer.addMessage");
     }

@@ -49,6 +49,11 @@ public class WidgetOpenedTransformer implements Transformer {
         return clazz;
     }
 
+    @Override
+    public boolean isUsed() {
+        return WidgetOpenedEvent.eventListenerList.listeners != null;
+    }
+
     public WidgetOpenedTransformer() {
         this.openWidget = MappingsHelper.deobfMethods.get("openWidget");
     }

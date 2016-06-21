@@ -68,6 +68,11 @@ public class ItemDefinitionCachedTransformer implements Transformer {
         return clazz;
     }
 
+    @Override
+    public boolean isUsed() {
+        return ItemDefinitionCachedEvent.eventListenerList.listeners != null;
+    }
+
     public ItemDefinitionCachedTransformer() {
         this.getItemDefinition = MappingsHelper.deobfMethods.get("getItemDefinition");
     }

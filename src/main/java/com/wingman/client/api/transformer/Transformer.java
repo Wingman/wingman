@@ -7,4 +7,6 @@ public interface Transformer {
     boolean canTransform(String name);
 
     ClassNode transform(ClassNode clazz);
+
+    boolean isUsed();
 }

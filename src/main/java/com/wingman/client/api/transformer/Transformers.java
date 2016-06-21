@@ -4,6 +4,7 @@ import com.wingman.client.classloader.transformers.*;
 import com.wingman.client.classloader.transformers.mapping.RSMemberInjector;
 import com.wingman.client.classloader.transformers.mapping.StaticsBridger;
 
+import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Transformers {
@@ -41,4 +42,12 @@ public class Transformers {
             */
             new PreserveExceptionInfoTransformer(),
     });
+
+    public static void removeUnusedTransformers() {
+        for (Transformer transformer : TRANSFORMERS) {
+            if (!transformer.isUsed()) {
+                TRANSFORMERS.remove(transformer);
+            }
+        }
+    }
 }

@@ -112,6 +112,11 @@ public class CanvasUpdatedTransformer implements Transformer {
         return clazz;
     }
 
+    @Override
+    public boolean isUsed() {
+        return true;
+    }
+
     public CanvasUpdatedTransformer() {
         this.drawFullGameImage = MappingsHelper.deobfMethods.get("AbstractGraphicsBuffer.drawFullGameImage");
         this.gameDrawingMode = MappingsHelper.deobfFields.get("gameDrawingMode");

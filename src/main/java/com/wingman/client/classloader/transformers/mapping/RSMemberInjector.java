@@ -42,6 +42,11 @@ public class RSMemberInjector implements Transformer {
         return clazz;
     }
 
+    @Override
+    public boolean isUsed() {
+        return true;
+    }
+
     private void transformMethods(ClassNode clazz) {
         Set<MethodInfo> methods = MappingsHelper.obfMethods.get(clazz.name);
 

@@ -96,6 +96,11 @@ public class ExperienceGainedTransformer implements Transformer {
         return clazz;
     }
 
+    @Override
+    public boolean isUsed() {
+        return ExperienceGainedEvent.eventListenerList.listeners != null;
+    }
+
     public ExperienceGainedTransformer() {
         this.expLevels = MappingsHelper.deobfFields.get("expLevels");
     }

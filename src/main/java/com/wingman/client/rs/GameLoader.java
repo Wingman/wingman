@@ -3,6 +3,7 @@ package com.wingman.client.rs;
 import com.google.common.base.Throwables;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.generated.Static;
+import com.wingman.client.api.transformer.Transformers;
 import com.wingman.client.classloader.TransformingClassLoader;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.rs.listeners.CanvasMouseListener;
@@ -28,6 +29,7 @@ public class GameLoader extends SwingWorker<Void, Void>{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Transformers.removeUnusedTransformers();
 
         System.out.println("Loading the game");
         try {

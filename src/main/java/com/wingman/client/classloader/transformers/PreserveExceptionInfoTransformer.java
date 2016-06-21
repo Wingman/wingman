@@ -49,6 +49,11 @@ public class PreserveExceptionInfoTransformer implements Transformer {
         return clazz;
     }
 
+    @Override
+    public boolean isUsed() {
+        return true;
+    }
+
     public PreserveExceptionInfoTransformer() {
         this.rsException = MappingsHelper.deobfClasses.get("RSException");
     }
