@@ -7,7 +7,7 @@ import java.lang.SuppressWarnings;
 import java.util.Map;
 
 @SuppressWarnings("all")
-public abstract class GameApi {
+public abstract class GameAPI {
     public static Static getterInstance;
 
     public static int getAppletHeight() {

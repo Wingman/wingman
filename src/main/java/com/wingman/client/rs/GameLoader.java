@@ -2,7 +2,7 @@ package com.wingman.client.rs;
 
 import com.google.common.base.Throwables;
 import com.wingman.client.ClientSettings;
-import com.wingman.client.api.generated.GameApi;
+import com.wingman.client.api.generated.GameAPI;
 import com.wingman.client.api.generated.Static;
 import com.wingman.client.api.transformer.Transformers;
 import com.wingman.client.classloader.TransformingClassLoader;
@@ -43,8 +43,8 @@ public class GameLoader extends SwingWorker<Void, Void>{
 
             Object clientInstance = classLoader.loadClass("client").newInstance();
 
-            GameApi.getterInstance = (Static) clientInstance;
-            GameApi.Unsafe.setterInstance = (Static.Unsafe) clientInstance;
+            GameAPI.getterInstance = (Static) clientInstance;
+            GameAPI.Unsafe.setterInstance = (Static.Unsafe) clientInstance;
 
             applet = (Applet) clientInstance;
             applet.setStub(new GameAppletStub());
@@ -70,7 +70,7 @@ public class GameLoader extends SwingWorker<Void, Void>{
 
             PluginManager.activatePlugins();
 
-            while (GameApi.getCanvas() == null) {
+            while (GameAPI.getCanvas() == null) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -78,7 +78,7 @@ public class GameLoader extends SwingWorker<Void, Void>{
                 }
             }
 
-            GameApi.getCanvas().addMouseListener(new CanvasMouseListener());
+            GameAPI.getCanvas().addMouseListener(new CanvasMouseListener());
         } catch (MalformedURLException | ClassNotFoundException
                 | InstantiationException | IllegalAccessException e) {
             Throwables.propagate(e);
