@@ -266,6 +266,18 @@ public abstract class GameAPI {
         return getterInstance.getUsername();
     }
 
+    public static int getViewPortHeight() {
+        return getterInstance.getViewPortHeight();
+    }
+
+    public static int getViewPortScale() {
+        return getterInstance.getViewPortScale();
+    }
+
+    public static int getViewPortWidth() {
+        return getterInstance.getViewPortWidth();
+    }
+
     public static Widget[][] getWidgets() {
         return getterInstance.getWidgets();
     }
@@ -572,6 +584,18 @@ public abstract class GameAPI {
 
         public static void setUsername(String value) {
             setterInstance.setUsername(value);
+        }
+
+        public static void setViewPortHeight(int value) {
+            setterInstance.setViewPortHeight(value);
+        }
+
+        public static void setViewPortScale(int value) {
+            setterInstance.setViewPortScale(value);
+        }
+
+        public static void setViewPortWidth(int value) {
+            setterInstance.setViewPortWidth(value);
         }
 
         public static void setWidgets(Widget[][] value) {

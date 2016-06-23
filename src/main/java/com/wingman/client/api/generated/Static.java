@@ -136,6 +136,12 @@ public interface Static {
 
     String getUsername();
 
+    int getViewPortHeight();
+
+    int getViewPortScale();
+
+    int getViewPortWidth();
+
     Widget[][] getWidgets();
 
     int getWorldCount();
@@ -289,6 +295,12 @@ public interface Static {
         void setTileSettings(byte[][][] value);
 
         void setUsername(String value);
+
+        void setViewPortHeight(int value);
+
+        void setViewPortScale(int value);
+
+        void setViewPortWidth(int value);
 
         void setWidgets(Widget[][] value);
 
