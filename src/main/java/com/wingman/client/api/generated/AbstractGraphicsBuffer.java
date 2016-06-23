@@ -10,7 +10,7 @@ public interface AbstractGraphicsBuffer {
 
     void createRasterizer();
 
-    void drawFullGameImage(Graphics arg0, int arg1, int arg2, byte arg3);
+    void drawFullGameImage(Graphics arg0, int arg1, int arg2, int arg3);
 
     void drawGameImageSection(Graphics arg0, int arg1, int arg2, int arg3, int arg4, int arg5);
 
