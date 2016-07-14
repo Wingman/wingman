@@ -7,25 +7,11 @@ import java.lang.SuppressWarnings;
 public interface Character extends Entity {
     int getAnimation();
 
-    int getCurrentHealth();
-
-    int[] getHitsplatCycles();
-
-    int[] getHitsplatDamages();
-
-    int[] getHitsplatTypes();
-
-    int getInteractingIndex();
-
-    int getMaxHealth();
+    int[] getInteractingIndex();
 
     String getOverheadText();
 
-    byte[] getQueueTransversed();
-
-    int[] getQueueX();
-
-    int[] getQueueY();
+    int[] getQueueTransversed();
 
     int getX();
 
@@ -35,25 +21,11 @@ public interface Character extends Entity {
     interface Unsafe extends Entity {
         void setAnimation(int value);
 
-        void setCurrentHealth(int value);
-
-        void setHitsplatCycles(int[] value);
-
-        void setHitsplatDamages(int[] value);
-
-        void setHitsplatTypes(int[] value);
-
-        void setInteractingIndex(int value);
-
-        void setMaxHealth(int value);
+        void setInteractingIndex(int[] value);
 
         void setOverheadText(String value);
 
-        void setQueueTransversed(byte[] value);
-
-        void setQueueX(int[] value);
-
-        void setQueueY(int[] value);
+        void setQueueTransversed(int[] value);
 
         void setX(int value);
 

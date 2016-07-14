@@ -54,8 +54,6 @@ public interface Static {
 
     int[] getGameSettings();
 
-    int getGameState();
-
     TaskHandler getGlobalTaskHandler();
 
     NodeDeque[][][] getGroundItems();
@@ -213,8 +211,6 @@ public interface Static {
         void setGameEngineAsApplet(Applet value);
 
         void setGameSettings(int[] value);
-
-        void setGameState(int value);
 
         void setGlobalTaskHandler(TaskHandler value);
 
