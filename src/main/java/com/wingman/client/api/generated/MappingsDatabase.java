@@ -309,6 +309,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.FieldInfo("gameEngine", "er", "ps", "Ler;", "Lcom/wingman/client/api/generated/GameEngine;", true, 1),
         new com.wingman.client.api.mapping.FieldInfo("gameEngineAsApplet", "ev", "e", "Ljava/applet/Applet;", "Ljava/applet/Applet;", true, 1),
         new com.wingman.client.api.mapping.FieldInfo("gameSettings", "fg", "c", "[I", "[I", true, 1),
+        new com.wingman.client.api.mapping.FieldInfo("gameState", "client", "z", "I", "I", true, 1491043689),
         new com.wingman.client.api.mapping.FieldInfo("globalTaskHandler", "df", "pg", "Lec;", "Lcom/wingman/client/api/generated/TaskHandler;", true, 1),
         new com.wingman.client.api.mapping.FieldInfo("groundItems", "client", "ht", "[[[Lgm;", "[[[Lcom/wingman/client/api/generated/NodeDeque;", true, 1),
         new com.wingman.client.api.mapping.FieldInfo("itemContainers", "x", "e", "Lge;", "Lcom/wingman/client/api/generated/NodeTable;", true, 1),

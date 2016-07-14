@@ -102,6 +102,10 @@ public abstract class GameAPI {
         return getterInstance.getGameSettings();
     }
 
+    public static int getGameState() {
+        return getterInstance.getGameState();
+    }
+
     public static TaskHandler getGlobalTaskHandler() {
         return getterInstance.getGlobalTaskHandler();
     }
@@ -416,6 +420,10 @@ public abstract class GameAPI {
 
         public static void setGameSettings(int[] value) {
             setterInstance.setGameSettings(value);
+        }
+
+        public static void setGameState(int value) {
+            setterInstance.setGameState(value);
         }
 
         public static void setGlobalTaskHandler(TaskHandler value) {
