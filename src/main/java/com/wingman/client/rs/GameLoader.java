@@ -81,7 +81,7 @@ public class GameLoader extends SwingWorker<Void, Void>{
             GameAPI.getCanvas().addMouseListener(new CanvasMouseListener());
         } catch (MalformedURLException | ClassNotFoundException
                 | InstantiationException | IllegalAccessException e) {
-            Throwables.propagate(e);
+            e.printStackTrace();
         }
 
         return null;
