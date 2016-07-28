@@ -8,105 +8,49 @@ import java.util.Map;
 
 @SuppressWarnings("all")
 public interface Static {
-    void executeRuneScript(RuneScript arg0, int arg1);
-
     void drawRightClickMenu();
 
-    void processLoginStages();
+    void executeRuneScript(RuneScript arg0, int arg1);
 
     ItemDefinition getItemDefinition(int arg0);
 
-    Varp getVarpForId(int arg0);
-
-    void pushMessage(int arg0, String arg1, String arg2, String arg3);
-
     int getVarbitValue(int arg0);
 
-    void openWidget(int arg0);
+    Varp getVarpForId(int arg0);
 
     boolean loadWidget(int arg0);
 
-    DualNodeMap getSpotAnimCache();
+    void openWidget(int arg0);
 
-    DualNodeMap getSpotAnimRasterizerMap();
+    void processLoginStages();
 
-    int getMenuHeight();
-
-    int getClientPlane();
-
-    int getCameraPitch();
-
-    int getWorldCount();
-
-    int getLoginState();
-
-    String getUsername();
-
-    TaskHandler getGlobalTaskHandler();
-
-    int getCameraY();
-
-    ReferenceTable getConfigReferenceTable();
-
-    int getCameraZ();
-
-    Map getMessageContainers();
-
-    ImmutableNodeDeque getMessageDeque();
-
-    ClanMate[] getClanMates();
-
-    int getCameraX();
-
-    Landscape getLandscape();
-
-    int[][][] getTileHeights();
-
-    byte[][][] getTileSettings();
-
-    int getMenuWidth();
-
-    int getLandscapeOffsetX();
-
-    int getLandscapeOffsetY();
-
-    int getLandscapeOffsetZ();
-
-    NodeTable getItemContainers();
+    void pushMessage(int arg0, String arg1, String arg2, String arg3);
 
     int getAppletHeight();
 
     int getAppletWidth();
 
+    int getCameraPitch();
+
+    int getCameraX();
+
+    int getCameraY();
+
     int getCameraYaw();
 
+    int getCameraZ();
+
     Canvas getCanvas();
-
-    Player getLocalPlayer();
-
-    Applet getGameEngineAsApplet();
-
-    int getRevision();
-
-    int getMouseX();
-
-    int getMouseY();
-
-    int getFps();
-
-    GameEngine getGameEngine();
-
-    int getLoadingState();
-
-    Widget[][] getWidgets();
-
-    int[] getGameSettings();
-
-    int[] getSettings();
 
     String getClanChatName();
 
     String getClanChatOwner();
+
+    ClanMate[] getClanMates();
+
+    int getClientPlane();
+
+    ReferenceTable getConfigReferenceTable();
 
     int[] getCurrentLevels();
 
@@ -114,15 +58,41 @@ public interface Static {
 
     int[] getExperiences();
 
+    int getFps();
+
     Friend[] getFriends();
 
     int getFriendsSize();
 
     int getGameDrawingMode();
 
+    GameEngine getGameEngine();
+
+    Applet getGameEngineAsApplet();
+
+    int[] getGameSettings();
+
     int getGameState();
 
+    TaskHandler getGlobalTaskHandler();
+
     NodeDeque[][][] getGroundItems();
+
+    NodeTable getItemContainers();
+
+    Landscape getLandscape();
+
+    int getLandscapeOffsetX();
+
+    int getLandscapeOffsetY();
+
+    int getLandscapeOffsetZ();
+
+    int getLoadingState();
+
+    Player getLocalPlayer();
+
+    int getLoginState();
 
     int getMapAngle();
 
@@ -132,11 +102,23 @@ public interface Static {
 
     String[] getMenuActions();
 
+    int getMenuHeight();
+
     String[] getMenuOptions();
 
     int getMenuSize();
 
+    int getMenuWidth();
+
     int getMenuY();
+
+    Map getMessageContainers();
+
+    ImmutableNodeDeque getMessageDeque();
+
+    int getMouseX();
+
+    int getMouseY();
 
     short getMouseZoom();
 
@@ -154,7 +136,21 @@ public interface Static {
 
     boolean getResizableMode();
 
+    int getRevision();
+
     int getRunEnergy();
+
+    int[] getSettings();
+
+    DualNodeMap getSpotAnimCache();
+
+    DualNodeMap getSpotAnimRasterizerMap();
+
+    int[][][] getTileHeights();
+
+    byte[][][] getTileSettings();
+
+    String getUsername();
 
     int getViewPortHeight();
 
@@ -162,91 +158,39 @@ public interface Static {
 
     int getViewPortWidth();
 
+    Widget[][] getWidgets();
+
+    int getWorldCount();
+
     World[] getWorlds();
 
     @SuppressWarnings("all")
     interface Unsafe {
-        void setSpotAnimCache(DualNodeMap value);
-
-        void setSpotAnimRasterizerMap(DualNodeMap value);
-
-        void setMenuHeight(int value);
-
-        void setClientPlane(int value);
-
-        void setCameraPitch(int value);
-
-        void setWorldCount(int value);
-
-        void setLoginState(int value);
-
-        void setUsername(String value);
-
-        void setGlobalTaskHandler(TaskHandler value);
-
-        void setCameraY(int value);
-
-        void setConfigReferenceTable(ReferenceTable value);
-
-        void setCameraZ(int value);
-
-        void setMessageContainers(Map value);
-
-        void setMessageDeque(ImmutableNodeDeque value);
-
-        void setClanMates(ClanMate[] value);
-
-        void setCameraX(int value);
-
-        void setLandscape(Landscape value);
-
-        void setTileHeights(int[][][] value);
-
-        void setTileSettings(byte[][][] value);
-
-        void setMenuWidth(int value);
-
-        void setLandscapeOffsetX(int value);
-
-        void setLandscapeOffsetY(int value);
-
-        void setLandscapeOffsetZ(int value);
-
-        void setItemContainers(NodeTable value);
-
         void setAppletHeight(int value);
 
         void setAppletWidth(int value);
 
+        void setCameraPitch(int value);
+
+        void setCameraX(int value);
+
+        void setCameraY(int value);
+
         void setCameraYaw(int value);
 
+        void setCameraZ(int value);
+
         void setCanvas(Canvas value);
-
-        void setLocalPlayer(Player value);
-
-        void setGameEngineAsApplet(Applet value);
-
-        void setRevision(int value);
-
-        void setMouseX(int value);
-
-        void setMouseY(int value);
-
-        void setFps(int value);
-
-        void setGameEngine(GameEngine value);
-
-        void setLoadingState(int value);
-
-        void setWidgets(Widget[][] value);
-
-        void setGameSettings(int[] value);
-
-        void setSettings(int[] value);
 
         void setClanChatName(String value);
 
         void setClanChatOwner(String value);
+
+        void setClanMates(ClanMate[] value);
+
+        void setClientPlane(int value);
+
+        void setConfigReferenceTable(ReferenceTable value);
 
         void setCurrentLevels(int[] value);
 
@@ -254,15 +198,41 @@ public interface Static {
 
         void setExperiences(int[] value);
 
+        void setFps(int value);
+
         void setFriends(Friend[] value);
 
         void setFriendsSize(int value);
 
         void setGameDrawingMode(int value);
 
+        void setGameEngine(GameEngine value);
+
+        void setGameEngineAsApplet(Applet value);
+
+        void setGameSettings(int[] value);
+
         void setGameState(int value);
 
+        void setGlobalTaskHandler(TaskHandler value);
+
         void setGroundItems(NodeDeque[][][] value);
+
+        void setItemContainers(NodeTable value);
+
+        void setLandscape(Landscape value);
+
+        void setLandscapeOffsetX(int value);
+
+        void setLandscapeOffsetY(int value);
+
+        void setLandscapeOffsetZ(int value);
+
+        void setLoadingState(int value);
+
+        void setLocalPlayer(Player value);
+
+        void setLoginState(int value);
 
         void setMapAngle(int value);
 
@@ -272,11 +242,23 @@ public interface Static {
 
         void setMenuActions(String[] value);
 
+        void setMenuHeight(int value);
+
         void setMenuOptions(String[] value);
 
         void setMenuSize(int value);
 
+        void setMenuWidth(int value);
+
         void setMenuY(int value);
+
+        void setMessageContainers(Map value);
+
+        void setMessageDeque(ImmutableNodeDeque value);
+
+        void setMouseX(int value);
+
+        void setMouseY(int value);
 
         void setMouseZoom(short value);
 
@@ -294,13 +276,31 @@ public interface Static {
 
         void setResizableMode(boolean value);
 
+        void setRevision(int value);
+
         void setRunEnergy(int value);
+
+        void setSettings(int[] value);
+
+        void setSpotAnimCache(DualNodeMap value);
+
+        void setSpotAnimRasterizerMap(DualNodeMap value);
+
+        void setTileHeights(int[][][] value);
+
+        void setTileSettings(byte[][][] value);
+
+        void setUsername(String value);
 
         void setViewPortHeight(int value);
 
         void setViewPortScale(int value);
 
         void setViewPortWidth(int value);
+
+        void setWidgets(Widget[][] value);
+
+        void setWorldCount(int value);
 
         void setWorlds(World[] value);
     }
