@@ -5,18 +5,18 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface OnlineFriend extends LinkedNode {
-    int getInsertedTime();
+    String getName();
 
     short getStatus();
 
-    String getName();
+    int getInsertedTime();
 
     @SuppressWarnings("all")
     interface Unsafe extends LinkedNode {
-        void setInsertedTime(int value);
+        void setName(String value);
 
         void setStatus(short value);
 
-        void setName(String value);
+        void setInsertedTime(int value);
     }
 }

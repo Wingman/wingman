@@ -4,22 +4,22 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Node {
-    boolean isLinked();
-
     void delete();
 
-    Node getPrevious();
-
-    long getKey();
+    boolean isLinked();
 
     Node getNext();
 
+    long getKey();
+
+    Node getPrevious();
+
     @SuppressWarnings("all")
     interface Unsafe {
-        void setPrevious(Node value);
+        void setNext(Node value);
 
         void setKey(long value);
 
-        void setNext(Node value);
+        void setPrevious(Node value);
     }
 }

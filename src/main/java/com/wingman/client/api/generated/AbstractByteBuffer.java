@@ -4,9 +4,9 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface AbstractByteBuffer {
-    byte[] getAsBytes();
-
     void set(byte[] arg0);
+
+    byte[] getAsBytes();
 
     @SuppressWarnings("all")
     interface Unsafe {

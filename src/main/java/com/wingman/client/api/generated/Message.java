@@ -5,13 +5,13 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Message extends DualNode {
+    String getMessage();
+
     String getPrefix();
 
     int getIndex();
 
     int getCycle();
-
-    String getMessage();
 
     String getSender();
 
@@ -19,13 +19,13 @@ public interface Message extends DualNode {
 
     @SuppressWarnings("all")
     interface Unsafe extends DualNode {
+        void setMessage(String value);
+
         void setPrefix(String value);
 
         void setIndex(int value);
 
         void setCycle(int value);
-
-        void setMessage(String value);
 
         void setSender(String value);
 

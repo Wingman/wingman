@@ -10,6 +10,10 @@ import java.util.Map;
 public abstract class GameAPI {
     public static Static getterInstance;
 
+    public static boolean decodePlayerLocationUpdate(BitBuffer arg0, int arg1) {
+        return getterInstance.decodePlayerLocationUpdate(arg0, arg1);
+    }
+
     public static void drawRightClickMenu() {
         getterInstance.drawRightClickMenu();
     }
@@ -54,6 +58,10 @@ public abstract class GameAPI {
         return getterInstance.getAppletWidth();
     }
 
+    public static int[] getBitMasks() {
+        return getterInstance.getBitMasks();
+    }
+
     public static int getCameraPitch() {
         return getterInstance.getCameraPitch();
     }
@@ -90,10 +98,6 @@ public abstract class GameAPI {
         return getterInstance.getClanMates();
     }
 
-    public static int getClientPlane() {
-        return getterInstance.getClientPlane();
-    }
-
     public static ReferenceTable getConfigReferenceTable() {
         return getterInstance.getConfigReferenceTable();
     }
@@ -108,6 +112,10 @@ public abstract class GameAPI {
 
     public static int[] getExperiences() {
         return getterInstance.getExperiences();
+    }
+
+    public static int[] getExternalPlayerLocations() {
+        return getterInstance.getExternalPlayerLocations();
     }
 
     public static int getFps() {
@@ -202,12 +210,20 @@ public abstract class GameAPI {
         return getterInstance.getMenuHeight();
     }
 
+    public static int getMenuHeight() {
+        return getterInstance.getMenuHeight();
+    }
+
     public static String[] getMenuOptions() {
         return getterInstance.getMenuOptions();
     }
 
     public static int getMenuSize() {
         return getterInstance.getMenuSize();
+    }
+
+    public static int getMenuWidth() {
+        return getterInstance.getMenuWidth();
     }
 
     public static int getMenuWidth() {
@@ -334,6 +350,10 @@ public abstract class GameAPI {
             setterInstance.setAppletWidth(value);
         }
 
+        public static void setBitMasks(int[] value) {
+            setterInstance.setBitMasks(value);
+        }
+
         public static void setCameraPitch(int value) {
             setterInstance.setCameraPitch(value);
         }
@@ -370,10 +390,6 @@ public abstract class GameAPI {
             setterInstance.setClanMates(value);
         }
 
-        public static void setClientPlane(int value) {
-            setterInstance.setClientPlane(value);
-        }
-
         public static void setConfigReferenceTable(ReferenceTable value) {
             setterInstance.setConfigReferenceTable(value);
         }
@@ -388,6 +404,10 @@ public abstract class GameAPI {
 
         public static void setExperiences(int[] value) {
             setterInstance.setExperiences(value);
+        }
+
+        public static void setExternalPlayerLocations(int[] value) {
+            setterInstance.setExternalPlayerLocations(value);
         }
 
         public static void setFps(int value) {
@@ -482,12 +502,20 @@ public abstract class GameAPI {
             setterInstance.setMenuHeight(value);
         }
 
+        public static void setMenuHeight(int value) {
+            setterInstance.setMenuHeight(value);
+        }
+
         public static void setMenuOptions(String[] value) {
             setterInstance.setMenuOptions(value);
         }
 
         public static void setMenuSize(int value) {
             setterInstance.setMenuSize(value);
+        }
+
+        public static void setMenuWidth(int value) {
+            setterInstance.setMenuWidth(value);
         }
 
         public static void setMenuWidth(int value) {

@@ -5,15 +5,15 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface GameEngine {
-    void load(int arg0, int arg1, int arg2);
-
-    void processGameLoop();
+    void throwCriticalError(String arg0);
 
     void processLogic();
 
-    void throwCriticalError(String arg0);
-
     void processRendering();
+
+    void load(int arg0, int arg1, int arg2);
+
+    void processGameLoop();
 
     boolean getErrorHasBeenThrown();
 

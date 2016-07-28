@@ -5,22 +5,22 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface NpcDefinition extends DualNode {
-    String[] getActions();
-
-    int getId();
-
     int getCombatLevel();
 
     String getName();
 
+    int getId();
+
+    String[] getActions();
+
     @SuppressWarnings("all")
     interface Unsafe extends DualNode {
-        void setActions(String[] value);
-
-        void setId(int value);
-
         void setCombatLevel(int value);
 
         void setName(String value);
+
+        void setId(int value);
+
+        void setActions(String[] value);
     }
 }

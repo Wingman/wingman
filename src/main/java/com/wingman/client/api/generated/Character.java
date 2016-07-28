@@ -5,54 +5,50 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Character extends Entity {
-    int[] getQueueY();
+    int[] getHitsplatDamages();
 
-    int getAnimation();
-
-    byte[] getQueueTransversed();
+    int[] getHitsplatCycles();
 
     int getMaxHealth();
 
     int getX();
 
-    String getOverheadText();
-
-    int getInteractingIndex();
-
-    int[] getHitsplatDamages();
+    int[] getQueueX();
 
     int getY();
 
-    int[] getQueueX();
+    String getOverheadText();
 
-    int[] getHitsplatCycles();
+    int[] getQueueY();
 
-    int[] getHitsplatTypes();
+    int getAnimation();
+
+    int getInteractingIndex();
+
+    byte[] getQueueTransversed();
 
     @SuppressWarnings("all")
     interface Unsafe extends Entity {
-        void setQueueY(int[] value);
+        void setHitsplatDamages(int[] value);
 
-        void setAnimation(int value);
-
-        void setQueueTransversed(byte[] value);
+        void setHitsplatCycles(int[] value);
 
         void setMaxHealth(int value);
 
         void setX(int value);
 
-        void setOverheadText(String value);
-
-        void setInteractingIndex(int value);
-
-        void setHitsplatDamages(int[] value);
+        void setQueueX(int[] value);
 
         void setY(int value);
 
-        void setQueueX(int[] value);
+        void setOverheadText(String value);
 
-        void setHitsplatCycles(int[] value);
+        void setQueueY(int[] value);
 
-        void setHitsplatTypes(int[] value);
+        void setAnimation(int value);
+
+        void setInteractingIndex(int value);
+
+        void setQueueTransversed(byte[] value);
     }
 }

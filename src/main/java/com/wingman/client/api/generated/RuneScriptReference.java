@@ -7,16 +7,16 @@ import java.lang.SuppressWarnings;
 public interface RuneScriptReference {
     RuneScriptDefinition getDefinition();
 
-    int[] getLocalInteger();
-
     String[] getLocalStrings();
+
+    int[] getLocalInteger();
 
     @SuppressWarnings("all")
     interface Unsafe {
         void setDefinition(RuneScriptDefinition value);
 
-        void setLocalInteger(int[] value);
-
         void setLocalStrings(String[] value);
+
+        void setLocalInteger(int[] value);
     }
 }

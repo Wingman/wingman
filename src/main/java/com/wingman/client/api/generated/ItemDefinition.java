@@ -7,29 +7,27 @@ import java.lang.SuppressWarnings;
 public interface ItemDefinition extends DualNode {
     String[] getOptions();
 
-    boolean getIsMembers();
-
     int getUnNotedId();
 
     int getAmbient();
 
     int getPrice();
 
-    int getNotedId();
-
-    String[] getWidgetOptions();
-
     int getContrast();
 
     int getTeam();
 
+    boolean getIsMembers();
+
+    String[] getWidgetOptions();
+
     String getName();
+
+    int getNotedId();
 
     @SuppressWarnings("all")
     interface Unsafe extends DualNode {
         void setOptions(String[] value);
-
-        void setIsMembers(boolean value);
 
         void setUnNotedId(int value);
 
@@ -37,14 +35,16 @@ public interface ItemDefinition extends DualNode {
 
         void setPrice(int value);
 
-        void setNotedId(int value);
-
-        void setWidgetOptions(String[] value);
-
         void setContrast(int value);
 
         void setTeam(int value);
 
+        void setIsMembers(boolean value);
+
+        void setWidgetOptions(String[] value);
+
         void setName(String value);
+
+        void setNotedId(int value);
     }
 }

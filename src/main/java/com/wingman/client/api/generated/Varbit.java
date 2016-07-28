@@ -6,16 +6,16 @@ import java.lang.SuppressWarnings;
 public interface Varbit extends DualNode {
     int getLowBit();
 
-    int getVarp();
-
     int getHighBit();
+
+    int getVarp();
 
     @SuppressWarnings("all")
     interface Unsafe extends DualNode {
         void setLowBit(int value);
 
-        void setVarp(int value);
-
         void setHighBit(int value);
+
+        void setVarp(int value);
     }
 }

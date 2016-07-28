@@ -8,16 +8,16 @@ public interface PlayerDefinition {
 
     int[] getAppearanceColors();
 
-    boolean getIsFemale();
-
     int[] getAppearance();
+
+    boolean getIsFemale();
 
     @SuppressWarnings("all")
     interface Unsafe {
         void setAppearanceColors(int[] value);
 
-        void setIsFemale(boolean value);
-
         void setAppearance(int[] value);
+
+        void setIsFemale(boolean value);
     }
 }

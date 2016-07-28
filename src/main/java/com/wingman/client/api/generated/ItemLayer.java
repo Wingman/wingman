@@ -4,38 +4,38 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface ItemLayer {
-    Entity getMiddle();
-
-    int getY();
+    Entity getTop();
 
     int getX();
 
-    Entity getTop();
-
-    Entity getBottom();
-
     int getHash();
-
-    int getPlane();
 
     int getHeight();
 
+    Entity getMiddle();
+
+    Entity getBottom();
+
+    int getY();
+
+    int getPlane();
+
     @SuppressWarnings("all")
     interface Unsafe {
-        void setMiddle(Entity value);
-
-        void setY(int value);
+        void setTop(Entity value);
 
         void setX(int value);
 
-        void setTop(Entity value);
+        void setHash(int value);
+
+        void setHeight(int value);
+
+        void setMiddle(Entity value);
 
         void setBottom(Entity value);
 
-        void setHash(int value);
+        void setY(int value);
 
         void setPlane(int value);
-
-        void setHeight(int value);
     }
 }

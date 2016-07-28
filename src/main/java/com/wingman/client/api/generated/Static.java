@@ -8,6 +8,8 @@ import java.util.Map;
 
 @SuppressWarnings("all")
 public interface Static {
+    boolean decodePlayerLocationUpdate(BitBuffer arg0, int arg1);
+
     void drawRightClickMenu();
 
     void executeRuneScript(RuneScript arg0, int arg1);
@@ -30,6 +32,8 @@ public interface Static {
 
     int getAppletWidth();
 
+    int[] getBitMasks();
+
     int getCameraPitch();
 
     int getCameraX();
@@ -48,8 +52,6 @@ public interface Static {
 
     ClanMate[] getClanMates();
 
-    int getClientPlane();
-
     ReferenceTable getConfigReferenceTable();
 
     int[] getCurrentLevels();
@@ -57,6 +59,8 @@ public interface Static {
     int[] getExpLevels();
 
     int[] getExperiences();
+
+    int[] getExternalPlayerLocations();
 
     int getFps();
 
@@ -104,9 +108,13 @@ public interface Static {
 
     int getMenuHeight();
 
+    int getMenuHeight();
+
     String[] getMenuOptions();
 
     int getMenuSize();
+
+    int getMenuWidth();
 
     int getMenuWidth();
 
@@ -170,6 +178,8 @@ public interface Static {
 
         void setAppletWidth(int value);
 
+        void setBitMasks(int[] value);
+
         void setCameraPitch(int value);
 
         void setCameraX(int value);
@@ -188,8 +198,6 @@ public interface Static {
 
         void setClanMates(ClanMate[] value);
 
-        void setClientPlane(int value);
-
         void setConfigReferenceTable(ReferenceTable value);
 
         void setCurrentLevels(int[] value);
@@ -197,6 +205,8 @@ public interface Static {
         void setExpLevels(int[] value);
 
         void setExperiences(int[] value);
+
+        void setExternalPlayerLocations(int[] value);
 
         void setFps(int value);
 
@@ -244,9 +254,13 @@ public interface Static {
 
         void setMenuHeight(int value);
 
+        void setMenuHeight(int value);
+
         void setMenuOptions(String[] value);
 
         void setMenuSize(int value);
+
+        void setMenuWidth(int value);
 
         void setMenuWidth(int value);
 

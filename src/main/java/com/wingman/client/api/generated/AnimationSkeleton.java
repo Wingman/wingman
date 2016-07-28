@@ -4,18 +4,18 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface AnimationSkeleton {
-    boolean getHasAlpha();
-
     AnimationSkin getSkin();
 
     int getStepCount();
 
+    boolean getHasAlpha();
+
     @SuppressWarnings("all")
     interface Unsafe {
-        void setHasAlpha(boolean value);
-
         void setSkin(AnimationSkin value);
 
         void setStepCount(int value);
+
+        void setHasAlpha(boolean value);
     }
 }

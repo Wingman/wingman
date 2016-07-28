@@ -4,17 +4,17 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface DualNodeMap {
+    DualNode get(long arg0);
+
     void put(DualNode arg0, long arg1);
 
     void clear();
 
-    DualNode get(long arg0);
-
     void remove(long arg0);
 
-    NodeTable getNodeTable();
-
     DualNodeQueue getDualNodeQueue();
+
+    NodeTable getNodeTable();
 
     int getCapacity();
 
@@ -24,9 +24,9 @@ public interface DualNodeMap {
 
     @SuppressWarnings("all")
     interface Unsafe {
-        void setNodeTable(NodeTable value);
-
         void setDualNodeQueue(DualNodeQueue value);
+
+        void setNodeTable(NodeTable value);
 
         void setCapacity(int value);
 

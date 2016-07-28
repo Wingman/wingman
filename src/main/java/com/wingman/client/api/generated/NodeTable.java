@@ -4,36 +4,36 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface NodeTable {
-    void put(Node arg0, long arg1);
+    Node next();
 
-    Node first();
+    void put(Node arg0, long arg1);
 
     Node get(long arg0);
 
+    Node first();
+
     void clear();
-
-    Node next();
-
-    int getIndex();
-
-    Node getTail();
 
     Node[] getBuckets();
 
+    Node getCurrent();
+
     int getSize();
 
-    Node getCurrent();
+    Node getTail();
+
+    int getIndex();
 
     @SuppressWarnings("all")
     interface Unsafe {
-        void setIndex(int value);
-
-        void setTail(Node value);
-
         void setBuckets(Node[] value);
+
+        void setCurrent(Node value);
 
         void setSize(int value);
 
-        void setCurrent(Node value);
+        void setTail(Node value);
+
+        void setIndex(int value);
     }
 }
