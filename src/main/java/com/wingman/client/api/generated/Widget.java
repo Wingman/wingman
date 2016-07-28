@@ -6,21 +6,13 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Widget extends Node {
-    int getX();
+    int getItemId();
 
-    int getInsetY();
+    int getWidth();
 
-    String getText();
-
-    int getItemQuantity();
-
-    int getInsetX();
-
-    int[] getItemIds();
+    boolean getIsHidden();
 
     Object[] getConfigListenerArgs();
-
-    int getHeight();
 
     int getY();
 
@@ -28,31 +20,31 @@ public interface Widget extends Node {
 
     String getName();
 
-    int getWidth();
+    int getX();
+
+    int getHeight();
+
+    int getItemQuantity();
 
     int getIdx();
 
-    boolean getIsHidden();
+    int getInsetX();
 
-    int getItemId();
+    int getInsetY();
+
+    String getText();
+
+    int[] getItemIds();
 
     @SuppressWarnings("all")
     interface Unsafe extends Node {
-        void setX(int value);
+        void setItemId(int value);
 
-        void setInsetY(int value);
+        void setWidth(int value);
 
-        void setText(String value);
-
-        void setItemQuantity(int value);
-
-        void setInsetX(int value);
-
-        void setItemIds(int[] value);
+        void setIsHidden(boolean value);
 
         void setConfigListenerArgs(Object[] value);
-
-        void setHeight(int value);
 
         void setY(int value);
 
@@ -60,12 +52,20 @@ public interface Widget extends Node {
 
         void setName(String value);
 
-        void setWidth(int value);
+        void setX(int value);
+
+        void setHeight(int value);
+
+        void setItemQuantity(int value);
 
         void setIdx(int value);
 
-        void setIsHidden(boolean value);
+        void setInsetX(int value);
 
-        void setItemId(int value);
+        void setInsetY(int value);
+
+        void setText(String value);
+
+        void setItemIds(int[] value);
     }
 }

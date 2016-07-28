@@ -7,14 +7,14 @@ import java.lang.SuppressWarnings;
 public interface GameType {
     int getGameId();
 
-    int getId();
-
     String getGameName();
+
+    int getId();
 
     @SuppressWarnings("all")
     interface Unsafe {
-        void setId(int value);
-
         void setGameName(String value);
+
+        void setId(int value);
     }
 }

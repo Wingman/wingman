@@ -5,18 +5,18 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface RuneScriptReference {
+    RuneScriptDefinition getDefinition();
+
     int[] getLocalInteger();
 
     String[] getLocalStrings();
 
-    RuneScriptDefinition getDefinition();
-
     @SuppressWarnings("all")
     interface Unsafe {
+        void setDefinition(RuneScriptDefinition value);
+
         void setLocalInteger(int[] value);
 
         void setLocalStrings(String[] value);
-
-        void setDefinition(RuneScriptDefinition value);
     }
 }

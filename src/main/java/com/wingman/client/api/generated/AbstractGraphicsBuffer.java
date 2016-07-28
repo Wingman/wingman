@@ -6,11 +6,11 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface AbstractGraphicsBuffer {
-    void drawGameImageSection(Graphics arg0, int arg1, int arg2, int arg3, int arg4);
+    void createRasterizer();
 
     void drawFullGameImage(Graphics arg0, int arg1, int arg2);
 
-    void createRasterizer();
+    void drawGameImageSection(Graphics arg0, int arg1, int arg2, int arg3, int arg4);
 
     Image getGraphicsBufferImage();
 

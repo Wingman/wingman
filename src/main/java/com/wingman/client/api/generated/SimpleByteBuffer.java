@@ -5,9 +5,9 @@ import java.nio.ByteBuffer;
 
 @SuppressWarnings("all")
 public interface SimpleByteBuffer extends AbstractByteBuffer {
-    void set(byte[] arg0);
-
     byte[] getAsBytes();
+
+    void set(byte[] arg0);
 
     ByteBuffer getByteBuffer();
 

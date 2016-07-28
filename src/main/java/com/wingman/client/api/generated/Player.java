@@ -9,30 +9,30 @@ public interface Player extends Character {
 
     void decodeAppearance(Buffer arg0);
 
-    PlayerDefinition getDefinition();
+    int getCombatLevel();
 
     int getSkull();
-
-    int getSkillLevel();
-
-    int getCombatLevel();
 
     String getName();
 
     int getPrayerIcon();
 
+    int getSkillLevel();
+
+    PlayerDefinition getDefinition();
+
     @SuppressWarnings("all")
     interface Unsafe extends Character {
-        void setDefinition(PlayerDefinition value);
+        void setCombatLevel(int value);
 
         void setSkull(int value);
-
-        void setSkillLevel(int value);
-
-        void setCombatLevel(int value);
 
         void setName(String value);
 
         void setPrayerIcon(int value);
+
+        void setSkillLevel(int value);
+
+        void setDefinition(PlayerDefinition value);
     }
 }

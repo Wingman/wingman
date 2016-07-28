@@ -8,9 +8,9 @@ public interface Landscape {
 
     void removeItemLayer(int arg0, int arg1, int arg2);
 
-    LandscapeTile[][][] getLandscapeTiles();
-
     int[][][] getHeightMap();
+
+    LandscapeTile[][][] getLandscapeTiles();
 
     int getPlaneAmount();
 
@@ -20,9 +20,9 @@ public interface Landscape {
 
     @SuppressWarnings("all")
     interface Unsafe {
-        void setLandscapeTiles(LandscapeTile[][][] value);
-
         void setHeightMap(int[][][] value);
+
+        void setLandscapeTiles(LandscapeTile[][][] value);
 
         void setPlaneAmount(int value);
 

@@ -4,34 +4,34 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface BoundaryObject {
-    int getX();
-
-    Entity getEntity2();
-
     int getHash();
-
-    int getY();
 
     Entity getEntity();
 
-    int getPlane();
+    int getX();
 
     int getConfig();
 
+    int getPlane();
+
+    Entity getEntity2();
+
+    int getY();
+
     @SuppressWarnings("all")
     interface Unsafe {
-        void setX(int value);
-
-        void setEntity2(Entity value);
-
         void setHash(int value);
-
-        void setY(int value);
 
         void setEntity(Entity value);
 
-        void setPlane(int value);
+        void setX(int value);
 
         void setConfig(int value);
+
+        void setPlane(int value);
+
+        void setEntity2(Entity value);
+
+        void setY(int value);
     }
 }

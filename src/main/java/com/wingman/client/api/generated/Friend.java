@@ -5,18 +5,18 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Friend {
-    String getPreviousName();
-
     int getWorld();
 
     String getName();
 
+    String getPreviousName();
+
     @SuppressWarnings("all")
     interface Unsafe {
-        void setPreviousName(String value);
-
         void setWorld(int value);
 
         void setName(String value);
+
+        void setPreviousName(String value);
     }
 }
