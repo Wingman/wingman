@@ -5,16 +5,16 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface GameType {
-    String getGameName();
+    int getGameId();
 
     int getId();
 
-    int getGameId();
+    String getGameName();
 
     @SuppressWarnings("all")
     interface Unsafe {
-        void setGameName(String value);
-
         void setId(int value);
+
+        void setGameName(String value);
     }
 }

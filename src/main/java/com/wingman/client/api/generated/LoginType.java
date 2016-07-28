@@ -4,11 +4,11 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface LoginType {
+    int getLoginId();
+
     int getId();
 
     int getType();
-
-    int getLoginId();
 
     @SuppressWarnings("all")
     interface Unsafe {

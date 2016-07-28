@@ -4,16 +4,16 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface DualNode extends Node {
-    DualNode getNext();
+    void deleteDual();
 
     DualNode getPrevious();
 
-    void deleteDual();
+    DualNode getNext();
 
     @SuppressWarnings("all")
     interface Unsafe extends Node {
-        void setNext(DualNode value);
-
         void setPrevious(DualNode value);
+
+        void setNext(DualNode value);
     }
 }

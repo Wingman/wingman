@@ -5,17 +5,17 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface GameEngine {
-    boolean getErrorHasBeenThrown();
+    void processLogic();
 
-    void load(int arg0, int arg1, int arg2);
+    void throwCriticalError(String arg0);
 
     void processGameLoop();
 
-    void processLogic(byte arg0);
+    void processRendering();
 
-    void processRendering(byte arg0);
+    void load(int arg0, int arg1, int arg2);
 
-    void throwCriticalError(String arg0);
+    boolean getErrorHasBeenThrown();
 
     @SuppressWarnings("all")
     interface Unsafe {

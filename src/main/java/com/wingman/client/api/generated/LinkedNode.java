@@ -4,11 +4,11 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface LinkedNode {
+    void remove();
+
     LinkedNode getNext();
 
     LinkedNode getPrev();
-
-    void remove();
 
     @SuppressWarnings("all")
     interface Unsafe {

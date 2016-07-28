@@ -4,50 +4,50 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface LandscapeTile extends Node {
+    PlainTile getPlainTile();
+
+    ItemLayer getItemLayer();
+
     BoundaryObject getBoundaryObject();
 
     GroundObject getGroundObject();
 
-    InteractableObject[] getInteractableObjects();
-
-    ItemLayer getItemLayer();
-
-    int[] getObjectFlags();
-
-    PlainTile getPlainTile();
+    int getY();
 
     int getPlane();
 
-    ShapedTile getShapedTile();
+    int getX();
 
     WallObject getWallObject();
 
-    int getX();
+    int[] getObjectFlags();
 
-    int getY();
+    InteractableObject[] getInteractableObjects();
+
+    ShapedTile getShapedTile();
 
     @SuppressWarnings("all")
     interface Unsafe extends Node {
+        void setPlainTile(PlainTile value);
+
+        void setItemLayer(ItemLayer value);
+
         void setBoundaryObject(BoundaryObject value);
 
         void setGroundObject(GroundObject value);
 
-        void setInteractableObjects(InteractableObject[] value);
-
-        void setItemLayer(ItemLayer value);
-
-        void setObjectFlags(int[] value);
-
-        void setPlainTile(PlainTile value);
+        void setY(int value);
 
         void setPlane(int value);
 
-        void setShapedTile(ShapedTile value);
+        void setX(int value);
 
         void setWallObject(WallObject value);
 
-        void setX(int value);
+        void setObjectFlags(int[] value);
 
-        void setY(int value);
+        void setInteractableObjects(InteractableObject[] value);
+
+        void setShapedTile(ShapedTile value);
     }
 }

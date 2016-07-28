@@ -3,12 +3,12 @@ package com.wingman.client.api.generated;
 import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
-public interface Client extends GameEngine {
-    void processRendering();
+public interface AbstractByteBuffer {
+    byte[] getAsBytes();
 
-    void processLogic();
+    void set(byte[] arg0);
 
     @SuppressWarnings("all")
-    interface Unsafe extends GameEngine {
+    interface Unsafe {
     }
 }

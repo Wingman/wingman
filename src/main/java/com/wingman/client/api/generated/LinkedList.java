@@ -4,15 +4,15 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface LinkedList {
-    LinkedNode getCurrent();
-
-    LinkedNode getHead();
+    void insertBack(LinkedNode arg0);
 
     LinkedNode getBack();
 
     LinkedNode getPrevious();
 
-    void insertBack(LinkedNode arg0);
+    LinkedNode getCurrent();
+
+    LinkedNode getHead();
 
     @SuppressWarnings("all")
     interface Unsafe {

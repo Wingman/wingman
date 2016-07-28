@@ -5,30 +5,54 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Character extends Entity {
-    int getAnimation();
+    byte[] getQueueTransversed();
 
-    int[] getInteractingIndex();
+    int[] getHitsplatCycles();
+
+    int getInteractingIndex();
 
     String getOverheadText();
 
-    int[] getQueueTransversed();
+    int getY();
+
+    int getAnimation();
+
+    int[] getQueueY();
+
+    int[] getHitsplatTypes();
+
+    int[] getHitsplatDamages();
+
+    int getMaxHealth();
 
     int getX();
 
-    int getY();
+    int[] getQueueX();
 
     @SuppressWarnings("all")
     interface Unsafe extends Entity {
-        void setAnimation(int value);
+        void setQueueTransversed(byte[] value);
 
-        void setInteractingIndex(int[] value);
+        void setHitsplatCycles(int[] value);
+
+        void setInteractingIndex(int value);
 
         void setOverheadText(String value);
 
-        void setQueueTransversed(int[] value);
+        void setY(int value);
+
+        void setAnimation(int value);
+
+        void setQueueY(int[] value);
+
+        void setHitsplatTypes(int[] value);
+
+        void setHitsplatDamages(int[] value);
+
+        void setMaxHealth(int value);
 
         void setX(int value);
 
-        void setY(int value);
+        void setQueueX(int[] value);
     }
 }

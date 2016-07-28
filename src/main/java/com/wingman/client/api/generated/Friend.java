@@ -7,16 +7,16 @@ import java.lang.SuppressWarnings;
 public interface Friend {
     String getName();
 
-    String getPreviousName();
-
     int getWorld();
+
+    String getPreviousName();
 
     @SuppressWarnings("all")
     interface Unsafe {
         void setName(String value);
 
-        void setPreviousName(String value);
-
         void setWorld(int value);
+
+        void setPreviousName(String value);
     }
 }

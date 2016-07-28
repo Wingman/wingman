@@ -5,34 +5,34 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Player extends Character {
-    int getCombatLevel();
+    void decodeAppearance(Buffer arg0);
 
-    PlayerDefinition getDefinition();
+    Model getModel();
+
+    int getSkillLevel();
 
     String getName();
 
     int getPrayerIcon();
 
-    int getSkillLevel();
+    PlayerDefinition getDefinition();
 
     int getSkull();
 
-    void decodeAppearance(Buffer arg0);
-
-    Model getModel();
+    int getCombatLevel();
 
     @SuppressWarnings("all")
     interface Unsafe extends Character {
-        void setCombatLevel(int value);
-
-        void setDefinition(PlayerDefinition value);
+        void setSkillLevel(int value);
 
         void setName(String value);
 
         void setPrayerIcon(int value);
 
-        void setSkillLevel(int value);
+        void setDefinition(PlayerDefinition value);
 
         void setSkull(int value);
+
+        void setCombatLevel(int value);
     }
 }

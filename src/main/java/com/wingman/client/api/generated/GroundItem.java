@@ -4,16 +4,16 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface GroundItem extends Entity {
-    int getId();
+    Model getModel();
 
     int getQuantity();
 
-    Model getModel();
+    int getId();
 
     @SuppressWarnings("all")
     interface Unsafe extends Entity {
-        void setId(int value);
-
         void setQuantity(int value);
+
+        void setId(int value);
     }
 }

@@ -4,20 +4,20 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface PlayerDefinition {
+    void initialize(int[] arg0, int[] arg1, boolean arg2, int arg3);
+
+    boolean getIsFemale();
+
     int[] getAppearance();
 
     int[] getAppearanceColors();
 
-    boolean getIsFemale();
-
-    void initialize(int[] arg0, int[] arg1, boolean arg2, int arg3);
-
     @SuppressWarnings("all")
     interface Unsafe {
+        void setIsFemale(boolean value);
+
         void setAppearance(int[] value);
 
         void setAppearanceColors(int[] value);
-
-        void setIsFemale(boolean value);
     }
 }

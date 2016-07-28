@@ -9,9 +9,9 @@ public interface NpcDefinition extends DualNode {
 
     int getCombatLevel();
 
-    int getId();
-
     String getName();
+
+    int getId();
 
     @SuppressWarnings("all")
     interface Unsafe extends DualNode {
@@ -19,8 +19,8 @@ public interface NpcDefinition extends DualNode {
 
         void setCombatLevel(int value);
 
-        void setId(int value);
-
         void setName(String value);
+
+        void setId(int value);
     }
 }

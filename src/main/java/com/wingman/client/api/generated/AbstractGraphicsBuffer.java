@@ -6,13 +6,13 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface AbstractGraphicsBuffer {
-    Image getGraphicsBufferImage();
+    void drawFullGameImage(Graphics arg0, int arg1, int arg2);
+
+    void drawGameImageSection(Graphics arg0, int arg1, int arg2, int arg3, int arg4);
 
     void createRasterizer();
 
-    void drawFullGameImage(Graphics arg0, int arg1, int arg2, int arg3);
-
-    void drawGameImageSection(Graphics arg0, int arg1, int arg2, int arg3, int arg4, byte arg5);
+    Image getGraphicsBufferImage();
 
     @SuppressWarnings("all")
     interface Unsafe {

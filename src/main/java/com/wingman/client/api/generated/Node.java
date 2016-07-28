@@ -4,15 +4,15 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Node {
+    void delete();
+
+    boolean isLinked();
+
     long getKey();
 
     Node getNext();
 
     Node getPrevious();
-
-    void delete();
-
-    boolean isLinked();
 
     @SuppressWarnings("all")
     interface Unsafe {
