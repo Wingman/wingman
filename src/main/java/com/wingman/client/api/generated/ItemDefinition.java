@@ -4,47 +4,35 @@ import java.lang.String;
 import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
-public interface ItemDefinition extends DualNode {
-    String[] getOptions();
+public interface ItemDefinition extends DoublyNode {
+    int getNoteTemplateIndex();
 
-    int getUnNotedId();
-
-    int getAmbient();
-
-    int getPrice();
-
-    int getContrast();
-
-    int getTeam();
-
-    boolean getIsMembers();
-
-    String[] getWidgetOptions();
+    int getValue();
 
     String getName();
 
-    int getNotedId();
+    int getNoteIndex();
+
+    String[] getGroundActions();
+
+    int getTeamIndex();
+
+    String[] getWidgetActions();
 
     @SuppressWarnings("all")
-    interface Unsafe extends DualNode {
-        void setOptions(String[] value);
+    interface Unsafe extends DoublyNode {
+        void setNoteTemplateIndex(int value);
 
-        void setUnNotedId(int value);
-
-        void setAmbient(int value);
-
-        void setPrice(int value);
-
-        void setContrast(int value);
-
-        void setTeam(int value);
-
-        void setIsMembers(boolean value);
-
-        void setWidgetOptions(String[] value);
+        void setValue(int value);
 
         void setName(String value);
 
-        void setNotedId(int value);
+        void setNoteIndex(int value);
+
+        void setGroundActions(String[] value);
+
+        void setTeamIndex(int value);
+
+        void setWidgetActions(String[] value);
     }
 }

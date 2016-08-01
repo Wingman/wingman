@@ -3,11 +3,13 @@ package com.wingman.client.api.generated;
 import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
-public interface Npc extends Character {
-    NpcDefinition getDefinition();
+public interface NPC extends Character {
+    Model getModel();
+
+    NPCDefinition getDefinition();
 
     @SuppressWarnings("all")
     interface Unsafe extends Character {
-        void setDefinition(NpcDefinition value);
+        void setDefinition(NPCDefinition value);
     }
 }

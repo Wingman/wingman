@@ -6,8 +6,6 @@ import java.lang.SuppressWarnings;
 public interface Client extends GameEngine {
     void processRendering();
 
-    void processLogic();
-
     @SuppressWarnings("all")
     interface Unsafe extends GameEngine {
     }
