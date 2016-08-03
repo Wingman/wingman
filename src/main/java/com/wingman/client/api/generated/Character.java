@@ -6,6 +6,8 @@ import java.lang.SuppressWarnings;
 public interface Character extends Entity {
     int getInteractingIndex();
 
+    NodeIterable getHealthBars();
+
     int getX();
 
     int getY();
@@ -15,6 +17,8 @@ public interface Character extends Entity {
     @SuppressWarnings("all")
     interface Unsafe extends Entity {
         void setInteractingIndex(int value);
+
+        void setHealthBars(NodeIterable value);
 
         void setX(int value);
 
