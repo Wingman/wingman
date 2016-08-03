@@ -143,7 +143,7 @@ public class RSMemberInjector implements Transformer {
             Type deobfType = Type.getType(f.deobfType);
 
             boolean needsCast = !f.obfType.equals(f.deobfType);
-            String cleanName = MappingsHelper.upperCaseify(f.cleanName);
+            String cleanName = MappingsHelper.toUpperCaseFirstCharacter(f.cleanName);
 
             {
                 Type getterType = Type.getMethodType(deobfType);
