@@ -15,15 +15,21 @@ public class PropertiesSettings extends Settings {
     public String fileComments;
 
     public PropertiesSettings(String settingsFileName, String fileComments) throws IOException {
-        this.file = ClientSettings.SETTINGS_DIR.resolve(settingsFileName).toFile();
+        this.file = ClientSettings.SETTINGS_DIR
+                .resolve(settingsFileName)
+                .toFile();
+
         if (!this.file.exists()) {
             if (!this.file.createNewFile()) {
                 throw new IOException("Couldn't create file " + file);
             }
         }
+
         this.fileComments = fileComments;
+
         this.properties = new Properties();
         this.properties.load(new FileReader(file));
+
         checkKeys();
     }
 
