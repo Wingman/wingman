@@ -25,6 +25,8 @@ import java.util.regex.Pattern;
  */
 public class GameDownloader extends SwingWorker<Void, Integer>{
 
+    private static HttpClient httpClient = new HttpClient();
+
     static String runeScapeUrl = null;
     static String pageSource = null;
     static String archiveName = null;
@@ -104,7 +106,7 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
         runeScapeUrl = "http://oldschool" + world + ".runescape.com/";
 
         try {
-            return HttpClient
+            return httpClient
                     .downloadUrlSync(runeScapeUrl + "jav_config.ws")
                     .body()
                     .string();
@@ -153,7 +155,7 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
      *         {@code false} if it is not
      */
     private static boolean checkGamePackUpToDate() throws IOException {
-        Response response = HttpClient
+        Response response = httpClient
                 .downloadUrlSync(runeScapeUrl + archiveName);
 
         remoteArchiveSize = Integer
@@ -175,12 +177,12 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
         progressBar.setMaximum(remoteArchiveSize);
         progressBar.setMode(StartProgressBar.Mode.DOWNLOADING);
 
-        Request request = HttpClient
-                .getRealisticRequestBuilder()
+        Request request = httpClient
+                .getRequestBuilder()
                 .url(runeScapeUrl + archiveName)
                 .build();
 
-        Response response = HttpClient.httpClient
+        Response response = httpClient
                 .newCall(request)
                 .execute();
 
