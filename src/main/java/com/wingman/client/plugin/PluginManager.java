@@ -169,7 +169,7 @@ public class PluginManager {
             pluginNodes.put(pluginContainer.pluginData.id(), new PluginNode(pluginContainer));
         }
 
-        plugins.clear();
+        plugins = new ArrayList<>(pluginNodes.size() + 1);
 
         for (PluginNode pluginNode : pluginNodes.values()) {
             for (PluginContainer dependencyPlugin : pluginNode.pluginContainer.dependencies) {
@@ -177,18 +177,16 @@ public class PluginManager {
             }
         }
 
-        Deque<PluginNode> stack = new ArrayDeque<>();
+        List<PluginNode> stack = new ArrayList<>(pluginNodes.size() + 1);
 
-        List<PluginNode> pluginNodesList = new LinkedList<>(pluginNodes.values());
-        for (PluginNode pluginNode : pluginNodesList) {
+        for (PluginNode pluginNode : pluginNodes.values()) {
             if (!pluginNode.isVisited && !pluginNode.isDependent) {
                 sort(pluginNode, stack);
             }
         }
 
-        while (!stack.isEmpty()) {
-            plugins.add(0, stack.getFirst().pluginContainer);
-            stack.pop();
+        for (PluginNode pluginNode : stack) {
+            plugins.add(pluginNode.pluginContainer);
         }
 
         return plugins;
@@ -197,13 +195,13 @@ public class PluginManager {
     /**
      * Sort the loading order of plugins topologically based on dependencies, as to introduce loading dependencies before dependants.
      */
-    private static void sort(PluginNode pluginNode, Deque<PluginNode> stack) {
+    private static void sort(PluginNode pluginNode, List<PluginNode> stack) {
         for (PluginNode children : pluginNode.children) {
             if (!children.isVisited) {
                 sort(children, stack);
             }
         }
-        stack.push(pluginNode);
+        stack.add(pluginNode);
         pluginNode.isVisited = true;
     }
 
