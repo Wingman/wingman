@@ -17,7 +17,7 @@ public class ExperienceGainedTransformer implements Transformer {
 
     @Override
     public boolean canTransform(String name) {
-        return expLevels != null;
+        return true;
     }
 
     @Override
@@ -98,7 +98,8 @@ public class ExperienceGainedTransformer implements Transformer {
 
     @Override
     public boolean isUsed() {
-        return ExperienceGainedEvent.eventListenerList.listeners != null;
+        return this.expLevels != null
+                && ExperienceGainedEvent.eventListenerList.listeners != null;
     }
 
     public ExperienceGainedTransformer() {

@@ -18,8 +18,7 @@ public class ItemDefinitionCachedTransformer implements Transformer {
 
     @Override
     public boolean canTransform(String name) {
-        return getItemDefinition != null
-                && getItemDefinition.owner.equals(name);
+        return getItemDefinition.owner.equals(name);
     }
 
     @Override
@@ -70,7 +69,8 @@ public class ItemDefinitionCachedTransformer implements Transformer {
 
     @Override
     public boolean isUsed() {
-        return ItemDefinitionCachedEvent.eventListenerList.listeners != null;
+        return this.getItemDefinition != null
+                && ItemDefinitionCachedEvent.eventListenerList.listeners != null;
     }
 
     public ItemDefinitionCachedTransformer() {

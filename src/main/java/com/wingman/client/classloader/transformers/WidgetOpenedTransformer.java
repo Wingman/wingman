@@ -15,8 +15,7 @@ public class WidgetOpenedTransformer implements Transformer {
 
     @Override
     public boolean canTransform(String name) {
-        return openWidget != null
-                && openWidget.owner.equals(name);
+        return openWidget.owner.equals(name);
     }
 
     @Override
@@ -51,7 +50,8 @@ public class WidgetOpenedTransformer implements Transformer {
 
     @Override
     public boolean isUsed() {
-        return WidgetOpenedEvent.eventListenerList.listeners != null;
+        return this.openWidget != null
+                && WidgetOpenedEvent.eventListenerList.listeners != null;
     }
 
     public WidgetOpenedTransformer() {

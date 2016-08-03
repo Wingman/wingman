@@ -14,8 +14,7 @@ public class PreserveExceptionInfoTransformer implements Transformer {
 
     @Override
     public boolean canTransform(String name) {
-        return rsException != null
-                && name.equals(rsException);
+        return name.equals(rsException);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class PreserveExceptionInfoTransformer implements Transformer {
 
     @Override
     public boolean isUsed() {
-        return true;
+        return this.rsException != null;
     }
 
     public PreserveExceptionInfoTransformer() {

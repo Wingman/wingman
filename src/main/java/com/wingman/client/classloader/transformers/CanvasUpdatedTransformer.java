@@ -46,64 +46,62 @@ public class CanvasUpdatedTransformer implements Transformer {
 
     @Override
     public ClassNode transform(ClassNode clazz) {
-        if (drawFullGameImage != null) {
-            if (clazz.name.equals(gameDrawingMode.owner)) {
-                for (MethodNode m : clazz.methods) {
-                    if (!m.name.equals("<clinit>")) {
-                        continue;
-                    }
+        if (clazz.name.equals(gameDrawingMode.owner)) {
+            for (MethodNode m : clazz.methods) {
+                if (!m.name.equals("<clinit>")) {
+                    continue;
+                }
 
-                    Iterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
-                    while (nodeIterator.hasNext()) {
-                        try {
-                            InsnNode i = (InsnNode) nodeIterator.next();
+                Iterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
+                while (nodeIterator.hasNext()) {
+                    try {
+                        InsnNode i = (InsnNode) nodeIterator.next();
 
-                            FieldInsnNode i2 = (FieldInsnNode) i.getNext();
-                            if (i2.getOpcode() != Opcodes.PUTSTATIC
-                                    || !i2.owner.equals(gameDrawingMode.owner)
-                                    || !i2.name.equals(gameDrawingMode.name)) {
-                                continue;
-                            }
-
-                            m.instructions.set(i, new InsnNode(Opcodes.ICONST_1));
-                            break;
-                        } catch (ClassCastException | NullPointerException e) {
-                            //swallow
+                        FieldInsnNode i2 = (FieldInsnNode) i.getNext();
+                        if (i2.getOpcode() != Opcodes.PUTSTATIC
+                                || !i2.owner.equals(gameDrawingMode.owner)
+                                || !i2.name.equals(gameDrawingMode.name)) {
+                            continue;
                         }
+
+                        m.instructions.set(i, new InsnNode(Opcodes.ICONST_1));
+                        break;
+                    } catch (ClassCastException | NullPointerException e) {
+                        //swallow
                     }
                 }
-            } else {
-                for (MethodNode m : clazz.methods) {
-                    if (!m.name.equals(drawFullGameImage.name)) {
-                        continue;
-                    }
+            }
+        } else {
+            for (MethodNode m : clazz.methods) {
+                if (!m.name.equals(drawFullGameImage.name)) {
+                    continue;
+                }
 
-                    Iterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
-                    while (nodeIterator.hasNext()) {
-                        try {
-                            FieldInsnNode fieldInsnNode = (FieldInsnNode) nodeIterator.next();
-                            if (!fieldInsnNode.desc.equals("Ljava/awt/Image;")) {
-                                continue;
-                            }
-
-                            InsnList insnList = new InsnList();
-                            MappingsHelper.addInstructions(insnList,
-                                    new IntInsnNode(Opcodes.ALOAD, 0),
-                                    new FieldInsnNode(Opcodes.GETFIELD,
-                                            clazz.name,
-                                            fieldInsnNode.name,
-                                            fieldInsnNode.desc),
-                                    new MethodInsnNode(Opcodes.INVOKESTATIC,
-                                            this.getClass().getName().replace(".", "/"),
-                                            "runHook",
-                                            "(Ljava/awt/Image;)V",
-                                            false)
-                            );
-                            m.instructions.insertBefore(fieldInsnNode.getPrevious().getPrevious(), insnList);
-                            break;
-                        } catch (ClassCastException | NullPointerException e) {
-                            //swallow
+                Iterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
+                while (nodeIterator.hasNext()) {
+                    try {
+                        FieldInsnNode fieldInsnNode = (FieldInsnNode) nodeIterator.next();
+                        if (!fieldInsnNode.desc.equals("Ljava/awt/Image;")) {
+                            continue;
                         }
+
+                        InsnList insnList = new InsnList();
+                        MappingsHelper.addInstructions(insnList,
+                                new IntInsnNode(Opcodes.ALOAD, 0),
+                                new FieldInsnNode(Opcodes.GETFIELD,
+                                        clazz.name,
+                                        fieldInsnNode.name,
+                                        fieldInsnNode.desc),
+                                new MethodInsnNode(Opcodes.INVOKESTATIC,
+                                        this.getClass().getName().replace(".", "/"),
+                                        "runHook",
+                                        "(Ljava/awt/Image;)V",
+                                        false)
+                        );
+                        m.instructions.insertBefore(fieldInsnNode.getPrevious().getPrevious(), insnList);
+                        break;
+                    } catch (ClassCastException | NullPointerException e) {
+                        //swallow
                     }
                 }
             }
@@ -114,7 +112,8 @@ public class CanvasUpdatedTransformer implements Transformer {
 
     @Override
     public boolean isUsed() {
-        return true;
+        return this.drawFullGameImage != null
+                && this.gameDrawingMode != null;
     }
 
     public CanvasUpdatedTransformer() {
