@@ -12,47 +12,21 @@ import java.util.Set;
 
 public class MappingsHelper {
 
-    private static BigInteger integerRange = new BigInteger("" + 4294967296L);
-    public static int getMMI(int multiplier) {
-        BigInteger multiplierInt = new BigInteger("" + multiplier);
-        return multiplierInt.modInverse(integerRange).intValue();
-    }
-
-    public static String upperCaseify(String name) {
-        return name.substring(0, 1).toUpperCase() + name.substring(1);
-    }
-
-    public static void addInstructions(InsnList list, AbstractInsnNode... instructions) {
-        for (AbstractInsnNode i : instructions) {
-            list.add(i);
-        }
-    }
-
-    public static AbstractInsnNode seekNode(AbstractInsnNode start, int opCode) {
-        AbstractInsnNode next = start.getNext();
-        while (true) {
-            if (next == null) {
-                return null;
-            }
-            if (next.getOpcode() == opCode) {
-                return next;
-            }
-            next = next.getNext();
-        }
-    }
-
     public static final Map<String, String> obfClasses = new HashMap<>();
     public static final Map<String, String> deobfClasses = new HashMap<>();
+
+    public static final Map<String, Set<MethodInfo>> obfMethods = new HashMap<>();
+    public static final Map<String, MethodInfo> deobfMethods = new HashMap<>();
+
+    public static final Map<String, Set<FieldInfo>> obfFields = new HashMap<>();
+    public static final Map<String, FieldInfo> deobfFields = new HashMap<>();
+
     static {
         for (ClassInfo classInfo : MappingsDatabase.CLASSES) {
             obfClasses.put(classInfo.obfName, classInfo.cleanName);
             deobfClasses.put(classInfo.cleanName, classInfo.obfName);
         }
-    }
 
-    public static final Map<String, Set<MethodInfo>> obfMethods = new HashMap<>();
-    public static final Map<String, MethodInfo> deobfMethods = new HashMap<>();
-    static {
         for (MethodInfo methodInfo : MappingsDatabase.METHODS) {
             Set<MethodInfo> methods = obfMethods.get(methodInfo.owner);
             if (methods == null) {
@@ -71,11 +45,7 @@ public class MappingsHelper {
                 }
             }
         }
-    }
 
-    public static final Map<String, Set<FieldInfo>> obfFields = new HashMap<>();
-    public static final Map<String, FieldInfo> deobfFields = new HashMap<>();
-    static {
         for (FieldInfo fieldInfo : MappingsDatabase.FIELDS) {
             Set<FieldInfo> fields = obfFields.get(fieldInfo.owner);
             if (fields == null) {
@@ -85,7 +55,7 @@ public class MappingsHelper {
             fields.add(fieldInfo);
 
             if (fieldInfo.isStatic) {
-                deobfFields.put(fieldInfo.cleanName, fieldInfo);
+                deobfFields.put(fieldInfo.cleanName, fieldInfo);;
             } else {
                 String cleanName = obfClasses.get(fieldInfo.owner);
                 if (cleanName != null) {
@@ -93,5 +63,41 @@ public class MappingsHelper {
                 }
             }
         }
+    }
+
+    public static void addInstructions(InsnList list, AbstractInsnNode... instructions) {
+        for (AbstractInsnNode i : instructions) {
+            list.add(i);
+        }
+    }
+
+    public static AbstractInsnNode findNode(AbstractInsnNode start, int opcode) {
+        return findNode(start, opcode, 0);
+    }
+
+    public static AbstractInsnNode findNode(AbstractInsnNode start, int opcode, int nodesToSkip) {
+        while (start != null) {
+            if (start.getOpcode() == opcode) {
+                if (nodesToSkip == 0) {
+                    return start;
+                }
+                nodesToSkip--;
+            }
+            start = start.getNext();
+        }
+        return null;
+    }
+
+    private static BigInteger integerRange = new BigInteger("" + 4294967296L);
+
+    public static int getMMI(int multiplier) {
+        BigInteger multiplierInt = new BigInteger("" + multiplier);
+        return multiplierInt.modInverse(integerRange).intValue();
+    }
+
+    public static String toUpperCaseFirstCharacter(String name) {
+        char[] chars = name.toCharArray();
+        chars[0] = Character.toUpperCase(chars[0]);
+        return new String(chars);
     }
 }
