@@ -17,15 +17,18 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.google.guava:guava:19.0'
-    compile 'org.reflections:reflections:0.9.10'
     compile 'org.ow2.asm:asm-debug-all:5.1'
+    compile 'org.reflections:reflections:0.9.10'
+
+    compile 'com.squareup.okhttp:okhttp:2.7.5'
+    compile 'com.squareup.okio:okio:1.9.0'
+
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.guava:guava:19.0'
+
     compile 'org.jetbrains:annotations:13.0'
     compile 'ch.qos.logback:logback-classic:1.1.7'
     compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
-    compile 'com.squareup.okhttp:okhttp:2.7.5'
-    compile 'com.squareup.okio:okio:1.8.0'
 }
 
 task wrapper(type: Wrapper) {
