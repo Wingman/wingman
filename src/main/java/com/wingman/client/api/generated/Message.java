@@ -4,31 +4,31 @@ import java.lang.String;
 import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
-public interface Message extends DoublyNode {
+public interface Message extends DualNode {
+    int getIndex();
+
     String getMessage();
+
+    String getPrefix();
+
+    int getPushedLoopCycle();
 
     String getSender();
 
     int getType();
 
-    String getPrefix();
-
-    int getIndex();
-
-    int getPushedLoopCycle();
-
     @SuppressWarnings("all")
-    interface Unsafe extends DoublyNode {
+    interface Unsafe extends DualNode {
+        void setIndex(int value);
+
         void setMessage(String value);
+
+        void setPrefix(String value);
+
+        void setPushedLoopCycle(int value);
 
         void setSender(String value);
 
         void setType(int value);
-
-        void setPrefix(String value);
-
-        void setIndex(int value);
-
-        void setPushedLoopCycle(int value);
     }
 }

@@ -17,8 +17,8 @@ public abstract class GameAPI {
         return getterInstance.getItemDefinition(arg0);
     }
 
-    public static NPCDefinition getNPCDefinition(int arg0) {
-        return getterInstance.getNPCDefinition(arg0);
+    public static NPCDefinition getNpcDefinition(int arg0) {
+        return getterInstance.getNpcDefinition(arg0);
     }
 
     public static void pushMessage(int arg0, String arg1, String arg2, String arg3) {

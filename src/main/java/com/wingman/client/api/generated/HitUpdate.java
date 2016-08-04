@@ -4,14 +4,14 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface HitUpdate extends Node {
-    int getSpawnedLoopCycle();
-
     int getHealthRatio();
+
+    int getSpawnedLoopCycle();
 
     @SuppressWarnings("all")
     interface Unsafe extends Node {
-        void setSpawnedLoopCycle(int value);
-
         void setHealthRatio(int value);
+
+        void setSpawnedLoopCycle(int value);
     }
 }

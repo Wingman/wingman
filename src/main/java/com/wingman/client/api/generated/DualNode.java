@@ -3,17 +3,17 @@ package com.wingman.client.api.generated;
 import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
-public interface DoublyNode extends Node {
+public interface DualNode extends Node {
     void unlink();
 
-    DoublyNode getNext();
+    DualNode getNext();
 
-    DoublyNode getPrevious();
+    DualNode getPrevious();
 
     @SuppressWarnings("all")
     interface Unsafe extends Node {
-        void setNext(DoublyNode value);
+        void setNext(DualNode value);
 
-        void setPrevious(DoublyNode value);
+        void setPrevious(DualNode value);
     }
 }

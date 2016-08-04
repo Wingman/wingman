@@ -4,26 +4,26 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Character extends Entity {
-    int getX();
-
-    int getInteractingIndex();
-
-    int getY();
+    int getAnimation();
 
     NodeIterable getHealthBars();
 
-    int getAnimation();
+    int getInteractingIndex();
+
+    int getX();
+
+    int getY();
 
     @SuppressWarnings("all")
     interface Unsafe extends Entity {
-        void setX(int value);
-
-        void setInteractingIndex(int value);
-
-        void setY(int value);
+        void setAnimation(int value);
 
         void setHealthBars(NodeIterable value);
 
-        void setAnimation(int value);
+        void setInteractingIndex(int value);
+
+        void setX(int value);
+
+        void setY(int value);
     }
 }
