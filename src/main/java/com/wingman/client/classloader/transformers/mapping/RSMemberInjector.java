@@ -20,7 +20,8 @@ public class RSMemberInjector implements Transformer {
 
     @Override
     public boolean canTransform(String name) {
-        return MappingsHelper.obfFields.get(name) != null
+        return MappingsHelper.obfClasses.get(name) != null
+                || MappingsHelper.obfFields.get(name) != null
                 || MappingsHelper.obfMethods.get(name) != null;
     }
 
