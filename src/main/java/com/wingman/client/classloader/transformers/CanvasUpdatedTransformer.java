@@ -73,7 +73,8 @@ public class CanvasUpdatedTransformer implements Transformer {
             }
         } else {
             for (MethodNode m : clazz.methods) {
-                if (!m.name.equals(drawFullGameImage.name)) {
+                if (!m.name.equals(drawFullGameImage.name)
+                        || !m.desc.equals(drawFullGameImage.desc)) {
                     continue;
                 }
 

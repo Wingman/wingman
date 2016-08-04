@@ -21,7 +21,8 @@ public class WidgetOpenedTransformer implements Transformer {
     @Override
     public ClassNode transform(ClassNode clazz) {
         for (MethodNode m : clazz.methods) {
-            if (!m.name.equals(openWidget.name)) {
+            if (!m.name.equals(openWidget.name)
+                    || !m.desc.equals(openWidget.desc)) {
                 continue;
             }
 

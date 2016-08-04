@@ -25,7 +25,8 @@ public class MessageReceivedTransformer implements Transformer {
     @Override
     public ClassNode transform(ClassNode clazz) {
         for (MethodNode m : clazz.methods) {
-            if (!m.name.equals(addMessage.name)) {
+            if (!m.name.equals(addMessage.name)
+                    || !m.desc.equals(addMessage.desc)) {
                 continue;
             }
 
