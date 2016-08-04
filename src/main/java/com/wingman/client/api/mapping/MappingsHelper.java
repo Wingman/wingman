@@ -37,7 +37,6 @@ public class MappingsHelper {
 
             if (methodInfo.isStatic) {
                 deobfMethods.put(methodInfo.cleanName, methodInfo);
-
             } else {
                 String cleanName = obfClasses.get(methodInfo.owner);
                 if (cleanName != null) {

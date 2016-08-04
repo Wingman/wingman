@@ -4,7 +4,6 @@ import com.wingman.client.classloader.transformers.*;
 import com.wingman.client.classloader.transformers.mapping.RSMemberInjector;
 import com.wingman.client.classloader.transformers.mapping.StaticsBridger;
 
-import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Transformers {
@@ -36,6 +35,7 @@ public class Transformers {
             new ItemDefinitionCachedTransformer(),
             new WidgetOpenedTransformer(),
             new ExperienceGainedTransformer(),
+            new ExternalPlayerMovedTransformer(),
 
             /**
              * Code patches:
