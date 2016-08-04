@@ -33,6 +33,10 @@ public abstract class GameAPI {
         return getterInstance.getCanvas();
     }
 
+    public static int[] getExternalPlayerLocations() {
+        return getterInstance.getExternalPlayerLocations();
+    }
+
     public static int getGameDrawingMode() {
         return getterInstance.getGameDrawingMode();
     }
@@ -63,6 +67,10 @@ public abstract class GameAPI {
 
         public static void setCanvas(Canvas value) {
             setterInstance.setCanvas(value);
+        }
+
+        public static void setExternalPlayerLocations(int[] value) {
+            setterInstance.setExternalPlayerLocations(value);
         }
 
         public static void setGameDrawingMode(int value) {

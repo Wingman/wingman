@@ -19,6 +19,8 @@ public interface Static {
 
     Canvas getCanvas();
 
+    int[] getExternalPlayerLocations();
+
     int getGameDrawingMode();
 
     int getGameState();
@@ -34,6 +36,8 @@ public interface Static {
     @SuppressWarnings("all")
     interface Unsafe {
         void setCanvas(Canvas value);
+
+        void setExternalPlayerLocations(int[] value);
 
         void setGameDrawingMode(int value);
 

@@ -70,6 +70,7 @@ public abstract class MappingsDatabase {
 
     public static final FieldInfo[] FIELDS = new com.wingman.client.api.mapping.FieldInfo[]{
         new com.wingman.client.api.mapping.FieldInfo("canvas", "df", "qe", "Ljava/awt/Canvas;", "Ljava/awt/Canvas;", true, 1),
+        new com.wingman.client.api.mapping.FieldInfo("externalPlayerLocations", "ad", "k", "[I", "[I", true, 1),
         new com.wingman.client.api.mapping.FieldInfo("gameDrawingMode", "client", "ln", "I", "I", true, -742522279),
         new com.wingman.client.api.mapping.FieldInfo("gameState", "client", "t", "I", "I", true, -572146141),
         new com.wingman.client.api.mapping.FieldInfo("loopCycle", "client", "z", "I", "I", true, -300383021),
