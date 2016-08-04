@@ -117,6 +117,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.FieldInfo("visible", "aj", "c", "Z", "Z", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("visibleOnMiniMap", "aj", "x", "Z", "Z", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("widgetActions", "bt", "ac", "[Ljava/lang/String;", "[Ljava/lang/String;", false, 1),
+        new com.wingman.client.api.mapping.FieldInfo("width", "al", "o", "I", "I", false, 1712785745),
         new com.wingman.client.api.mapping.FieldInfo("x", "ay", "as", "I", "I", false, -1376592207),
         new com.wingman.client.api.mapping.FieldInfo("y", "ay", "ac", "I", "I", false, 1624622857),
 
