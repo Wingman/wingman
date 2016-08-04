@@ -6,14 +6,14 @@ import java.lang.SuppressWarnings;
 public interface DoublyNode extends Node {
     void unlink();
 
-    DoublyNode getPrevious();
-
     DoublyNode getNext();
+
+    DoublyNode getPrevious();
 
     @SuppressWarnings("all")
     interface Unsafe extends Node {
-        void setPrevious(DoublyNode value);
-
         void setNext(DoublyNode value);
+
+        void setPrevious(DoublyNode value);
     }
 }

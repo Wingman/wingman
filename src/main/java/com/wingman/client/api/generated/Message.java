@@ -5,30 +5,30 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Message extends DoublyNode {
-    String getPrefix();
+    String getMessage();
 
     String getSender();
 
-    int getPushedLoopCycle();
+    int getType();
+
+    String getPrefix();
 
     int getIndex();
 
-    String getMessage();
-
-    int getType();
+    int getPushedLoopCycle();
 
     @SuppressWarnings("all")
     interface Unsafe extends DoublyNode {
-        void setPrefix(String value);
+        void setMessage(String value);
 
         void setSender(String value);
 
-        void setPushedLoopCycle(int value);
+        void setType(int value);
+
+        void setPrefix(String value);
 
         void setIndex(int value);
 
-        void setMessage(String value);
-
-        void setType(int value);
+        void setPushedLoopCycle(int value);
     }
 }

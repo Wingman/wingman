@@ -5,30 +5,30 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface NPCDefinition extends DoublyNode {
-    boolean getVisibleOnMiniMap();
+    boolean getVisible();
 
     int getCombatLevel();
 
-    String getName();
+    String[] getActions();
 
-    boolean getVisible();
+    boolean getVisibleOnMiniMap();
 
     int getOverHeadIcon();
 
-    String[] getActions();
+    String getName();
 
     @SuppressWarnings("all")
     interface Unsafe extends DoublyNode {
-        void setVisibleOnMiniMap(boolean value);
+        void setVisible(boolean value);
 
         void setCombatLevel(int value);
 
-        void setName(String value);
+        void setActions(String[] value);
 
-        void setVisible(boolean value);
+        void setVisibleOnMiniMap(boolean value);
 
         void setOverHeadIcon(int value);
 
-        void setActions(String[] value);
+        void setName(String value);
     }
 }

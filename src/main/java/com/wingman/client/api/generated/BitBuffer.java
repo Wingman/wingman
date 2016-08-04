@@ -6,14 +6,14 @@ import java.lang.SuppressWarnings;
 public interface BitBuffer extends ByteBuffer {
     int getBits(int arg0);
 
-    IsaacCipher getIsaacCipher();
-
     int getBitPosition();
+
+    IsaacCipher getIsaacCipher();
 
     @SuppressWarnings("all")
     interface Unsafe extends ByteBuffer {
-        void setIsaacCipher(IsaacCipher value);
-
         void setBitPosition(int value);
+
+        void setIsaacCipher(IsaacCipher value);
     }
 }

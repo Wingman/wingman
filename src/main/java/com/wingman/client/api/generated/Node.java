@@ -8,18 +8,18 @@ public interface Node {
 
     void unlink();
 
-    Node getPrevious();
+    long getKey();
 
     Node getNext();
 
-    long getKey();
+    Node getPrevious();
 
     @SuppressWarnings("all")
     interface Unsafe {
-        void setPrevious(Node value);
+        void setKey(long value);
 
         void setNext(Node value);
 
-        void setKey(long value);
+        void setPrevious(Node value);
     }
 }

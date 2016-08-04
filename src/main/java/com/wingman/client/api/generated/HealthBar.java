@@ -4,14 +4,14 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface HealthBar extends Node {
-    HealthBarDefinition getDefinition();
-
     NodeIterable getHitUpdates();
+
+    HealthBarDefinition getDefinition();
 
     @SuppressWarnings("all")
     interface Unsafe extends Node {
-        void setDefinition(HealthBarDefinition value);
-
         void setHitUpdates(NodeIterable value);
+
+        void setDefinition(HealthBarDefinition value);
     }
 }
