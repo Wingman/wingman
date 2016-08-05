@@ -29,8 +29,32 @@ public abstract class GameAPI {
         getterInstance.updateCharacterMovement(arg0, arg1);
     }
 
+    public static int getCameraPitch() {
+        return getterInstance.getCameraPitch();
+    }
+
+    public static int getCameraX() {
+        return getterInstance.getCameraX();
+    }
+
+    public static int getCameraY() {
+        return getterInstance.getCameraY();
+    }
+
+    public static int getCameraYaw() {
+        return getterInstance.getCameraYaw();
+    }
+
+    public static int getCameraZ() {
+        return getterInstance.getCameraZ();
+    }
+
     public static Canvas getCanvas() {
         return getterInstance.getCanvas();
+    }
+
+    public static int getClientPlane() {
+        return getterInstance.getClientPlane();
     }
 
     public static int[] getExternalPlayerLocations() {
@@ -45,8 +69,32 @@ public abstract class GameAPI {
         return getterInstance.getGameState();
     }
 
+    public static NodeTable getItemContainers() {
+        return getterInstance.getItemContainers();
+    }
+
+    public static Landscape getLandscape() {
+        return getterInstance.getLandscape();
+    }
+
+    public static Player getLocalPlayer() {
+        return getterInstance.getLocalPlayer();
+    }
+
     public static int getLoopCycle() {
         return getterInstance.getLoopCycle();
+    }
+
+    public static int getMapAngle() {
+        return getterInstance.getMapAngle();
+    }
+
+    public static int getMapOffset() {
+        return getterInstance.getMapOffset();
+    }
+
+    public static int getMapScale() {
+        return getterInstance.getMapScale();
     }
 
     public static Map getMessageContainers() {
@@ -61,12 +109,60 @@ public abstract class GameAPI {
         return getterInstance.getPlayers();
     }
 
+    public static boolean getResizableMode() {
+        return getterInstance.getResizableMode();
+    }
+
+    public static int[][][] getTileHeights() {
+        return getterInstance.getTileHeights();
+    }
+
+    public static byte[][][] getTileSettings() {
+        return getterInstance.getTileSettings();
+    }
+
+    public static int getViewPortHeight() {
+        return getterInstance.getViewPortHeight();
+    }
+
+    public static int getViewPortScale() {
+        return getterInstance.getViewPortScale();
+    }
+
+    public static int getViewPortWidth() {
+        return getterInstance.getViewPortWidth();
+    }
+
     @SuppressWarnings("all")
     public abstract static class Unsafe {
         public static Static.Unsafe setterInstance;
 
+        public static void setCameraPitch(int value) {
+            setterInstance.setCameraPitch(value);
+        }
+
+        public static void setCameraX(int value) {
+            setterInstance.setCameraX(value);
+        }
+
+        public static void setCameraY(int value) {
+            setterInstance.setCameraY(value);
+        }
+
+        public static void setCameraYaw(int value) {
+            setterInstance.setCameraYaw(value);
+        }
+
+        public static void setCameraZ(int value) {
+            setterInstance.setCameraZ(value);
+        }
+
         public static void setCanvas(Canvas value) {
             setterInstance.setCanvas(value);
+        }
+
+        public static void setClientPlane(int value) {
+            setterInstance.setClientPlane(value);
         }
 
         public static void setExternalPlayerLocations(int[] value) {
@@ -81,8 +177,32 @@ public abstract class GameAPI {
             setterInstance.setGameState(value);
         }
 
+        public static void setItemContainers(NodeTable value) {
+            setterInstance.setItemContainers(value);
+        }
+
+        public static void setLandscape(Landscape value) {
+            setterInstance.setLandscape(value);
+        }
+
+        public static void setLocalPlayer(Player value) {
+            setterInstance.setLocalPlayer(value);
+        }
+
         public static void setLoopCycle(int value) {
             setterInstance.setLoopCycle(value);
+        }
+
+        public static void setMapAngle(int value) {
+            setterInstance.setMapAngle(value);
+        }
+
+        public static void setMapOffset(int value) {
+            setterInstance.setMapOffset(value);
+        }
+
+        public static void setMapScale(int value) {
+            setterInstance.setMapScale(value);
         }
 
         public static void setMessageContainers(Map value) {
@@ -95,6 +215,30 @@ public abstract class GameAPI {
 
         public static void setPlayers(Player[] value) {
             setterInstance.setPlayers(value);
+        }
+
+        public static void setResizableMode(boolean value) {
+            setterInstance.setResizableMode(value);
+        }
+
+        public static void setTileHeights(int[][][] value) {
+            setterInstance.setTileHeights(value);
+        }
+
+        public static void setTileSettings(byte[][][] value) {
+            setterInstance.setTileSettings(value);
+        }
+
+        public static void setViewPortHeight(int value) {
+            setterInstance.setViewPortHeight(value);
+        }
+
+        public static void setViewPortScale(int value) {
+            setterInstance.setViewPortScale(value);
+        }
+
+        public static void setViewPortWidth(int value) {
+            setterInstance.setViewPortWidth(value);
         }
     }
 }

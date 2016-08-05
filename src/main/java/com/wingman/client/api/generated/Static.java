@@ -17,7 +17,19 @@ public interface Static {
 
     void updateCharacterMovement(Character arg0, int arg1);
 
+    int getCameraPitch();
+
+    int getCameraX();
+
+    int getCameraY();
+
+    int getCameraYaw();
+
+    int getCameraZ();
+
     Canvas getCanvas();
+
+    int getClientPlane();
 
     int[] getExternalPlayerLocations();
 
@@ -25,7 +37,19 @@ public interface Static {
 
     int getGameState();
 
+    NodeTable getItemContainers();
+
+    Landscape getLandscape();
+
+    Player getLocalPlayer();
+
     int getLoopCycle();
+
+    int getMapAngle();
+
+    int getMapOffset();
+
+    int getMapScale();
 
     Map getMessageContainers();
 
@@ -33,9 +57,33 @@ public interface Static {
 
     Player[] getPlayers();
 
+    boolean getResizableMode();
+
+    int[][][] getTileHeights();
+
+    byte[][][] getTileSettings();
+
+    int getViewPortHeight();
+
+    int getViewPortScale();
+
+    int getViewPortWidth();
+
     @SuppressWarnings("all")
     interface Unsafe {
+        void setCameraPitch(int value);
+
+        void setCameraX(int value);
+
+        void setCameraY(int value);
+
+        void setCameraYaw(int value);
+
+        void setCameraZ(int value);
+
         void setCanvas(Canvas value);
+
+        void setClientPlane(int value);
 
         void setExternalPlayerLocations(int[] value);
 
@@ -43,12 +91,36 @@ public interface Static {
 
         void setGameState(int value);
 
+        void setItemContainers(NodeTable value);
+
+        void setLandscape(Landscape value);
+
+        void setLocalPlayer(Player value);
+
         void setLoopCycle(int value);
+
+        void setMapAngle(int value);
+
+        void setMapOffset(int value);
+
+        void setMapScale(int value);
 
         void setMessageContainers(Map value);
 
         void setNpcs(NPC[] value);
 
         void setPlayers(Player[] value);
+
+        void setResizableMode(boolean value);
+
+        void setTileHeights(int[][][] value);
+
+        void setTileSettings(byte[][][] value);
+
+        void setViewPortHeight(int value);
+
+        void setViewPortScale(int value);
+
+        void setViewPortWidth(int value);
     }
 }
