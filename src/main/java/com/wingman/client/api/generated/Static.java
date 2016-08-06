@@ -35,6 +35,8 @@ public interface Static {
 
     int getGameDrawingMode();
 
+    int[] getGameSettings();
+
     int getGameState();
 
     NodeTable getItemContainers();
@@ -55,6 +57,8 @@ public interface Static {
 
     NPC[] getNpcs();
 
+    int[] getPlayerSettings();
+
     Player[] getPlayers();
 
     boolean getResizableMode();
@@ -68,6 +72,8 @@ public interface Static {
     int getViewPortScale();
 
     int getViewPortWidth();
+
+    int[] getWidgetSettings();
 
     @SuppressWarnings("all")
     interface Unsafe {
@@ -89,6 +95,8 @@ public interface Static {
 
         void setGameDrawingMode(int value);
 
+        void setGameSettings(int[] value);
+
         void setGameState(int value);
 
         void setItemContainers(NodeTable value);
@@ -109,6 +117,8 @@ public interface Static {
 
         void setNpcs(NPC[] value);
 
+        void setPlayerSettings(int[] value);
+
         void setPlayers(Player[] value);
 
         void setResizableMode(boolean value);
@@ -122,5 +132,7 @@ public interface Static {
         void setViewPortScale(int value);
 
         void setViewPortWidth(int value);
+
+        void setWidgetSettings(int[] value);
     }
 }

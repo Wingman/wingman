@@ -65,6 +65,10 @@ public abstract class GameAPI {
         return getterInstance.getGameDrawingMode();
     }
 
+    public static int[] getGameSettings() {
+        return getterInstance.getGameSettings();
+    }
+
     public static int getGameState() {
         return getterInstance.getGameState();
     }
@@ -105,6 +109,10 @@ public abstract class GameAPI {
         return getterInstance.getNpcs();
     }
 
+    public static int[] getPlayerSettings() {
+        return getterInstance.getPlayerSettings();
+    }
+
     public static Player[] getPlayers() {
         return getterInstance.getPlayers();
     }
@@ -131,6 +139,10 @@ public abstract class GameAPI {
 
     public static int getViewPortWidth() {
         return getterInstance.getViewPortWidth();
+    }
+
+    public static int[] getWidgetSettings() {
+        return getterInstance.getWidgetSettings();
     }
 
     @SuppressWarnings("all")
@@ -173,6 +185,10 @@ public abstract class GameAPI {
             setterInstance.setGameDrawingMode(value);
         }
 
+        public static void setGameSettings(int[] value) {
+            setterInstance.setGameSettings(value);
+        }
+
         public static void setGameState(int value) {
             setterInstance.setGameState(value);
         }
@@ -213,6 +229,10 @@ public abstract class GameAPI {
             setterInstance.setNpcs(value);
         }
 
+        public static void setPlayerSettings(int[] value) {
+            setterInstance.setPlayerSettings(value);
+        }
+
         public static void setPlayers(Player[] value) {
             setterInstance.setPlayers(value);
         }
@@ -239,6 +259,10 @@ public abstract class GameAPI {
 
         public static void setViewPortWidth(int value) {
             setterInstance.setViewPortWidth(value);
+        }
+
+        public static void setWidgetSettings(int[] value) {
+            setterInstance.setWidgetSettings(value);
         }
     }
 }
