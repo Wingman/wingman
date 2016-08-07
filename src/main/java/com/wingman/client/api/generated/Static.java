@@ -7,15 +7,15 @@ import java.util.Map;
 
 @SuppressWarnings("all")
 public interface Static {
-    boolean decodeExternalPlayerMovement(BitBuffer arg0, int arg1);
+    boolean decodeExternalPlayerMovement(BitBuffer bitBuffer, int playerId);
 
-    ItemDefinition getItemDefinition(int arg0);
+    ItemDefinition getItemDefinition(int itemId);
 
-    NPCDefinition getNpcDefinition(int arg0);
+    NPCDefinition getNpcDefinition(int npcId);
 
-    void pushMessage(int arg0, String arg1, String arg2, String arg3);
+    void pushMessage(int type, String prefix, String message, String suffix);
 
-    void updateCharacterMovement(Character arg0, int arg1);
+    void updateCharacterMovement(Character character, int arg1);
 
     int getAppletHeight();
 

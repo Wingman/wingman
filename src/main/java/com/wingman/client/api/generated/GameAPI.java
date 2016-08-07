@@ -9,24 +9,24 @@ import java.util.Map;
 public abstract class GameAPI {
     public static Static getterInstance;
 
-    public static boolean decodeExternalPlayerMovement(BitBuffer arg0, int arg1) {
-        return getterInstance.decodeExternalPlayerMovement(arg0, arg1);
+    public static boolean decodeExternalPlayerMovement(BitBuffer bitBuffer, int playerId) {
+        return getterInstance.decodeExternalPlayerMovement(bitBuffer, playerId);
     }
 
-    public static ItemDefinition getItemDefinition(int arg0) {
-        return getterInstance.getItemDefinition(arg0);
+    public static ItemDefinition getItemDefinition(int itemId) {
+        return getterInstance.getItemDefinition(itemId);
     }
 
-    public static NPCDefinition getNpcDefinition(int arg0) {
-        return getterInstance.getNpcDefinition(arg0);
+    public static NPCDefinition getNpcDefinition(int npcId) {
+        return getterInstance.getNpcDefinition(npcId);
     }
 
-    public static void pushMessage(int arg0, String arg1, String arg2, String arg3) {
-        getterInstance.pushMessage(arg0, arg1, arg2, arg3);
+    public static void pushMessage(int type, String prefix, String message, String suffix) {
+        getterInstance.pushMessage(type, prefix, message, suffix);
     }
 
-    public static void updateCharacterMovement(Character arg0, int arg1) {
-        getterInstance.updateCharacterMovement(arg0, arg1);
+    public static void updateCharacterMovement(Character character, int arg1) {
+        getterInstance.updateCharacterMovement(character, arg1);
     }
 
     public static int getAppletHeight() {

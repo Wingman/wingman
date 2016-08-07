@@ -8,7 +8,7 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface GameEngine extends FocusListener, WindowListener, Runnable {
-    void throwCriticalError(String arg0);
+    void throwCriticalError(String errorMessage);
 
     @SuppressWarnings("all")
     interface Unsafe extends FocusListener, WindowListener, Runnable {

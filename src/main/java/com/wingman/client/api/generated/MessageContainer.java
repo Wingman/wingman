@@ -5,7 +5,7 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface MessageContainer {
-    Message addMessage(int arg0, String arg1, String arg2, String arg3);
+    Message addMessage(int type, String prefix, String message, String suffix);
 
     @SuppressWarnings("all")
     interface Unsafe {

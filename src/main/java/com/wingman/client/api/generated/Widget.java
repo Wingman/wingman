@@ -4,7 +4,7 @@ import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface Widget extends Node {
-    void rearrangeItemSlot(int arg0, int arg1);
+    void rearrangeItemSlot(int targetSlot, int sourceSlot);
 
     int[] getItemIds();
 
