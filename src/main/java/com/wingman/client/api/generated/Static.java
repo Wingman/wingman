@@ -75,6 +75,8 @@ public interface Static {
 
     int[] getWidgetSettings();
 
+    Widget[][] getWidgets();
+
     @SuppressWarnings("all")
     interface Unsafe {
         void setCameraPitch(int value);
@@ -134,5 +136,7 @@ public interface Static {
         void setViewPortWidth(int value);
 
         void setWidgetSettings(int[] value);
+
+        void setWidgets(Widget[][] value);
     }
 }

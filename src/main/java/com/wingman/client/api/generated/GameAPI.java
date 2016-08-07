@@ -145,6 +145,10 @@ public abstract class GameAPI {
         return getterInstance.getWidgetSettings();
     }
 
+    public static Widget[][] getWidgets() {
+        return getterInstance.getWidgets();
+    }
+
     @SuppressWarnings("all")
     public abstract static class Unsafe {
         public static Static.Unsafe setterInstance;
@@ -263,6 +267,10 @@ public abstract class GameAPI {
 
         public static void setWidgetSettings(int[] value) {
             setterInstance.setWidgetSettings(value);
+        }
+
+        public static void setWidgets(Widget[][] value) {
+            setterInstance.setWidgets(value);
         }
     }
 }

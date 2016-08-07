@@ -20,6 +20,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.ClassInfo("HealthBarDefinition", "al"),
         new com.wingman.client.api.mapping.ClassInfo("HitUpdate", "j"),
         new com.wingman.client.api.mapping.ClassInfo("IsaacCipher", "dr"),
+        new com.wingman.client.api.mapping.ClassInfo("ItemContainer", "d"),
         new com.wingman.client.api.mapping.ClassInfo("ItemDefinition", "bt"),
         new com.wingman.client.api.mapping.ClassInfo("Landscape", "cs"),
         new com.wingman.client.api.mapping.ClassInfo("LandscapeTile", "di"),
@@ -37,6 +38,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.ClassInfo("ReferenceTable", "fp"),
         new com.wingman.client.api.mapping.ClassInfo("SecondaryGraphicsBuffer", "cw"),
         new com.wingman.client.api.mapping.ClassInfo("WallObject", "cb"),
+        new com.wingman.client.api.mapping.ClassInfo("Widget", "fx"),
 
     };
 
@@ -103,6 +105,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.FieldInfo("viewPortScale", "client", "ow", "I", "I", true, 202303965),
         new com.wingman.client.api.mapping.FieldInfo("viewPortWidth", "client", "ov", "I", "I", true, 110362467),
         new com.wingman.client.api.mapping.FieldInfo("widgetSettings", "fu", "l", "[I", "[I", true, 1),
+        new com.wingman.client.api.mapping.FieldInfo("widgets", "fx", "l", "[[Lfx;", "[[Lcom/wingman/client/api/generated/Widget;", true, 1),
         new com.wingman.client.api.mapping.FieldInfo("actions", "aj", "j", "[Ljava/lang/String;", "[Ljava/lang/String;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("animation", "ay", "be", "I", "I", false, -1571771687),
         new com.wingman.client.api.mapping.FieldInfo("bitPosition", "du", "m", "I", "I", false, -1652549435),
@@ -115,6 +118,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.FieldInfo("healthBars", "ay", "bq", "Lgg;", "Lcom/wingman/client/api/generated/NodeIterable;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("healthRatio", "j", "r", "I", "I", false, -554880233),
         new com.wingman.client.api.mapping.FieldInfo("hitUpdates", "ad", "e", "Lgg;", "Lcom/wingman/client/api/generated/NodeIterable;", false, 1),
+        new com.wingman.client.api.mapping.FieldInfo("ids", "d", "g", "[I", "[I", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("index", "ap", "l", "I", "I", false, -1163282247),
         new com.wingman.client.api.mapping.FieldInfo("interactingIndex", "ay", "bj", "I", "I", false, 1774280051),
         new com.wingman.client.api.mapping.FieldInfo("isaacCipher", "du", "n", "Ldr;", "Lcom/wingman/client/api/generated/IsaacCipher;", false, 1),
@@ -135,6 +139,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.FieldInfo("previous", "gm", "cs", "Lgm;", "Lcom/wingman/client/api/generated/DualNode;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("previous", "hb", "ef", "Lhb;", "Lcom/wingman/client/api/generated/Node;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("pushedLoopCycle", "ap", "g", "I", "I", false, 420119609),
+        new com.wingman.client.api.mapping.FieldInfo("quantities", "d", "r", "[I", "[I", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("sender", "ap", "e", "Ljava/lang/String;", "Ljava/lang/String;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("spawnedLoopCycle", "j", "l", "I", "I", false, 2103373921),
         new com.wingman.client.api.mapping.FieldInfo("teamIndex", "bt", "an", "I", "I", false, 389970231),
