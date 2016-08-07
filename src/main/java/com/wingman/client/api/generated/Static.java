@@ -65,6 +65,10 @@ public interface Static {
 
     Player[] getPlayers();
 
+    int getRepaintChatBox();
+
+    int getRepaintFlag();
+
     boolean getResizableMode();
 
     int[][][] getTileHeights();
@@ -130,6 +134,10 @@ public interface Static {
         void setPlayerSettings(int[] value);
 
         void setPlayers(Player[] value);
+
+        void setRepaintChatBox(int value);
+
+        void setRepaintFlag(int value);
 
         void setResizableMode(boolean value);
 

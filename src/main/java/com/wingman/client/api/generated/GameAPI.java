@@ -125,6 +125,14 @@ public abstract class GameAPI {
         return getterInstance.getPlayers();
     }
 
+    public static int getRepaintChatBox() {
+        return getterInstance.getRepaintChatBox();
+    }
+
+    public static int getRepaintFlag() {
+        return getterInstance.getRepaintFlag();
+    }
+
     public static boolean getResizableMode() {
         return getterInstance.getResizableMode();
     }
@@ -255,6 +263,14 @@ public abstract class GameAPI {
 
         public static void setPlayers(Player[] value) {
             setterInstance.setPlayers(value);
+        }
+
+        public static void setRepaintChatBox(int value) {
+            setterInstance.setRepaintChatBox(value);
+        }
+
+        public static void setRepaintFlag(int value) {
+            setterInstance.setRepaintFlag(value);
         }
 
         public static void setResizableMode(boolean value) {
