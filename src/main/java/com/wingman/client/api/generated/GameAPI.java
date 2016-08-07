@@ -29,6 +29,14 @@ public abstract class GameAPI {
         getterInstance.updateCharacterMovement(arg0, arg1);
     }
 
+    public static int getAppletHeight() {
+        return getterInstance.getAppletHeight();
+    }
+
+    public static int getAppletWidth() {
+        return getterInstance.getAppletWidth();
+    }
+
     public static int getCameraPitch() {
         return getterInstance.getCameraPitch();
     }
@@ -152,6 +160,14 @@ public abstract class GameAPI {
     @SuppressWarnings("all")
     public abstract static class Unsafe {
         public static Static.Unsafe setterInstance;
+
+        public static void setAppletHeight(int value) {
+            setterInstance.setAppletHeight(value);
+        }
+
+        public static void setAppletWidth(int value) {
+            setterInstance.setAppletWidth(value);
+        }
 
         public static void setCameraPitch(int value) {
             setterInstance.setCameraPitch(value);

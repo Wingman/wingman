@@ -19,6 +19,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.ClassInfo("HealthBar", "ad"),
         new com.wingman.client.api.mapping.ClassInfo("HealthBarDefinition", "al"),
         new com.wingman.client.api.mapping.ClassInfo("HitUpdate", "j"),
+        new com.wingman.client.api.mapping.ClassInfo("InteractableObject", "cv"),
         new com.wingman.client.api.mapping.ClassInfo("IsaacCipher", "dr"),
         new com.wingman.client.api.mapping.ClassInfo("ItemContainer", "d"),
         new com.wingman.client.api.mapping.ClassInfo("ItemDefinition", "bt"),
@@ -76,6 +77,8 @@ public abstract class MappingsDatabase {
     };
 
     public static final FieldInfo[] FIELDS = new com.wingman.client.api.mapping.FieldInfo[]{
+        new com.wingman.client.api.mapping.FieldInfo("appletHeight", "ay", "qb", "I", "I", true, 1324038261),
+        new com.wingman.client.api.mapping.FieldInfo("appletWidth", "gb", "qq", "I", "I", true, -906707721),
         new com.wingman.client.api.mapping.FieldInfo("cameraPitch", "cq", "fr", "I", "I", true, -1139349345),
         new com.wingman.client.api.mapping.FieldInfo("cameraX", "ee", "fb", "I", "I", true, 864506953),
         new com.wingman.client.api.mapping.FieldInfo("cameraY", "cx", "ff", "I", "I", true, 1541264873),
@@ -120,6 +123,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.FieldInfo("hitUpdates", "ad", "e", "Lgg;", "Lcom/wingman/client/api/generated/NodeIterable;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("ids", "d", "g", "[I", "[I", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("index", "ap", "l", "I", "I", false, -1163282247),
+        new com.wingman.client.api.mapping.FieldInfo("interactableObjects", "di", "q", "[Lcv;", "[Lcom/wingman/client/api/generated/InteractableObject;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("interactingIndex", "ay", "bj", "I", "I", false, 1774280051),
         new com.wingman.client.api.mapping.FieldInfo("isaacCipher", "du", "n", "Ldr;", "Lcom/wingman/client/api/generated/IsaacCipher;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("key", "hb", "em", "J", "J", false, 1),
@@ -132,8 +136,10 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.FieldInfo("next", "hb", "eq", "Lhb;", "Lcom/wingman/client/api/generated/Node;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("noteIndex", "bt", "ar", "I", "I", false, 38903507),
         new com.wingman.client.api.mapping.FieldInfo("noteTemplateIndex", "bt", "at", "I", "I", false, -1685935717),
+        new com.wingman.client.api.mapping.FieldInfo("objectFlags", "di", "p", "[I", "[I", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("overHeadIcon", "aj", "ac", "I", "I", false, -1678730625),
         new com.wingman.client.api.mapping.FieldInfo("payload", "dc", "l", "[B", "[B", false, 1),
+        new com.wingman.client.api.mapping.FieldInfo("plane", "di", "e", "I", "I", false, -922709805),
         new com.wingman.client.api.mapping.FieldInfo("position", "dc", "g", "I", "I", false, -221102553),
         new com.wingman.client.api.mapping.FieldInfo("prefix", "ap", "h", "Ljava/lang/String;", "Ljava/lang/String;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("previous", "gm", "cs", "Lgm;", "Lcom/wingman/client/api/generated/DualNode;", false, 1),
@@ -151,7 +157,9 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.FieldInfo("widgetActions", "bt", "ac", "[Ljava/lang/String;", "[Ljava/lang/String;", false, 1),
         new com.wingman.client.api.mapping.FieldInfo("width", "al", "o", "I", "I", false, 1712785745),
         new com.wingman.client.api.mapping.FieldInfo("x", "ay", "as", "I", "I", false, -1376592207),
+        new com.wingman.client.api.mapping.FieldInfo("x", "di", "g", "I", "I", false, -987515097),
         new com.wingman.client.api.mapping.FieldInfo("y", "ay", "ac", "I", "I", false, 1624622857),
+        new com.wingman.client.api.mapping.FieldInfo("y", "di", "r", "I", "I", false, -304054191),
 
     };
 }

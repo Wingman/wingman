@@ -17,6 +17,10 @@ public interface Static {
 
     void updateCharacterMovement(Character arg0, int arg1);
 
+    int getAppletHeight();
+
+    int getAppletWidth();
+
     int getCameraPitch();
 
     int getCameraX();
@@ -79,6 +83,10 @@ public interface Static {
 
     @SuppressWarnings("all")
     interface Unsafe {
+        void setAppletHeight(int value);
+
+        void setAppletWidth(int value);
+
         void setCameraPitch(int value);
 
         void setCameraX(int value);
