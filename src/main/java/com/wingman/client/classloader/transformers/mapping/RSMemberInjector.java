@@ -177,11 +177,18 @@ public class RSMemberInjector implements Transformer {
                     );
                 }
 
-                if (f.multiplier != 1) {
-                    MappingsHelper.addInstructions(insnList,
-                            new LdcInsnNode(f.multiplier),
-                            new InsnNode(Opcodes.IMUL)
-                    );
+                if (f.getter != 1) {
+                    if (f.obfType.equals("I")) {
+                        MappingsHelper.addInstructions(insnList,
+                                new LdcInsnNode(new Integer("" + f.getter)),
+                                new InsnNode(Opcodes.IMUL)
+                        );
+                    } else {
+                        MappingsHelper.addInstructions(insnList,
+                                new LdcInsnNode(f.getter),
+                                new InsnNode(Opcodes.LMUL)
+                        );
+                    }
                 }
 
                 MappingsHelper.addInstructions(insnList,
@@ -219,28 +226,26 @@ public class RSMemberInjector implements Transformer {
                     );
                 }
 
-                try {
-                    if (f.multiplier != 1) {
+                if (f.getter != 1) {
+                    if (f.obfType.equals("I")) {
                         MappingsHelper.addInstructions(insnList,
-                                new LdcInsnNode(MappingsHelper.getMMI(f.multiplier)),
+                                new LdcInsnNode(new Integer("" + f.setter)),
                                 new InsnNode(Opcodes.IMUL)
                         );
+                    } else {
+                        MappingsHelper.addInstructions(insnList,
+                                new LdcInsnNode(f.setter),
+                                new InsnNode(Opcodes.LMUL)
+                        );
                     }
-
-                    MappingsHelper.addInstructions(insnList,
-                            new FieldInsnNode(Opcodes.PUTFIELD, f.owner, f.name, obfType.toString()),
-                            new InsnNode(Opcodes.RETURN)
-                    );
-
-                    clazz.methods.add(setter);
-                } catch (ArithmeticException e) {
-                    System.out.println(MessageFormat.format("Multiplier {0} for {1}.{2} ({3}) is broken - {4}",
-                            f.multiplier,
-                            f.owner,
-                            f.name,
-                            f.cleanName,
-                            e.getMessage()));
                 }
+
+                MappingsHelper.addInstructions(insnList,
+                        new FieldInsnNode(Opcodes.PUTFIELD, f.owner, f.name, obfType.toString()),
+                        new InsnNode(Opcodes.RETURN)
+                );
+
+                clazz.methods.add(setter);
             }
         }
     }
