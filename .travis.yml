@@ -25,11 +25,11 @@ after_deploy:
  - cd wingman.github.io
  - git remote rm origin
  - git remote add origin https://wingmanupdater:$GH_TOKEN@github.com/Wingman/wingman.github.io.git
- - mkdir javadoc
- - git rm javadoc/*
- - cp -R ../build/docs/javadoc/* javadoc
- - git add javadoc/*
- - git commit -m "Update Javadoc"
+ - mkdir docs
+ - git rm docs/*
+ - cp -R ../build/docs/javadoc/* docs
+ - git add docs/*
+ - git commit -m "Update Javadocs"
  - git push -fq origin master
  
 env:
