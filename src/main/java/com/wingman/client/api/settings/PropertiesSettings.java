@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-public class PropertiesSettings extends Settings {
+public class PropertiesSettings {
 
     public File file;
     public Properties properties;
@@ -36,17 +36,14 @@ public class PropertiesSettings extends Settings {
     public void checkKeys() {
     }
 
-    @Override
     public void update(String key, Object value) {
         properties.put(key, value);
     }
 
-    @Override
     public String get(String key) {
         return (String) properties.get(key);
     }
 
-    @Override
     public void save() {
         try {
             properties.store(new FileOutputStream(file), fileComments);
