@@ -17,18 +17,18 @@ public class Transformers {
      * Should a plugin transformer want to transform a RuneScape class, add it in {@link com.wingman.client.api.plugin.Plugin.Setup}.
      */
     public static final CopyOnWriteArrayList<Transformer> TRANSFORMERS = new CopyOnWriteArrayList<>(new Transformer[] {
-            /**
+            /*
              * Mapping:
             */
             new RSMemberInjector(),
             new StaticsBridger(),
 
-            /**
+            /*
              * Client-listenable events:
             */
             new CanvasUpdatedTransformer(),
 
-            /**
+            /*
              * Plugin/client-listenable events:
             */
             new MessageReceivedTransformer(),
@@ -37,7 +37,7 @@ public class Transformers {
             new ExperienceGainedTransformer(),
             new ExternalPlayerMovedTransformer(),
 
-            /**
+            /*
              * Code patches:
             */
             new PreserveExceptionInfoTransformer(),

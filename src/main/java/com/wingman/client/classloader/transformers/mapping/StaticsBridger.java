@@ -8,7 +8,6 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
-import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
 
