@@ -10,7 +10,7 @@ public class SettingsItem {
 
     private final String description;
 
-    private final List<JComponent> components = new ArrayList<>();
+    public List<JComponent> components = new ArrayList<>();
 
     public SettingsItem(String description) {
         this.description = description;
