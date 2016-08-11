@@ -22,11 +22,11 @@ public class SettingsSection {
     private final SettingSectionToggleListener toggleListener;
     private final boolean defaultToggleState;
 
-    private final List<SettingsItem> items = new ArrayList<>();
+    public List<SettingsItem> items = new ArrayList<>();
 
     private JPanel builtListHeader;
     private JPanel builtSelectedHeader;
-    private JPanel builtSelectedBody;
+    private JScrollPane builtSelectedBody;
 
     /*
         Plugin specific constructors
@@ -93,14 +93,6 @@ public class SettingsSection {
     public void add(SettingsItem... items) {
         if (items != null) {
             Collections.addAll(this.items, items);
-        }
-    }
-
-    public void remove(SettingsItem... items) {
-        if (items != null) {
-            for (SettingsItem item : items) {
-                this.items.remove(item);
-            }
         }
     }
 
@@ -235,7 +227,7 @@ public class SettingsSection {
         return builtSelectedHeader = panel;
     }
 
-    public JPanel buildSelectedSectionBody() {
+    public JScrollPane buildSelectedSectionBody() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -250,7 +242,7 @@ public class SettingsSection {
             panel.add(itemPanel);
         }
 
-        return builtSelectedBody = panel;
+        return builtSelectedBody = new JScrollPane(panel);
     }
 
     public String getOwner() {
@@ -269,7 +261,7 @@ public class SettingsSection {
         return builtSelectedHeader;
     }
 
-    public JPanel getSelectedBody() {
+    public JScrollPane getSelectedBody() {
         return builtSelectedBody;
     }
 }

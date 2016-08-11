@@ -19,7 +19,7 @@ public class SettingsScreen extends JDialog {
     private JPanel sectionList = new JPanel();
     private JScrollPane sectionListScrollPane = new JScrollPane(sectionList);
 
-    private JPanel selectedSectionPanel = new JPanel(new BorderLayout());
+    private JPanel selectedSectionPanel = new JPanel();
     private SettingsSection selectedSection;
 
     public SettingsScreen() {
@@ -30,6 +30,7 @@ public class SettingsScreen extends JDialog {
         this.setJMenuBar(new SettingsTitleBar(this));
 
         sectionList.setLayout(new BoxLayout(sectionList, BoxLayout.Y_AXIS));
+        selectedSectionPanel.setLayout(new BoxLayout(selectedSectionPanel, BoxLayout.Y_AXIS));
 
         JPanel contentPane = new JPanel(new BorderLayout() {
             @Override
@@ -50,7 +51,7 @@ public class SettingsScreen extends JDialog {
         this.setLocationRelativeTo(null);
     }
 
-    private void redrawSectionList() {
+    private synchronized void redrawSectionList() {
         sectionList.removeAll();
 
         for (int i = 0; i < sections.size(); i++) {
@@ -137,13 +138,13 @@ public class SettingsScreen extends JDialog {
             });
         }
 
-        JPanel builtBody = section.getSelectedBody();
+        JScrollPane builtBody = section.getSelectedBody();
         if (builtBody == null) {
             builtBody = section.buildSelectedSectionBody();
         }
 
-        selectedSectionPanel.add(builtHeader, BorderLayout.NORTH);
-        selectedSectionPanel.add(builtBody, BorderLayout.CENTER);
+        selectedSectionPanel.add(builtHeader);
+        selectedSectionPanel.add(builtBody);
 
         contentPane.add(selectedSectionPanel);
         contentPane.revalidate();
@@ -164,9 +165,11 @@ public class SettingsScreen extends JDialog {
     }
 
     public void registerSection(SettingsSection settingsSection) {
-        if (!sections.contains(settingsSection)) {
-            sections.add(settingsSection);
-            redrawSectionList();
+        if (settingsSection != null) {
+            if (!sections.contains(settingsSection)) {
+                sections.add(settingsSection);
+                redrawSectionList();
+            }
         }
     }
 
