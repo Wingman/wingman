@@ -45,6 +45,7 @@ public abstract class MappingsDatabase {
 
     public static final MethodInfo[] METHODS = new com.wingman.client.api.mapping.MethodInfo[]{
         new com.wingman.client.api.mapping.MethodInfo("decodeExternalPlayerMovement", "an", "s", "Z", "Z", "(Ldu;IB)Z", "(Lcom/wingman/client/api/generated/BitBuffer;I)Z", true, true, 15),
+        new com.wingman.client.api.mapping.MethodInfo("decodeNpcUpdate", "fa", "bw", "V", "V", "(ZI)V", "(Z)V", true, true, -221102554),
         new com.wingman.client.api.mapping.MethodInfo("getItemDefinition", "g", "g", "Lbt;", "Lcom/wingman/client/api/generated/ItemDefinition;", "(II)Lbt;", "(I)Lcom/wingman/client/api/generated/ItemDefinition;", true, true, 1039182812),
         new com.wingman.client.api.mapping.MethodInfo("getNpcDefinition", "f", "l", "Laj;", "Lcom/wingman/client/api/generated/NPCDefinition;", "(IB)Laj;", "(I)Lcom/wingman/client/api/generated/NPCDefinition;", true, true, 8),
         new com.wingman.client.api.mapping.MethodInfo("pushMessage", "k", "r", "V", "V", "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V", "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", true, true, -1384917157),
