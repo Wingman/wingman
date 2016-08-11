@@ -117,7 +117,7 @@ public class FrameTitleBar extends OnyxTitleBar {
             e.printStackTrace();
         }
         JLabel titleLabel = new JLabel("Wingman " + version);
-        titleLabel.setForeground(OnyxStyleFactory.LIGHT_GRAY);
+        titleLabel.setForeground(OnyxStyleFactory.SECONDARY_TEXT_COLOR);
         titleLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
         return titleLabel;
     }
@@ -147,7 +147,7 @@ public class FrameTitleBar extends OnyxTitleBar {
                         parent.setExtendedState(parent.getExtendedState() | JFrame.MAXIMIZED_BOTH);
                         hoverButton.setIcon(maximizeIcon2);
                     } else {
-                        parent.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.DARK_BLACK));
+                        parent.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.BASE));
                         parent.setExtendedState(JFrame.NORMAL);
                         hoverButton.setIcon(maximizeIcon);
                     }

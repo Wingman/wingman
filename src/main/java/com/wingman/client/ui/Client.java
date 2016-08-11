@@ -3,8 +3,8 @@ package com.wingman.client.ui;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.Util;
 import com.wingman.client.api.settings.PropertiesSettings;
-import com.wingman.client.api.ui.SettingsSection;
-import com.wingman.client.api.ui.SettingsSectionDesigner;
+import com.wingman.client.api.ui.settingscreen.SettingsItem;
+import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.client.rs.GameDownloader;
 import com.wingman.client.ui.style.OnyxComboBoxUI;
 import com.wingman.client.ui.style.OnyxOptionPaneUI;
@@ -63,8 +63,8 @@ public class Client {
         }
 
         framePanel = new JPanel(new BorderLayout());
-        framePanel.setForeground(OnyxStyleFactory.LIGHT_WHITE);
-        framePanel.setBackground(OnyxStyleFactory.DARK_BLACK);
+        framePanel.setForeground(OnyxStyleFactory.PRIMARY_TEXT_COLOR);
+        framePanel.setBackground(OnyxStyleFactory.BASE);
 
         try {
             ArrayList<Image> icons = new ArrayList<>();
@@ -80,7 +80,7 @@ public class Client {
             e.printStackTrace();
         }
 
-        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.DARK_BLACK));
+        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.BASE));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.setTitle("Wingman");
@@ -106,65 +106,62 @@ public class Client {
      * Registers a {@link SettingsSection} with client related settings.
      */
     private void addClientSettings() {
-        SettingsSection settingsSection = new SettingsSection();
-        settingsSection.sideText = "Wingman";
+        SettingsSection settingsSection = new SettingsSection("Wingman", "Click to modify client related settings");
 
-        ArrayList<JPanel> settingsList = new ArrayList<>();
+        {
+            SettingsItem settingsItem = new SettingsItem("Preferred game world");
 
-        // PREFERRED WORLD
-        JComboBox<Integer> preferredWorld = new JComboBox<Integer>() {
-            @Override
-            public Dimension getMaximumSize() {
-                return new Dimension(80, 20);
+            JComboBox<Integer> preferredWorld = new JComboBox<Integer>() {
+                @Override
+                public Dimension getMaximumSize() {
+                    return new Dimension(80, 20);
+                }
+
+                @Override
+                public Dimension getPreferredSize() {
+                    return new Dimension(80, 20);
+                }
+            };
+            for (int i = 301; i <= 399; i++) {
+                preferredWorld.addItem(i);
             }
-
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(80, 20);
+            int settingsPreferredWorld = 311;
+            try {
+                settingsPreferredWorld = Integer.parseInt(clientSettings.get(ClientSettings.PREFERRED_WORLD));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                clientSettings.update(ClientSettings.PREFERRED_WORLD, settingsPreferredWorld);
             }
-        };
-        for (int i = 301; i <= 399; i++) {
-            preferredWorld.addItem(i);
+            preferredWorld.setSelectedItem(settingsPreferredWorld);
+            preferredWorld.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + (int) e.getItem());
+                }
+            });
+
+            settingsItem.add(preferredWorld);
+            settingsSection.add(settingsItem);
         }
-        int settingsPreferredWorld = 311;
-        try {
-            settingsPreferredWorld = Integer.parseInt(clientSettings.get(ClientSettings.PREFERRED_WORLD));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            clientSettings.update(ClientSettings.PREFERRED_WORLD, settingsPreferredWorld);
+
+        {
+            SettingsItem settingsItem = new SettingsItem("Enable notifications");
+
+            JCheckBox notificationsEnabled = new JCheckBox();
+            notificationsEnabled.setSelected(clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED));
+            notificationsEnabled.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    String newState = e.getStateChange() == ItemEvent.SELECTED ? "true" : "false";
+                    clientSettings.update(ClientSettings.NOTIFICATIONS_ENABLED, newState);
+                }
+            });
+
+            settingsItem.add(notificationsEnabled);
+            settingsSection.add(settingsItem);
         }
-        preferredWorld.setSelectedItem(settingsPreferredWorld);
-        preferredWorld.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + (int) e.getItem());
-            }
-        });
 
-        JPanel worldSettings = SettingsSectionDesigner
-                .createSettingsRow("Preferred world", preferredWorld);
-
-        settingsList.add(worldSettings);
-
-        // ENABLE NOTIFICATIONS API
-        JCheckBox notificationsEnabled = new JCheckBox();
-        notificationsEnabled.setSelected(clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED));
-        notificationsEnabled.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                String newState = e.getStateChange() == ItemEvent.SELECTED ? "true" : "false";
-                clientSettings.update(ClientSettings.NOTIFICATIONS_ENABLED, newState);
-            }
-        });
-
-        JPanel notificationsApi = SettingsSectionDesigner
-                .createSettingsRow("Enable notifications API", notificationsEnabled);
-
-        settingsList.add(notificationsApi);
-
-        SettingsSectionDesigner.design(settingsSection, settingsList, true);
-        settingsSection.panel.add(Box.createVerticalGlue());
-        settingsSection.register();
+        settingsScreen.registerSection(settingsSection);
     }
 
     /**

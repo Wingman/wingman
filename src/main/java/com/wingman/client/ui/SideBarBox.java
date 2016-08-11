@@ -21,7 +21,7 @@ public class SideBarBox extends JPanel {
             }
         });
 
-        buttonPanel.setBackground(OnyxStyleFactory.DARK_BLACK);
+        buttonPanel.setBackground(OnyxStyleFactory.BASE);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS) {
             @Override
             public Dimension minimumLayoutSize(Container target) {

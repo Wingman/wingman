@@ -1,59 +1,37 @@
 package com.wingman.client.ui;
 
-import com.wingman.client.api.ui.SettingsSection;
-import com.wingman.client.ui.style.OnyxListCellRenderer;
+import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.SettingsTitleBar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsScreen extends JDialog {
 
-    public Map<String, SettingsSection> settingsBars = new HashMap<>();
+    private List<SettingsSection> sections = new ArrayList<>();
 
-    public DefaultListModel<String> buttonListModel = new DefaultListModel<>();
-    public final JList<String> buttonList = new JList<>(buttonListModel);
+    private JPanel sectionList = new JPanel();
+    private JScrollPane sectionListScrollPane = new JScrollPane(sectionList);
 
-    public JPanel settingsBarPanel = new JPanel();
+    private JPanel selectedSectionPanel = new JPanel(new BorderLayout());
+    private SettingsSection selectedSection;
 
     public SettingsScreen() {
         new ComponentBorderResizer(this);
 
-        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.DARK_BLACK));
+        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.BASE));
         this.setUndecorated(true);
         this.setJMenuBar(new SettingsTitleBar(this));
-        this.setAlwaysOnTop(true);
 
-        settingsBarPanel.setLayout(new BoxLayout(settingsBarPanel, BoxLayout.Y_AXIS));
+        sectionList.setLayout(new BoxLayout(sectionList, BoxLayout.Y_AXIS));
 
-        buttonList.setCellRenderer(new OnyxListCellRenderer<String>(true));
-        buttonList.setFixedCellHeight(30);
-        buttonList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                SettingsSection selectedSettingsSection = settingsBars.get(buttonList.getSelectedValue());
-                if (selectedSettingsSection != null) {
-                    settingsBarPanel.removeAll();
-                    settingsBarPanel.add(selectedSettingsSection.panel);
-                    Client.settingsScreen.settingsBarPanel.revalidate();
-                    Client.settingsScreen.settingsBarPanel.repaint();
-                }
-            }
-        });
-
-        JScrollPane buttonScrollPane = new JScrollPane();
-        buttonScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        buttonScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        buttonScrollPane.getViewport().add(buttonList);
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout() {
+        JPanel contentPane = new JPanel(new BorderLayout() {
             @Override
             public Dimension minimumLayoutSize(Container target) {
                 return new Dimension(750, 450);
@@ -65,9 +43,141 @@ public class SettingsScreen extends JDialog {
             }
         });
 
-        panel.add(buttonScrollPane, BorderLayout.WEST);
-        panel.add(settingsBarPanel, BorderLayout.CENTER);
+        contentPane.add(sectionListScrollPane);
 
-        this.setContentPane(panel);
+        this.setContentPane(contentPane);
+        this.pack();
+        this.setLocationRelativeTo(null);
+    }
+
+    private void redrawSectionList() {
+        sectionList.removeAll();
+
+        for (int i = 0; i < sections.size(); i++) {
+            final SettingsSection section = sections.get(i);
+            JPanel builtHeader = section.getListHeader();
+
+            if (builtHeader == null) {
+                builtHeader = section.buildSectionListHeader();
+
+                builtHeader.addMouseListener(new MouseListener() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (selectedSection == null) {
+                            showSectionBody(section);
+                        }
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                    }
+                });
+            }
+
+            if (i % 2 == 0) {
+                builtHeader.setBackground(OnyxStyleFactory.BASE_DARKER);
+            }
+
+            sectionList.add(builtHeader);
+        }
+
+        this.revalidate();
+        this.repaint();
+    }
+
+    private void showSectionBody(SettingsSection section) {
+        JPanel contentPane = (JPanel) this.getContentPane();
+        contentPane.removeAll();
+
+        selectedSectionPanel.removeAll();
+
+        JPanel builtHeader = section.getSelectedHeader();
+        if (builtHeader == null) {
+            builtHeader = section.buildSelectedSectionHeader();
+
+            builtHeader.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (selectedSection != null) {
+                        hideSectionBody();
+                    }
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+        }
+
+        JPanel builtBody = section.getSelectedBody();
+        if (builtBody == null) {
+            builtBody = section.buildSelectedSectionBody();
+        }
+
+        selectedSectionPanel.add(builtHeader, BorderLayout.NORTH);
+        selectedSectionPanel.add(builtBody, BorderLayout.CENTER);
+
+        contentPane.add(selectedSectionPanel);
+        contentPane.revalidate();
+        contentPane.repaint();
+
+        selectedSection = section;
+    }
+
+    private void hideSectionBody() {
+        JPanel contentPane = (JPanel) this.getContentPane();
+        contentPane.removeAll();
+
+        contentPane.add(sectionListScrollPane);
+        contentPane.revalidate();
+        contentPane.repaint();
+
+        selectedSection = null;
+    }
+
+    public void registerSection(SettingsSection settingsSection) {
+        if (!sections.contains(settingsSection)) {
+            sections.add(settingsSection);
+            redrawSectionList();
+        }
+    }
+
+    public void unregisterSection(SettingsSection settingsSection) {
+        if (sections.contains(settingsSection)) {
+            if (settingsSection.equals(selectedSection)) {
+                hideSectionBody();
+            }
+
+            sections.remove(settingsSection);
+            redrawSectionList();
+        }
     }
 }

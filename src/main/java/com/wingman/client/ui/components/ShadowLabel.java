@@ -21,8 +21,8 @@ public class ShadowLabel extends JLabel {
     private int rightX = 1;
     private int rightY = 1;
 
-    private Color leftColor = OnyxStyleFactory.DARK_BLACK;
-    private Color rightColor = OnyxStyleFactory.DARK_BLACK;
+    private Color leftColor = OnyxStyleFactory.BASE;
+    private Color rightColor = OnyxStyleFactory.BASE;
 
     public void setLeftShadow(int x, int y, Color color) {
         leftX = x;

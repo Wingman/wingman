@@ -10,9 +10,6 @@ import java.io.IOException;
 public class OnyxComboBoxUI extends SynthComboBoxUI {
 
     public static ComponentUI createUI(JComponent c) {
-        if (c.getBorder() == null) {
-            c.setBorder(BorderFactory.createLineBorder(OnyxStyleFactory.LIGHT_BLACK));
-        }
         return new OnyxComboBoxUI();
     }
 
@@ -23,11 +20,11 @@ public class OnyxComboBoxUI extends SynthComboBoxUI {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new JButton("\\/");
+        return new JButton();
     }
 
     @Override
     protected ListCellRenderer createRenderer() {
-        return new OnyxListCellRenderer(true);
+        return new OnyxListCellRenderer(true, OnyxStyleFactory.BASE_BLUE_DARKER);
     }
 }

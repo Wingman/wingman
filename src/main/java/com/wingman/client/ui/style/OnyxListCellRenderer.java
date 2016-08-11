@@ -5,14 +5,12 @@ import java.awt.*;
 
 public class OnyxListCellRenderer<E> implements ListCellRenderer<E> {
 
-    public boolean centerLabel;
+    private boolean centerLabel;
+    private Color selectedColor;
 
-    public OnyxListCellRenderer() {
-        this(false);
-    }
-
-    public OnyxListCellRenderer(boolean centerLabel) {
+    public OnyxListCellRenderer(boolean centerLabel, Color selectedColor) {
         this.centerLabel = centerLabel;
+        this.selectedColor = selectedColor;
     }
 
     @Override
@@ -30,8 +28,8 @@ public class OnyxListCellRenderer<E> implements ListCellRenderer<E> {
            panel.add(Box.createHorizontalGlue());
         }
 
-        if (isSelected) {
-            panel.setBackground(OnyxStyleFactory.DARK_BLACK);
+        if (isSelected && selectedColor != null) {
+            panel.setBackground(selectedColor);
         }
 
         return panel;

@@ -1,8 +1,15 @@
 package com.wingman.client.ui.style;
 
 import com.wingman.client.Util;
+import com.wingman.client.ui.style.synthstyles.ComboBoxStyle;
+import com.wingman.client.ui.style.synthstyles.PanelStyle;
+import com.wingman.client.ui.style.synthstyles.TextFieldStyle;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.UIResource;
 import javax.swing.plaf.synth.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -10,23 +17,24 @@ import java.io.IOException;
 
 public class OnyxStyleFactory extends SynthStyleFactory {
 
-    public static final Color DARK_BLACK = new Color(15, 15, 15);
-    public static final Color MID_BLACK = new Color(21, 21, 21);
-    public static final Color LIGHT_BLACK = new Color(30, 30, 30);
+    public static final Color BASE = Color.decode("#191919");
+    public static final Color BASE_DARKER = BASE.darker();
+    public static final Color BASE_BRIGHTER = BASE.brighter();
+    public static final Color BASE_BRIGHTEST = BASE_BRIGHTER.brighter();
 
-    public static final Color LIGHT_WHITE = new Color(216, 216, 216);
+    public static final Color BASE_BLUE = Color.decode("#22A7F0");
+    public static final Color BASE_BLUE_DARKER = BASE_BLUE.darker();
 
-    public static final Color DARK_GRAY = new Color(91, 89, 82);
-    public static final Color LIGHT_GRAY = new Color(180, 180, 185);
-
-    public static final Color LIGHT_BROWN = new Color(199, 173, 129);
-
-    public static final Color LIGHT_BLUE = new Color(34, 140, 219);
+    public static final Color PRIMARY_TEXT_COLOR = Color.decode("#F5F5F5");
+    public static final Color SECONDARY_TEXT_COLOR = Color.decode("#E0E0E0");
 
     public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 
     public static final Font ROBOTO_REGULAR = new Font("Roboto", Font.PLAIN, 12);
     public static final Font ROBOTO_MEDIUM = new Font("Roboto Medium", Font.PLAIN, 12);
+
+    private ImageIcon checkBoxIcon;
+    private ImageIcon checkBoxIconChecked;
 
     public OnyxStyleFactory() {
         GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -36,35 +44,22 @@ public class OnyxStyleFactory extends SynthStyleFactory {
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
         }
+
+        try {
+            checkBoxIcon = new ImageIcon(Util.getFileAsBytes("/images/icons/unchecked.png"));
+            checkBoxIconChecked = new ImageIcon(Util.getFileAsBytes("/images/icons/checked.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static SynthStyle defaultStyle = new SynthStyle() {
         @Override
         protected Color getColorForState(SynthContext context, ColorType type) {
-            JComponent component = context.getComponent();
-            if (type == ColorType.FOREGROUND
-                    || type == ColorType.TEXT_FOREGROUND) {
-                Color contextForeground = component.getForeground();
-                if (contextForeground == null) {
-                    return Color.WHITE;
-                }
-                return contextForeground;
-            } else if (type == ColorType.BACKGROUND
-                    || type == ColorType.TEXT_BACKGROUND) {
-                Color contextBackground = component.getBackground();
-                if (contextBackground == null) {
-                    if (component instanceof JPanel) {
-                        return MID_BLACK;
-                    } else if (component instanceof JLabel) {
-                        if (component.getParent() != null) {
-                            return component.getParent().getBackground();
-                        }
-                    }
-                    return DARK_BLACK;
-                }
-                return contextBackground;
+            if (type == ColorType.FOREGROUND || type == ColorType.TEXT_FOREGROUND) {
+                return PRIMARY_TEXT_COLOR;
             }
-            return MID_BLACK;
+            return BASE;
         }
 
         @Override
@@ -77,18 +72,86 @@ public class OnyxStyleFactory extends SynthStyleFactory {
         }
     };
 
+    private static SynthStyle textFieldStyle = new TextFieldStyle();
+    private static SynthStyle panelStyle = new PanelStyle();
+    private static SynthStyle comboBoxStyle = new ComboBoxStyle();
+
     @Override
     public SynthStyle getStyle(JComponent c, Region id) {
-        if (c instanceof JLabel) {
+        if (id == Region.PANEL) {
+            return panelStyle;
+        }
+
+        if (id == Region.BUTTON) {
+            c.setOpaque(false);
+        }
+
+        if (id == Region.LABEL) {
+            Color background = c.getBackground();
+            if (background == null || background instanceof UIResource) {
+                c.setOpaque(false);
+            }
+        }
+
+        if (c instanceof JTextComponent) {
+            JTextComponent textComponent = (JTextComponent) c;
+
+            Border border = textComponent.getBorder();
+            if (border == null || border instanceof UIResource) {
+                textComponent.setBorder(new CompoundBorder(
+                        BorderFactory.createLineBorder(BASE_BRIGHTER, 1),
+                        new EmptyBorder(3, 3, 3, 3)
+                ));
+            }
+
+            Color selectionColor = textComponent.getSelectionColor();
+            if (selectionColor == null || selectionColor instanceof UIResource) {
+                textComponent.setSelectionColor(BASE_BLUE_DARKER);
+            }
+
+            Color selectedTextColor = textComponent.getSelectedTextColor();
+            if (selectedTextColor == null || selectedTextColor instanceof UIResource) {
+                textComponent.setSelectedTextColor(SECONDARY_TEXT_COLOR);
+            }
+
+            return textFieldStyle;
+        }
+
+        if (id == Region.CHECK_BOX) {
+            JCheckBox checkBox = (JCheckBox) c;
+
+            checkBox.setRolloverEnabled(false);
+            checkBox.setIcon(checkBoxIcon);
+            checkBox.setSelectedIcon(checkBoxIconChecked);
+        }
+
+        if (id == Region.COMBO_BOX) {
+            if (c.getBorder() == null) {
+                c.setBorder(BorderFactory.createLineBorder(OnyxStyleFactory.BASE_BRIGHTER));
+            }
+
+            return comboBoxStyle;
+        }
+
+        if (id == Region.PROGRESS_BAR) {
+            Color foreground = c.getForeground();
+            if (foreground == null || foreground instanceof UIResource) {
+                c.setForeground(BASE_BLUE);
+            }
+        }
+
+        return defaultStyle;
+
+        /*if (c instanceof JLabel) {
             c.setOpaque(false);
         } else if (c instanceof JButton) {
             c.setOpaque(false);
             if (c.getBorder() == null) {
-                c.setBorder(BorderFactory.createLineBorder(DARK_BLACK));
+                c.setBorder(BorderFactory.createLineBorder(BASE));
             }
         } else if (c instanceof JCheckBox) {
             if (c.getBorder() == null) {
-                c.setBorder(BorderFactory.createLineBorder(LIGHT_BLACK));
+                c.setBorder(BorderFactory.createLineBorder(PRIMARY_DARK));
             }
             try {
                 ((JCheckBox) c).setRolloverEnabled(false);
@@ -99,16 +162,16 @@ public class OnyxStyleFactory extends SynthStyleFactory {
             }
         } else if (c instanceof JTextComponent) {
             if (c.getBorder() == null) {
-                ((JTextComponent) c).setSelectionColor(LIGHT_WHITE);
-                ((JTextComponent) c).setSelectedTextColor(DARK_BLACK);
+                ((JTextComponent) c).setSelectionColor(PRIMARY_TEXT_COLOR);
+                ((JTextComponent) c).setSelectedTextColor(BASE);
                 JComponent parent = (JComponent) c.getParent();
                 if (parent != null) {
-                    if (parent.getBackground() == DARK_BLACK) {
+                    if (parent.getBackground() == BASE) {
                         c.setBackground(MID_BLACK);
-                        c.setBorder(BorderFactory.createLineBorder(LIGHT_BLACK));
+                        c.setBorder(BorderFactory.createLineBorder(PRIMARY_DARK));
                     } else if (parent.getBackground() == MID_BLACK) {
-                        c.setBackground(DARK_BLACK);
-                        c.setBorder(BorderFactory.createLineBorder(LIGHT_BLACK));
+                        c.setBackground(BASE);
+                        c.setBorder(BorderFactory.createLineBorder(PRIMARY_DARK));
                     }
                 }
             }
@@ -117,10 +180,9 @@ public class OnyxStyleFactory extends SynthStyleFactory {
                 c.setBackground(MID_BLACK);
             }
         } else if (c instanceof JSeparator) {
-            c.setBackground(OnyxStyleFactory.LIGHT_BLACK);
+            c.setBackground(OnyxStyleFactory.PRIMARY_DARK);
         } else if(c instanceof JProgressBar){
             c.setForeground(LIGHT_BLUE);
-        }
-        return defaultStyle;
+        }*/
     }
 }

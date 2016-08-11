@@ -23,9 +23,16 @@ public class OnyxScrollBarUI extends SynthScrollBarUI {
     }
 
     @Override
+    protected void paintTrack(SynthContext context, Graphics g, Rectangle trackBounds) {
+        g.translate(trackBounds.x, trackBounds.y);
+        g.setColor(OnyxStyleFactory.BASE_DARKER);
+        g.fillRect(0, 0, trackBounds.width, trackBounds.height);
+    }
+
+    @Override
     protected void paintThumb(SynthContext context, Graphics g, Rectangle thumbBounds) {
         g.translate(thumbBounds.x, thumbBounds.y);
-        g.setColor(OnyxStyleFactory.LIGHT_BLACK);
+        g.setColor(OnyxStyleFactory.BASE_BRIGHTER);
         g.fillRect(0, 0, thumbBounds.width, thumbBounds.height);
     }
 }
