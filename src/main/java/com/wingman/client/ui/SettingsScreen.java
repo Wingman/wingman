@@ -10,11 +10,13 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SettingsScreen extends JDialog {
 
-    private List<SettingsSection> sections = new ArrayList<>();
+    private final List<SettingsSection> sections
+            = Collections.synchronizedList(new ArrayList<SettingsSection>());
 
     private JPanel sectionList = new JPanel();
     private JScrollPane sectionListScrollPane = new JScrollPane(sectionList);
@@ -54,44 +56,46 @@ public class SettingsScreen extends JDialog {
     private synchronized void redrawSectionList() {
         sectionList.removeAll();
 
-        for (int i = 0; i < sections.size(); i++) {
-            final SettingsSection section = sections.get(i);
-            JPanel builtHeader = section.getListHeader();
+        synchronized (sections) {
+            int i = 0;
+            for (final SettingsSection section : sections) {
+                JPanel builtHeader = section.getListHeader();
 
-            if (builtHeader == null) {
-                builtHeader = section.buildSectionListHeader();
+                if (builtHeader == null) {
+                    builtHeader = section.buildSectionListHeader();
 
-                builtHeader.addMouseListener(new MouseListener() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (selectedSection == null) {
-                            showSectionBody(section);
+                    builtHeader.addMouseListener(new MouseListener() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            if (selectedSection == null) {
+                                showSectionBody(section);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                    }
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                        }
 
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                    }
+                        @Override
+                        public void mouseReleased(MouseEvent e) {
+                        }
 
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                    }
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                        }
 
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                    }
-                });
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                        }
+                    });
+                }
+
+                if (i++ % 2 == 0) {
+                    builtHeader.setBackground(OnyxStyleFactory.BASE_DARKER);
+                }
+
+                sectionList.add(builtHeader);
             }
-
-            if (i % 2 == 0) {
-                builtHeader.setBackground(OnyxStyleFactory.BASE_DARKER);
-            }
-
-            sectionList.add(builtHeader);
         }
 
         this.revalidate();
