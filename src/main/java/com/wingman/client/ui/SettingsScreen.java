@@ -1,16 +1,19 @@
 package com.wingman.client.ui;
 
+import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.SettingsTitleBar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 public class SettingsScreen extends JDialog {
@@ -20,6 +23,9 @@ public class SettingsScreen extends JDialog {
 
     private JPanel sectionList = new JPanel();
     private JScrollPane sectionListScrollPane = new JScrollPane(sectionList);
+    private JPanel nothingFoundPanel;
+
+    private JTextField searchField = new JTextField();
 
     private JPanel selectedSectionPanel = new JPanel();
     private SettingsSection selectedSection;
@@ -34,75 +40,68 @@ public class SettingsScreen extends JDialog {
         sectionList.setLayout(new BoxLayout(sectionList, BoxLayout.Y_AXIS));
         selectedSectionPanel.setLayout(new BoxLayout(selectedSectionPanel, BoxLayout.Y_AXIS));
 
+        sectionListScrollPane.getVerticalScrollBar().setUnitIncrement(15);
+
         JPanel contentPane = new JPanel(new BorderLayout() {
             @Override
             public Dimension minimumLayoutSize(Container target) {
-                return new Dimension(750, 450);
+                return new Dimension(750, 515);
             }
 
             @Override
             public Dimension preferredLayoutSize(Container target) {
-                return new Dimension(750, 450);
+                return new Dimension(750, 515);
             }
         });
 
         contentPane.add(sectionListScrollPane);
+        contentPane.add(searchField, BorderLayout.SOUTH);
+
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                redrawSectionList();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                redrawSectionList();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                redrawSectionList();
+            }
+        });
 
         this.setContentPane(contentPane);
         this.pack();
         this.setLocationRelativeTo(null);
+
+        searchField.requestFocusInWindow();
     }
 
-    private synchronized void redrawSectionList() {
-        sectionList.removeAll();
-
-        synchronized (sections) {
-            int i = 0;
-            for (final SettingsSection section : sections) {
-                JPanel builtHeader = section.getListHeader();
-
-                if (builtHeader == null) {
-                    builtHeader = section.buildSectionListHeader();
-
-                    builtHeader.addMouseListener(new MouseListener() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            if (selectedSection == null) {
-                                showSectionBody(section);
-                            }
-                        }
-
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                        }
-
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-                        }
-
-                        @Override
-                        public void mouseEntered(MouseEvent e) {
-                        }
-
-                        @Override
-                        public void mouseExited(MouseEvent e) {
-                        }
-                    });
-                }
-
-                if (i++ % 2 == 0) {
-                    builtHeader.setBackground(OnyxStyleFactory.BASE_DARKER);
-                }
-
-                sectionList.add(builtHeader);
+    public void registerSection(SettingsSection settingsSection) {
+        if (settingsSection != null) {
+            if (!sections.contains(settingsSection)) {
+                sections.add(settingsSection);
+                redrawSectionList();
             }
         }
-
-        this.revalidate();
-        this.repaint();
     }
 
-    private void showSectionBody(SettingsSection section) {
+    public void unregisterSection(SettingsSection settingsSection) {
+        if (sections.contains(settingsSection)) {
+            if (settingsSection.equals(selectedSection)) {
+                deselectSection();
+            }
+
+            sections.remove(settingsSection);
+            redrawSectionList();
+        }
+    }
+
+    private void selectSection(SettingsSection section) {
         JPanel contentPane = (JPanel) this.getContentPane();
         contentPane.removeAll();
 
@@ -116,7 +115,7 @@ public class SettingsScreen extends JDialog {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (selectedSection != null) {
-                        hideSectionBody();
+                        deselectSection();
                     }
                 }
 
@@ -142,49 +141,168 @@ public class SettingsScreen extends JDialog {
             });
         }
 
-        JScrollPane builtBody = section.getSelectedBody();
-        if (builtBody == null) {
-            builtBody = section.buildSelectedSectionBody();
-        }
-
         selectedSectionPanel.add(builtHeader);
-        selectedSectionPanel.add(builtBody);
+        selectedSectionPanel.add(section.buildSelectedSectionBody());
 
         contentPane.add(selectedSectionPanel);
-        contentPane.revalidate();
-        contentPane.repaint();
+
+        this.revalidate();
+        this.repaint();
 
         selectedSection = section;
     }
 
-    private void hideSectionBody() {
+    private void deselectSection() {
+        selectedSection = null;
+
         JPanel contentPane = (JPanel) this.getContentPane();
         contentPane.removeAll();
 
         contentPane.add(sectionListScrollPane);
-        contentPane.revalidate();
-        contentPane.repaint();
+        contentPane.add(searchField, BorderLayout.SOUTH);
 
-        selectedSection = null;
+        redrawSectionList();
+
+        searchField.requestFocusInWindow();
     }
 
-    public void registerSection(SettingsSection settingsSection) {
-        if (settingsSection != null) {
-            if (!sections.contains(settingsSection)) {
-                sections.add(settingsSection);
-                redrawSectionList();
+    private synchronized void redrawSectionList() {
+        sectionList.removeAll();
+
+        final String searchString = searchField.getText().toLowerCase();
+
+        List<SettingsSection> sectionsToDraw;
+        Map<SettingsSection, List<SettingsItem>> settingsToDraw = new HashMap<>();
+
+        synchronized (sections) {
+            if (searchString.length() == 0) {
+                sectionsToDraw = sections;
+            } else {
+                sectionsToDraw = new ArrayList<>();
+
+                for (SettingsSection section : sections) {
+                    for (SettingsItem item : section.items) {
+                        if (item.getDescription().toLowerCase().contains(searchString)) {
+
+                            List<SettingsItem> settingsList = settingsToDraw.get(section);
+                            if (settingsList == null) {
+                                settingsList = new ArrayList<>();
+                                settingsToDraw.put(section, settingsList);
+                            }
+
+                            settingsList.add(item);
+                        }
+                    }
+
+                    if (settingsToDraw.containsKey(section)
+                            || section.getOwner().toLowerCase().contains(searchString)
+                            || section.getDescription().toLowerCase().contains(searchString)
+                            || (section.getPluginId() != null
+                            && section.getPluginId().toLowerCase().contains(searchString))) {
+
+                        sectionsToDraw.add(section);
+                    }
+                }
             }
         }
+
+        if (!sectionsToDraw.isEmpty()) {
+            int i = 0;
+            for (final SettingsSection section : sectionsToDraw) {
+                JPanel builtHeader = section.getListHeader();
+
+                if (builtHeader == null) {
+                    builtHeader = section.buildSectionListHeader();
+
+                    builtHeader.addMouseListener(new MouseListener() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            if (selectedSection == null) {
+                                selectSection(section);
+                            }
+                        }
+
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                        }
+
+                        @Override
+                        public void mouseReleased(MouseEvent e) {
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                        }
+                    });
+                }
+
+                List<SettingsItem> settings = settingsToDraw.get(section);
+                if (settings != null) {
+                    builtHeader.setBackground(OnyxStyleFactory.BASE_DARKER);
+                } else {
+                    if (i++ % 2 == 0) {
+                        builtHeader.setBackground(OnyxStyleFactory.BASE_DARKER);
+                    } else {
+                        builtHeader.setBackground(OnyxStyleFactory.BASE);
+                    }
+                }
+
+                sectionList.add(builtHeader);
+
+                if (settings != null) {
+                    JPanel panel = new JPanel();
+                    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                    panel.setBackground(OnyxStyleFactory.BASE_DARKER);
+
+                    if (sectionsToDraw.size() > 1) {
+                        panel.setBorder(new EmptyBorder(0, 30, 0, 0));
+                    }
+
+                    int j = 0;
+                    for (SettingsItem item : settings) {
+                        JPanel itemPanel = item.build();
+
+                        if (j++ % 2 == 1) {
+                            itemPanel.setBackground(OnyxStyleFactory.BASE_DARKER);
+                        }
+
+                        panel.add(itemPanel);
+                    }
+
+                    sectionList.add(panel);
+                } else {
+                    if (sectionsToDraw.size() == 1) {
+                        sectionList.add(section.buildSelectedSectionBody());
+                    }
+                }
+            }
+        } else {
+            if (nothingFoundPanel == null) {
+                nothingFoundPanel = makeNothingFoundPanel();
+            }
+
+            sectionList.add(nothingFoundPanel);
+        }
+
+        this.revalidate();
+        this.repaint();
     }
 
-    public void unregisterSection(SettingsSection settingsSection) {
-        if (sections.contains(settingsSection)) {
-            if (settingsSection.equals(selectedSection)) {
-                hideSectionBody();
-            }
+    private JPanel makeNothingFoundPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
 
-            sections.remove(settingsSection);
-            redrawSectionList();
-        }
+        JLabel errorLabel = new JLabel("<html><div style='text-align: center;'>" +
+                "<b style='font-size:14px'>Couldn't find anything matching your search query</b><br><br>" +
+                "The search function looks for results using settings section names,<br>" +
+                "their description, plugin IDs and the descriptions of the section's settings");
+        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        panel.add(errorLabel, BorderLayout.CENTER);
+
+        return panel;
     }
 }

@@ -26,7 +26,6 @@ public class SettingsSection {
 
     private JPanel builtListHeader;
     private JPanel builtSelectedHeader;
-    private JScrollPane builtSelectedBody;
 
     /*
         Plugin specific constructors
@@ -242,7 +241,7 @@ public class SettingsSection {
             panel.add(itemPanel);
         }
 
-        return builtSelectedBody = new JScrollPane(panel);
+        return new JScrollPane(panel);
     }
 
     public String getOwner() {
@@ -253,15 +252,19 @@ public class SettingsSection {
         return description;
     }
 
+    public String getPluginVersion() {
+        return pluginVersion;
+    }
+
+    public String getPluginId() {
+        return pluginId;
+    }
+
     public JPanel getListHeader() {
         return builtListHeader;
     }
 
     public JPanel getSelectedHeader() {
         return builtSelectedHeader;
-    }
-
-    public JScrollPane getSelectedBody() {
-        return builtSelectedBody;
     }
 }
