@@ -9,6 +9,8 @@ public interface NPCDefinition extends DualNode {
 
     int getCombatLevel();
 
+    int getId();
+
     String getName();
 
     int getOverHeadIcon();
@@ -22,6 +24,8 @@ public interface NPCDefinition extends DualNode {
         void setActions(String[] value);
 
         void setCombatLevel(int value);
+
+        void setId(int value);
 
         void setName(String value);
 

@@ -128,6 +128,7 @@ public abstract class MappingsDatabase {
         new com.wingman.client.api.mapping.FieldInfo("healthRatio", "j", "r", "I", "I", false, "-554880233"),
         new com.wingman.client.api.mapping.FieldInfo("hidden", "r", "x", "Z", "Z", false, "1"),
         new com.wingman.client.api.mapping.FieldInfo("hitUpdates", "ad", "e", "Lgg;", "Lcom/wingman/client/api/generated/NodeIterable;", false, "1"),
+        new com.wingman.client.api.mapping.FieldInfo("id", "aj", "h", "I", "I", false, "-965663117"),
         new com.wingman.client.api.mapping.FieldInfo("ids", "d", "g", "[I", "[I", false, "1"),
         new com.wingman.client.api.mapping.FieldInfo("index", "ap", "l", "I", "I", false, "-1163282247"),
         new com.wingman.client.api.mapping.FieldInfo("interactableObjects", "di", "q", "[Lcv;", "[Lcom/wingman/client/api/generated/InteractableObject;", false, "1"),
