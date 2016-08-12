@@ -36,6 +36,7 @@ public class Transformers {
             new WidgetOpenedTransformer(),
             new ExperienceGainedTransformer(),
             new ExternalPlayerMovedTransformer(),
+            new NpcUpdateTransformer(),
 
             /*
              * Code patches:
