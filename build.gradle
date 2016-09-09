@@ -21,7 +21,7 @@ dependencies {
     compile 'org.reflections:reflections:0.9.10'
 
     compile 'com.squareup.okhttp:okhttp:2.7.5'
-    compile 'com.squareup.okio:okio:1.9.0'
+    compile 'com.squareup.okio:okio:1.10.0'
 
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.guava:guava:19.0'
