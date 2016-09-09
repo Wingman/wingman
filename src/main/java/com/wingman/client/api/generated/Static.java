@@ -13,7 +13,9 @@ public interface Static {
 
     ItemDefinition getItemDefinition(int itemId);
 
-    NPCDefinition getNpcDefinition(int npcId);
+    NPCDefinition getNpcDefinition(int itemId);
+
+    ObjectDefinition getObjectDefinition(int objectId);
 
     void pushMessage(int type, String prefix, String message, String suffix);
 

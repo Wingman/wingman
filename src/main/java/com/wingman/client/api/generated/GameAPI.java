@@ -21,8 +21,12 @@ public abstract class GameAPI {
         return getterInstance.getItemDefinition(itemId);
     }
 
-    public static NPCDefinition getNpcDefinition(int npcId) {
-        return getterInstance.getNpcDefinition(npcId);
+    public static NPCDefinition getNpcDefinition(int itemId) {
+        return getterInstance.getNpcDefinition(itemId);
+    }
+
+    public static ObjectDefinition getObjectDefinition(int objectId) {
+        return getterInstance.getObjectDefinition(objectId);
     }
 
     public static void pushMessage(int type, String prefix, String message, String suffix) {
