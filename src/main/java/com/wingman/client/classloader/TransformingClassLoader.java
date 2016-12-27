@@ -81,7 +81,12 @@ public class TransformingClassLoader extends URLClassLoader {
             }
         }
 
-        ClassWriter classWriter = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
+        ClassWriter classWriter = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS) {
+            @Override
+            protected String getCommonSuperClass(String type1, String type2) {
+                return "java/lang/Object";
+            }
+        };
         classNode.accept(classWriter);
 
         byte[] transformed = classWriter.toByteArray();
