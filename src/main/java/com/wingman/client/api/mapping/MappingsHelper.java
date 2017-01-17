@@ -57,7 +57,7 @@ public class MappingsHelper {
             fields.add(fieldInfo);
 
             if (fieldInfo.isStatic) {
-                deobfFields.put(fieldInfo.cleanName, fieldInfo);;
+                deobfFields.put(fieldInfo.cleanName, fieldInfo);
             } else {
                 String cleanName = obfClasses.get(fieldInfo.owner);
                 if (cleanName != null) {

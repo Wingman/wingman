@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class OnyxStyleFactory extends SynthStyleFactory {
 
-    public static final Color BASE = Color.decode("#191919");
+    public static final Color BASE = Color.decode("#3a3a3a");
     public static final Color BASE_DARKER = BASE.darker();
     public static final Color BASE_BRIGHTER = BASE.brighter();
     public static final Color BASE_BRIGHTEST = BASE_BRIGHTER.brighter();

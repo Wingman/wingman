@@ -9,11 +9,13 @@ import com.wingman.client.api.event.EventListener;
 import com.wingman.client.api.event.EventListenerList;
 import com.wingman.client.api.plugin.Plugin;
 import com.wingman.client.api.plugin.PluginDependency;
+import com.wingman.client.api.settings.PropertiesSettings;
 import com.wingman.client.classloader.PluginClassLoader;
 import com.wingman.client.plugin.exceptions.PluginLoadingException;
 import com.wingman.client.plugin.exceptions.PluginRefreshingException;
 import com.wingman.client.plugin.exceptions.PluginSetupException;
 import com.wingman.client.plugin.toposort.PluginNode;
+import com.wingman.client.ui.Client;
 import org.reflections.Reflections;
 
 import java.io.File;
@@ -296,51 +298,105 @@ public class PluginManager {
 
     /**
      * Activate all plugins. <br>
-     * Safely invokes ({@link PluginContainer#activateMethod}) of all loaded plugins.
+     * Attempts to activate plugins from the directory. If the plugin is
+     * toggleable then it will add a new item to the settings panel.
      */
     public static void activatePlugins() {
-        if (plugins == null) {
+        if (plugins == null)
+        {
             System.out.println("Plugins were not activated, because none had been loaded.");
             return;
         }
-
-        for (PluginContainer plugin : plugins) {
-            try {
-                plugin.invokeActivateMethod();
-                System.out.println(MessageFormat.format("Activated plugin {0} ({1} {2})",
-                        plugin.pluginData.name(),
-                        plugin.pluginData.id(),
-                        plugin.pluginData.version()));
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                new PluginLoadingException(plugin.pluginData.id(), e.toString())
-                        .printStackTrace();
+        //try to enable plugin
+        PropertiesSettings activePluginSettings;
+        try
+        {
+            activePluginSettings = new PluginSettings();
+            for (PluginContainer plugin : plugins)
+            {
+                //plugins requests a GUI toggle
+                if (plugin.pluginData.canToggle().equalsIgnoreCase("true"))
+                {
+                    Client.addPluginToggle(plugin);
+                }
+                //if PropertySetting is (not null && true) or Plugin's defaultToggle=true
+                if ((activePluginSettings.get(plugin.pluginData.id()) != null &&
+                        activePluginSettings.get(plugin.pluginData.id()).equalsIgnoreCase("true")) ||
+                        plugin.pluginData.defaultToggle().equalsIgnoreCase("true"))
+                {
+                    try
+                    {
+                        activatePlugin(plugin);
+                    }
+                    catch (InvocationTargetException | IllegalAccessException e)
+                    {
+                        new PluginLoadingException(plugin.pluginData.id(), e.toString())
+                                .printStackTrace();
+                        //set to disabled state so plugin toggle doesnt use defaultToggle
+                        activePluginSettings.update(plugin.pluginData.id(), "false");
+                        activePluginSettings.save();
+                    }
+                }
             }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
     /**
-     * Deactivate all plugins. <br>
-     * Safely invokes ({@link PluginContainer#deactivateMethod}) of all loaded plugins.
+     * Activate a specific plugin <br>
+     * Safely invokes ({@link PluginContainer#activateMethod}) of all loaded plugins.
+     *
+     * If the plugin fails to activate the settings toggle will be disabled.
+     *
+     * @param plugin what we are activating
+     * @return true if success
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public static boolean activatePlugin(PluginContainer plugin) throws InvocationTargetException,IllegalAccessException {
+        plugin.invokeActivateMethod();
+        System.out.println(MessageFormat.format("Activated plugin {0} ({1} {2})",
+                plugin.pluginData.name(),
+                plugin.pluginData.id(),
+                plugin.pluginData.version()));
+        return true;
+    }
+
+    /**
+     * Deactivate all plugins.
      */
     public static void deactivatePlugins() {
         if (plugins == null) {
             System.out.println("Plugins were not deactivated, because none had been loaded.");
             return;
         }
-
         for (PluginContainer plugin : plugins) {
-            try {
-                plugin.invokeDeactivateMethod();
-                System.out.println(MessageFormat.format("Deactivated plugin {0} ({1} {2})",
-                        plugin.pluginData.name(),
-                        plugin.pluginData.id(),
-                        plugin.pluginData.version()));
-            } catch (Exception e) {
-                new PluginLoadingException(plugin.pluginData.id(), e.toString())
-                        .printStackTrace();
-            }
+            deactivatePlugin(plugin);
         }
     }
+
+    /**
+     * Deactivate a specific plugin <br>
+     * Safely invokes ({@link PluginContainer#deactivateMethod}) of all loaded plugins.
+     * @param plugin what we are deactivating
+     */
+    public static void deactivatePlugin(PluginContainer plugin) {
+        try {
+            plugin.invokeDeactivateMethod();
+            System.out.println(MessageFormat.format("Deactivated plugin {0} ({1} {2})",
+                    plugin.pluginData.name(),
+                    plugin.pluginData.id(),
+                    plugin.pluginData.version()));
+        } catch (Exception e) {
+            new PluginLoadingException(plugin.pluginData.id(), e.toString())
+                    .printStackTrace();
+        }
+    }
+
+
 
     /**
      * Refresh all plugins. <br>
