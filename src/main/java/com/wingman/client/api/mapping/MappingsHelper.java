@@ -26,8 +26,8 @@ public class MappingsHelper {
 
     static {
         for (ClassInfo classInfo : MappingsDatabase.CLASSES) {
-            obfClasses.put(classInfo.obfName, classInfo.cleanName);
-            deobfClasses.put(classInfo.cleanName, classInfo.obfName);
+            obfClasses.put(classInfo.name, classInfo.realName);
+            deobfClasses.put(classInfo.realName, classInfo.name);
         }
 
         for (MethodInfo methodInfo : MappingsDatabase.METHODS) {
@@ -39,11 +39,11 @@ public class MappingsHelper {
             methods.add(methodInfo);
 
             if (methodInfo.isStatic) {
-                deobfMethods.put(methodInfo.cleanName, methodInfo);
+                deobfMethods.put(methodInfo.realName, methodInfo);
             } else {
                 String cleanName = obfClasses.get(methodInfo.owner);
                 if (cleanName != null) {
-                    deobfMethods.put(cleanName + "." + methodInfo.cleanName, methodInfo);
+                    deobfMethods.put(cleanName + "." + methodInfo.realName, methodInfo);
                 }
             }
         }
@@ -57,11 +57,11 @@ public class MappingsHelper {
             fields.add(fieldInfo);
 
             if (fieldInfo.isStatic) {
-                deobfFields.put(fieldInfo.cleanName, fieldInfo);;
+                deobfFields.put(fieldInfo.realName, fieldInfo);;
             } else {
                 String cleanName = obfClasses.get(fieldInfo.owner);
                 if (cleanName != null) {
-                    deobfFields.put(cleanName + "." + fieldInfo.cleanName, fieldInfo);
+                    deobfFields.put(cleanName + "." + fieldInfo.realName, fieldInfo);
                 }
             }
         }
