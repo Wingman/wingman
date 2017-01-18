@@ -29,7 +29,16 @@ public class RSMemberInjector implements Transformer {
         String cleanName = MappingsHelper.obfClasses.get(clazz.name);
 
         if (cleanName != null) {
-            clazz.interfaces.add("com/wingman/client/api/generated/" + cleanName);
+            String interfaceName = "com/wingman/client/api/generated/" + cleanName;
+
+            try {
+                Class.forName(interfaceName.replace("/", "."));
+            } catch (ClassNotFoundException e) {
+                System.out.println("Missing generated API for class " + cleanName + " (" + clazz.name + ")");
+                return clazz;
+            }
+
+            clazz.interfaces.add(interfaceName);
             clazz.interfaces.add("com/wingman/client/api/generated/" + cleanName + "$Unsafe");
         }
 
