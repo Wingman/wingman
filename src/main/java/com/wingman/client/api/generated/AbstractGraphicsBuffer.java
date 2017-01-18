@@ -17,4 +17,3 @@ public interface AbstractGraphicsBuffer {
         void setGraphicsBufferImage(Image value);
     }
 }
-
