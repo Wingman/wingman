@@ -42,15 +42,15 @@ public class StaticsBridger implements Transformer {
 
     private void transformMethods(ClassNode clazz) {
         for (MethodInfo m : methods) {
-            Type obfType = Type.getType(m.obfType);
+            Type obfType = Type.getType(m.type);
             Type obfDesc = Type.getType(m.desc);
-            Type deobfType = Type.getType(m.deobfType);
-            Type deobfDesc = Type.getType(m.cleanDesc);
+            Type deobfType = Type.getType(m.realType);
+            Type deobfDesc = Type.getType(m.realDesc);
 
             MethodNode method = new MethodNode(
                     Opcodes.ASM5,
                     Opcodes.ACC_PUBLIC,
-                    m.cleanName,
+                    m.realName,
                     deobfDesc.toString(),
                     null,
                     new String[]{});
@@ -80,9 +80,9 @@ public class StaticsBridger implements Transformer {
                 }
             }
 
-            if (m.hasDummy) {
+            if (m.hasOpaquePredicate) {
                 MappingsHelper.addInstructions(insnList,
-                        new LdcInsnNode(m.dummy)
+                        new LdcInsnNode(m.opaquePredicate)
                 );
             }
 
@@ -111,11 +111,11 @@ public class StaticsBridger implements Transformer {
 
     private void transformFields(ClassNode clazz) {
         for (FieldInfo f : fields) {
-            Type obfType = Type.getType(f.obfType);
-            Type deobfType = Type.getType(f.deobfType);
+            Type obfType = Type.getType(f.type);
+            Type deobfType = Type.getType(f.realType);
 
-            boolean needsCast = !f.obfType.equals(f.deobfType);
-            String cleanName = MappingsHelper.toUpperCaseFirstCharacter(f.cleanName);
+            boolean needsCast = !f.type.equals(f.realType);
+            String cleanName = MappingsHelper.toUpperCaseFirstCharacter(f.realName);
 
             {
                 Type getterType = Type.getMethodType(deobfType);
@@ -145,7 +145,7 @@ public class StaticsBridger implements Transformer {
                 }
 
                 if (f.getter != 1) {
-                    if (f.obfType.equals("I")) {
+                    if (f.type.equals("I")) {
                         MappingsHelper.addInstructions(insnList,
                                 new LdcInsnNode(new Integer("" + f.getter)),
                                 new InsnNode(Opcodes.IMUL)
@@ -189,7 +189,7 @@ public class StaticsBridger implements Transformer {
                 }
 
                 if (f.getter != 1) {
-                    if (f.obfType.equals("I")) {
+                    if (f.type.equals("I")) {
                         MappingsHelper.addInstructions(insnList,
                                 new LdcInsnNode(new Integer("" + f.setter)),
                                 new InsnNode(Opcodes.IMUL)

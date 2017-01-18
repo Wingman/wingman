@@ -89,6 +89,26 @@ public class HttpClient extends OkHttpClient {
     }
 
     /**
+     * Sends a HEAD request to the URL specified and returns the value of the Content-Length response header.
+     *
+     * @param url the URL to get the Content-Length of
+     * @return the Content-Length of the URL
+     * @throws IOException if the download failed
+     * @throws NumberFormatException if the Content-Length returned is not a number
+     */
+    public long getContentLength(String url) throws IOException, NumberFormatException {
+        Request request = getRequestBuilder()
+                .url(url)
+                .head()
+                .build();
+
+        Response response = newCall(request)
+                .execute();
+
+        return Integer.parseInt(response.header("Content-Length"));
+    }
+
+    /**
      * Constructs a {@link com.squareup.okhttp.Request.Builder} with request headers attempting to mimic a real browser.
      */
     public Request.Builder getRequestBuilder() {
