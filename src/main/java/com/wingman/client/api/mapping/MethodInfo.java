@@ -10,6 +10,7 @@ public class MethodInfo {
     public final String desc;
     public final String realDesc;
     public final boolean isStatic;
+
     public final boolean hasOpaquePredicate;
     public final int opaquePredicate;
 
@@ -32,6 +33,7 @@ public class MethodInfo {
         this.desc = desc;
         this.realDesc = realDesc;
         this.isStatic = isStatic;
+
         this.hasOpaquePredicate = hasOpaquePredicate;
         this.opaquePredicate = opaquePredicate;
     }

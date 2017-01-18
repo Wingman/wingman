@@ -18,6 +18,7 @@ public class ClientSettings extends PropertiesSettings {
     public static final Path SETTINGS_DIR = HOME_DIR.resolve("settings");
 
     public static final Path APPLET_JAR_FILE = HOME_DIR.resolve("gamepack.jar");
+    public static final Path MAPPINGS_FILE = HOME_DIR.resolve("mappings.json");
     public static final String LOGGING_FILE = HOME_DIR.resolve("wingman.log").toString();
 
     public static final Dimension APPLET_INITIAL_SIZE = new Dimension(765, 503);

@@ -1,7 +1,5 @@
 package com.wingman.client.api.mapping;
 
-import java.text.MessageFormat;
-
 public class FieldInfo {
 
     public final String realName;
@@ -20,7 +18,8 @@ public class FieldInfo {
                      String type,
                      String realType,
                      boolean isStatic,
-                     String getter) {
+                     long getter,
+                     long setter) {
 
         this.realName = realName;
         this.owner = owner;
@@ -29,21 +28,7 @@ public class FieldInfo {
         this.realType = realType;
         this.isStatic = isStatic;
 
-        this.getter = Long.parseLong(getter);
-
-        long setter = 1;
-        if (type.equals("I") || type.equals("J")) {
-            try {
-                setter = MappingsHelper.getMMI(this.getter, type.equals("I"));
-            } catch (ArithmeticException e) {
-                System.out.println(MessageFormat.format("Multiplier {0} for {1}.{2} ({3}) is broken - {4}",
-                        this.getter,
-                        owner,
-                        name,
-                        realName,
-                        e.getMessage()));
-            }
-        }
+        this.getter = getter;
         this.setter = setter;
     }
 }
