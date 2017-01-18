@@ -28,6 +28,7 @@ import java.util.*;
 
 public class PluginManager {
 
+    private static Reflections pluginClassLoaderReflections;
     private static List<PluginContainer> plugins;
 
     private static Set<Class<? extends Event>> eventClasses = new HashSet<>();
@@ -39,11 +40,15 @@ public class PluginManager {
     public static void findAndSetupPlugins() throws Exception {
         System.out.println("Finding and setting up plugins");
 
-        Set<Class<?>> pluginClasses = new Reflections(getPluginClassLoader()).getTypesAnnotatedWith(Plugin.class);
+        pluginClassLoaderReflections = new Reflections(getPluginClassLoader());
+
+        Set<Class<?>> pluginClasses = pluginClassLoaderReflections
+                .getTypesAnnotatedWith(Plugin.class);
         plugins = parsePlugins(pluginClasses);
         plugins = parsePluginDependencies(plugins);
         plugins = sortPlugins(plugins);
         setupPlugins();
+        pluginClassLoaderReflections = null;
         bakeEventListeners();
     }
 
@@ -230,6 +235,7 @@ public class PluginManager {
      *
      * @param instance an instance of a class containing {@link EventCallback} annotated methods
      */
+    @SuppressWarnings("unchecked")
     public static void registerEventClass(final Object instance) {
         for (final Method method : instance.getClass().getMethods()) {
             if (method.isAnnotationPresent(EventCallback.class)) {
@@ -240,28 +246,49 @@ public class PluginManager {
                         if (Event.class.isAssignableFrom(checkClass = argTypes[0])) {
                             final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
 
-                            EventListenerList eventListenerList = (EventListenerList) eventClass
-                                    .getDeclaredField("eventListenerList")
-                                    .get(null);
+                            Set subTypesOfEventClass = pluginClassLoaderReflections
+                                    .getSubTypesOf(eventClass);
 
-                            eventClasses.add(eventClass);
-
-                            eventListenerList.register(new EventListener() {
-                                @Override
-                                public void runEvent(Event event) {
-                                    try {
-                                        method.invoke(instance, event);
-                                    } catch (IllegalAccessException | InvocationTargetException e) {
-                                        Throwables.propagate(e);
-                                    }
+                            if (!subTypesOfEventClass.isEmpty()) {
+                                for (Object subClassObject : subTypesOfEventClass) {
+                                    Class<? extends Event> subClass = (Class<? extends Event>) subClassObject;
+                                    registerEventClass(instance, method, subClass);
                                 }
-                            });
+                            }
+
+                            registerEventClass(instance, method, eventClass);
                         }
                     }
-                } catch (NoSuchFieldException | IllegalAccessException e) {
+                } catch (ReflectiveOperationException e) {
                     Throwables.propagate(e);
                 }
             }
+        }
+    }
+
+    private static void registerEventClass(Object instance,
+                                           Method method,
+                                           Class<? extends Event> eventClass)
+            throws ReflectiveOperationException {
+
+        try {
+            EventListenerList eventListenerList = (EventListenerList) eventClass
+                    .getDeclaredField("eventListenerList")
+                    .get(null);
+
+            eventClasses.add(eventClass);
+
+            eventListenerList.register(new EventListener() {
+                @Override
+                public void runEvent(Event event) {
+                    try {
+                        method.invoke(instance, event);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        Throwables.propagate(e);
+                    }
+                }
+            });
+        } catch (NoSuchFieldException ignored) {
         }
     }
 
