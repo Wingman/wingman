@@ -5,6 +5,10 @@ import com.wingman.client.Util;
 import com.wingman.client.api.settings.PropertiesSettings;
 import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
+import com.wingman.client.plugin.PluginContainer;
+import com.wingman.client.plugin.PluginManager;
+import com.wingman.client.plugin.PluginSettings;
+import com.wingman.client.plugin.exceptions.PluginLoadingException;
 import com.wingman.client.rs.GameDownloader;
 import com.wingman.client.ui.style.OnyxComboBoxUI;
 import com.wingman.client.ui.style.OnyxOptionPaneUI;
@@ -21,6 +25,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 /**
@@ -33,10 +38,13 @@ public class Client {
 
     public static SettingsScreen settingsScreen;
     public static PropertiesSettings clientSettings;
+    public static PropertiesSettings activePluginsSettings;
 
     public static SideBarBox sideBarBox;
 
     public static ClientTrayIcon clientTrayIcon;
+
+    private static SettingsSection pluginSection;
 
     public Client() {
         frame = new JFrame();
@@ -47,6 +55,7 @@ public class Client {
         settingsScreen = new SettingsScreen();
         try {
             clientSettings = new ClientSettings();
+            activePluginsSettings = new PluginSettings();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -106,7 +115,7 @@ public class Client {
      * Registers a {@link SettingsSection} with client related settings.
      */
     private void addClientSettings() {
-        SettingsSection settingsSection = new SettingsSection("Wingman", "Click to modify client related settings");
+        SettingsSection settingsSection = new SettingsSection("Options", "Click to modify client related settings");
 
         {
             SettingsItem settingsItem = new SettingsItem("Preferred game world");
@@ -161,8 +170,73 @@ public class Client {
             settingsSection.add(settingsItem);
         }
 
+        pluginSection = new SettingsSection("Plugins", "Choose which plugins to enable");
+
         settingsScreen.registerSection(settingsSection);
+        settingsScreen.registerSection(pluginSection);
     }
+
+    /**
+     * Add plugin specific toggle to enable or disable a plugin.
+     * @param plugin PluginContainer of the plugin
+     */
+    public static void addPluginToggle(final PluginContainer plugin) {
+        String pluginTitle = plugin.pluginData.name() + " (" + plugin.pluginData.version() + ")";
+        SettingsItem item = new SettingsItem(pluginTitle);
+        final JCheckBox pCheckbox = new JCheckBox();
+
+        //look for past setting
+        if (activePluginsSettings.get(plugin.pluginData.id()) != null) //settings exist
+        {
+            if (activePluginsSettings.get(plugin.pluginData.id()).equalsIgnoreCase("true"))
+            {
+                pCheckbox.setSelected(true);
+            } else {
+                pCheckbox.setSelected(false);
+            }
+        }
+        //no setting saved, use defaultToggle from plugin's annotation
+        else
+        {
+            pCheckbox.setSelected(plugin.pluginData.defaultToggle().equalsIgnoreCase("true"));
+        }
+
+        //listen for GUI toggle
+        pCheckbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent itemEvent) {
+                if (itemEvent.getStateChange() == ItemEvent.SELECTED)
+                {
+                    try
+                    {
+                        PluginManager.activatePlugin(plugin);
+                        activePluginsSettings.update(plugin.pluginData.id(), "true");
+                    }
+                    //failed to activate plugin
+                    catch (IllegalAccessException | InvocationTargetException e)
+                    {
+                        //force plugin toggle OFF
+                        pCheckbox.setSelected(false);
+                        activePluginsSettings.update(plugin.pluginData.id(), "false");
+                        activePluginsSettings.save();
+                        new PluginLoadingException(plugin.pluginData.id(), e.toString())
+                                .printStackTrace();
+                    }
+                }
+                else
+                {
+                    PluginManager.deactivatePlugin(plugin);
+                    activePluginsSettings.update(plugin.pluginData.id(), "false");
+                }
+                activePluginsSettings.save();
+            }
+        });
+
+        item.add(pCheckbox);
+        pluginSection.add(item);
+        settingsScreen.registerSection(pluginSection);
+    }
+
 
     /**
      * Adds the default client frame/program listeners.

@@ -82,7 +82,7 @@ public class PluginContainer {
      * @throws IllegalAccessException
      */
     public void invokeSetupMethod() throws InvocationTargetException, IllegalAccessException {
-        invokeSafe(setupMethod);
+        invokeMethod(setupMethod);
     }
 
     /**
@@ -92,7 +92,7 @@ public class PluginContainer {
      * @throws IllegalAccessException
      */
     public void invokeActivateMethod() throws InvocationTargetException, IllegalAccessException {
-        invokeSafe(activateMethod);
+        invokeMethod(activateMethod);
     }
 
     /**
@@ -102,7 +102,7 @@ public class PluginContainer {
      * @throws IllegalAccessException
      */
     public void invokeRefreshMethod() throws InvocationTargetException, IllegalAccessException {
-        invokeSafe(refreshMethod);
+        invokeMethod(refreshMethod);
     }
 
     /**
@@ -112,21 +112,17 @@ public class PluginContainer {
      * @throws IllegalAccessException
      */
     public void invokeDeactivateMethod() throws InvocationTargetException, IllegalAccessException {
-        invokeSafe(deactivateMethod);
+        invokeMethod(deactivateMethod);
     }
 
     /**
-     * Safely invokes a {@link Method}.
+     * invokes a {@link Method}.
      *
      * @param method the method to safely invoke
      */
-    private void invokeSafe(Method method) {
-        try {
-            if (method != null) {
-                method.invoke(instance);
-            }
-        } catch (Exception e) {
-            Throwables.propagate(e);
+    private void invokeMethod(Method method) throws InvocationTargetException, IllegalAccessException {
+        if (method != null) {
+            method.invoke(instance);
         }
     }
 

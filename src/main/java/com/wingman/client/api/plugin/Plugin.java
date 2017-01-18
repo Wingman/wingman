@@ -21,6 +21,10 @@ public @interface Plugin {
 
     String description();
 
+    String canToggle() default "false";
+
+    String defaultToggle() default "true";
+
     /**
      * Use this interface to annotate the setup method. <br>
      * The setup method should perform actions that need to be done before the game is loaded. <br>

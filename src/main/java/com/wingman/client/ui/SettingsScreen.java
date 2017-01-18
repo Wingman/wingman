@@ -45,12 +45,12 @@ public class SettingsScreen extends JDialog {
         JPanel contentPane = new JPanel(new BorderLayout() {
             @Override
             public Dimension minimumLayoutSize(Container target) {
-                return new Dimension(750, 515);
+                return new Dimension(550, 300);
             }
 
             @Override
             public Dimension preferredLayoutSize(Container target) {
-                return new Dimension(750, 515);
+                return new Dimension(550, 400);
             }
         });
 

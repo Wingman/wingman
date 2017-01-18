@@ -37,6 +37,6 @@ public class ExternalPlayerMovedEvent extends Event {
         ADDED_TO_LOCAL,
         PLANE_CHANGE,
         ADJACENT_REGION,
-        NONADJACENT_REGION;
+        NONADJACENT_REGION
     }
 }
