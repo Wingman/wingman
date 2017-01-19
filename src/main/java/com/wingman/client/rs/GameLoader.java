@@ -8,6 +8,7 @@ import com.wingman.client.api.transformer.Transformers;
 import com.wingman.client.classloader.TransformingClassLoader;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.rs.listeners.CanvasMouseListener;
+import com.wingman.client.rs.listeners.CanvasMouseWheelListener;
 import com.wingman.client.ui.Client;
 
 import javax.swing.*;
@@ -79,6 +80,7 @@ public class GameLoader extends SwingWorker<Void, Void>{
             }
 
             GameAPI.getCanvas().addMouseListener(new CanvasMouseListener());
+            GameAPI.getCanvas().addMouseWheelListener(new CanvasMouseWheelListener());
         } catch (MalformedURLException | ClassNotFoundException
                 | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
