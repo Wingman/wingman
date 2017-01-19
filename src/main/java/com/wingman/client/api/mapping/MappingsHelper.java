@@ -1,16 +1,21 @@
 package com.wingman.client.api.mapping;
 
 import com.google.common.base.Throwables;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.squareup.okhttp.Response;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.net.HttpClient;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
 
+import java.io.File;
 import java.io.FileReader;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -80,27 +85,40 @@ public class MappingsHelper {
     }
 
     static {
-        HttpClient httpClient = new HttpClient();
-
-        long localSize = ClientSettings.MAPPINGS_FILE
-                .toFile()
-                .length();
-
-        String mappingsUrl = "https://wingman.github.io/download/mappings.json";
-
         try {
-            long remoteSize = httpClient
-                    .getContentLength(mappingsUrl);
+            File mappingsFile = ClientSettings.MAPPINGS_FILE
+                    .toFile();
 
-            if (remoteSize != localSize) {
-                httpClient.downloadFileSync(mappingsUrl, ClientSettings.MAPPINGS_FILE);
+            boolean shouldUpdate = true;
+
+            HttpClient httpClient = new HttpClient();
+
+            if (mappingsFile.exists()) {
+                HashCode localHashCode = Files.hash(mappingsFile, Hashing.md5());
+
+                Response response = httpClient
+                        .downloadUrlSync("https://wingman.github.io/download/mappings.hash");
+
+                HashCode remoteHashCode = HashCode
+                        .fromString(response
+                        .body()
+                        .string());
+
+                if (localHashCode.equals(remoteHashCode)) {
+                    shouldUpdate = false;
+                }
+            }
+
+            if (shouldUpdate) {
+                httpClient.downloadFileSync("https://wingman.github.io/download/mappings.json",
+                        ClientSettings.MAPPINGS_FILE);
             }
 
             JsonParser parser = new JsonParser();
 
             JsonObject rootObject;
 
-            try (JsonReader reader = new JsonReader(new FileReader(ClientSettings.MAPPINGS_FILE.toFile()))) {
+            try (JsonReader reader = new JsonReader(new FileReader(mappingsFile))) {
                 rootObject = parser
                         .parse(reader)
                         .getAsJsonObject();
