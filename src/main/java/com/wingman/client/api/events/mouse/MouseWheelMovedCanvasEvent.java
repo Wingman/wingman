@@ -10,7 +10,8 @@ public class MouseWheelMovedCanvasEvent extends Event {
 
     public static final EventListenerList eventListenerList = new EventListenerList();
 
-    MouseWheelEvent mouseWheelEvent;
+    public MouseWheelEvent mouseWheelEvent;
+    
     public MouseWheelMovedCanvasEvent(MouseWheelEvent mouseWheelEvent) {
         this.mouseWheelEvent = mouseWheelEvent;
     }
@@ -18,5 +19,4 @@ public class MouseWheelMovedCanvasEvent extends Event {
     public EventListener[] getListeners() {
         return eventListenerList.listeners;
     }
-
 }
