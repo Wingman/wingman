@@ -21,6 +21,8 @@ public interface Static {
 
     void updateCharacterMovement(Character character, int arg1);
 
+    void updateItemLayer(int x, int y);
+
     int getAppletHeight();
 
     int getAppletWidth();
@@ -46,6 +48,8 @@ public interface Static {
     int[] getGameSettings();
 
     int getGameState();
+
+    LinkedNodeList[][][] getGroundItems();
 
     NodeTable getItemContainers();
 
@@ -116,6 +120,8 @@ public interface Static {
         void setGameSettings(int[] value);
 
         void setGameState(int value);
+
+        void setGroundItems(LinkedNodeList[][][] value);
 
         void setItemContainers(NodeTable value);
 
