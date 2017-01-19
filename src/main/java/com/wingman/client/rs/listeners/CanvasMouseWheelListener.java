@@ -6,9 +6,6 @@ import com.wingman.client.plugin.PluginManager;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-/**
- * Created by mmccoy37 on 1/18/17.
- */
 public class CanvasMouseWheelListener implements MouseWheelListener {
 
     @Override
