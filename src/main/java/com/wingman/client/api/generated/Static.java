@@ -43,6 +43,8 @@ public interface Static {
 
     int[] getExternalPlayerLocations();
 
+    int getFps();
+
     int getGameDrawingMode();
 
     int[] getGameSettings();
@@ -114,6 +116,8 @@ public interface Static {
         void setClientPlane(int value);
 
         void setExternalPlayerLocations(int[] value);
+
+        void setFps(int value);
 
         void setGameDrawingMode(int value);
 

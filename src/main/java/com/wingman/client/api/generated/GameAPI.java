@@ -81,6 +81,10 @@ public abstract class GameAPI {
         return getterInstance.getExternalPlayerLocations();
     }
 
+    public static int getFps() {
+        return getterInstance.getFps();
+    }
+
     public static int getGameDrawingMode() {
         return getterInstance.getGameDrawingMode();
     }
@@ -223,6 +227,10 @@ public abstract class GameAPI {
 
         public static void setExternalPlayerLocations(int[] value) {
             setterInstance.setExternalPlayerLocations(value);
+        }
+
+        public static void setFps(int value) {
+            setterInstance.setFps(value);
         }
 
         public static void setGameDrawingMode(int value) {
