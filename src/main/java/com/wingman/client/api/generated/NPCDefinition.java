@@ -1,8 +1,5 @@
 package com.wingman.client.api.generated;
 
-import java.lang.String;
-import java.lang.SuppressWarnings;
-
 @SuppressWarnings("all")
 public interface NPCDefinition extends DualNode {
     String[] getActions();

@@ -1,8 +1,6 @@
 package com.wingman.client.api.generated;
 
 import java.awt.Canvas;
-import java.lang.String;
-import java.lang.SuppressWarnings;
 import java.util.Map;
 
 @SuppressWarnings("all")

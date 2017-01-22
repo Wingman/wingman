@@ -2,7 +2,6 @@ package com.wingman.client.api.generated;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface AbstractGraphicsBuffer {

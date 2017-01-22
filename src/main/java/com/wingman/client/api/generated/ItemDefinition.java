@@ -1,8 +1,5 @@
 package com.wingman.client.api.generated;
 
-import java.lang.String;
-import java.lang.SuppressWarnings;
-
 @SuppressWarnings("all")
 public interface ItemDefinition extends DualNode {
     String[] getGroundActions();
