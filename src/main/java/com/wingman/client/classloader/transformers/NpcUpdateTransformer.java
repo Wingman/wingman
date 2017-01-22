@@ -86,7 +86,6 @@ public class NpcUpdateTransformer implements Transformer {
                     InsnNode i3 = (InsnNode) i2.getNext();
                     npcNode = (VarInsnNode) i3.getNext();
                 } catch (ClassCastException | NullPointerException ignored) {
-                    // swallow
                 }
             }
 
@@ -99,7 +98,6 @@ public class NpcUpdateTransformer implements Transformer {
                     }
                     indexNode = (VarInsnNode) i.getPrevious();
                 } catch (ClassCastException | NullPointerException ignored) {
-                    // swallow
                 }
             }
 
@@ -147,7 +145,6 @@ public class NpcUpdateTransformer implements Transformer {
                     );
                     m.instructions.insert(i, insnList);
                 } catch (ClassCastException | NullPointerException ignored) {
-                    // swallow
                 }
             }
         }

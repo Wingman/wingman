@@ -22,12 +22,12 @@ public class PreserveExceptionInfoTransformer implements Transformer {
         Iterator<MethodNode> iterator = clazz.methods.iterator();
         while (iterator.hasNext()) {
             MethodNode m = iterator.next();
-            if (m.name.equals("<init>")) {
+            if ("<init>".equals(m.name)) {
                 ListIterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
                 while (nodeIterator.hasNext()) {
                     try {
                         MethodInsnNode i = (MethodInsnNode) nodeIterator.next();
-                        if (i.owner.equals("java/lang/RuntimeException")) {
+                        if ("java/lang/RuntimeException".equals(i.owner)) {
                             i.desc = "(Ljava/lang/String;Ljava/lang/Throwable;)V";
 
                             InsnList insnList = new InsnList();
@@ -38,8 +38,7 @@ public class PreserveExceptionInfoTransformer implements Transformer {
                             m.instructions.insertBefore(i, insnList);
                             break;
                         }
-                    } catch (ClassCastException | NullPointerException e) {
-                        //swallow
+                    } catch (ClassCastException | NullPointerException ignored) {
                     }
                 }
             }

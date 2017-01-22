@@ -48,7 +48,7 @@ public class CanvasUpdatedTransformer implements Transformer {
     public ClassNode transform(ClassNode clazz) {
         if (clazz.name.equals(gameDrawingMode.owner)) {
             for (MethodNode m : clazz.methods) {
-                if (!m.name.equals("<clinit>")) {
+                if (!"<clinit>".equals(m.name)) {
                     continue;
                 }
 
@@ -66,8 +66,7 @@ public class CanvasUpdatedTransformer implements Transformer {
 
                         m.instructions.set(i, new InsnNode(Opcodes.ICONST_1));
                         break;
-                    } catch (ClassCastException | NullPointerException e) {
-                        //swallow
+                    } catch (ClassCastException | NullPointerException ignored) {
                     }
                 }
             }
@@ -82,7 +81,7 @@ public class CanvasUpdatedTransformer implements Transformer {
                 while (nodeIterator.hasNext()) {
                     try {
                         FieldInsnNode fieldInsnNode = (FieldInsnNode) nodeIterator.next();
-                        if (!fieldInsnNode.desc.equals("Ljava/awt/Image;")) {
+                        if (!"Ljava/awt/Image;".equals(fieldInsnNode.desc)) {
                             continue;
                         }
 
@@ -101,8 +100,7 @@ public class CanvasUpdatedTransformer implements Transformer {
                         );
                         m.instructions.insertBefore(fieldInsnNode.getPrevious().getPrevious(), insnList);
                         break;
-                    } catch (ClassCastException | NullPointerException e) {
-                        //swallow
+                    } catch (ClassCastException | NullPointerException ignored) {
                     }
                 }
             }

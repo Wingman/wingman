@@ -86,8 +86,8 @@ public class RSMemberInjector implements Transformer {
                         new VarInsnNode(deobfArg.getOpcode(Opcodes.ILOAD), index++)
                 );
 
-                if (deobfArg.getDescriptor().equals("J")
-                        || deobfArg.getDescriptor().equals("D")) {
+                if ("J".equals(deobfArg.getDescriptor())
+                        || "D".equals(deobfArg.getDescriptor())) {
                     index++;
                 }
 
@@ -177,7 +177,7 @@ public class RSMemberInjector implements Transformer {
                 }
 
                 if (f.getter != 1) {
-                    if (f.type.equals("I")) {
+                    if ("I".equals(f.type)) {
                         MappingsHelper.addInstructions(insnList,
                                 new LdcInsnNode(new Integer("" + f.getter)),
                                 new InsnNode(Opcodes.IMUL)
@@ -226,7 +226,7 @@ public class RSMemberInjector implements Transformer {
                 }
 
                 if (f.getter != 1) {
-                    if (f.type.equals("I")) {
+                    if ("I".equals(f.type)) {
                         MappingsHelper.addInstructions(insnList,
                                 new LdcInsnNode(new Integer("" + f.setter)),
                                 new InsnNode(Opcodes.IMUL)

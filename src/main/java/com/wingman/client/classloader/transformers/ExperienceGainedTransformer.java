@@ -46,7 +46,8 @@ public class ExperienceGainedTransformer implements Transformer {
 
                     VarInsnNode i6 = (VarInsnNode) i5.getPrevious();
 
-                    FieldInsnNode i7 = (FieldInsnNode) i6.getPrevious(); // Current levels (boosts included)
+                    // Current levels (boosts included)
+                    FieldInsnNode i7 = (FieldInsnNode) i6.getPrevious();
 
                     InsnNode i8 = (InsnNode) i7.getPrevious();
 
@@ -54,7 +55,8 @@ public class ExperienceGainedTransformer implements Transformer {
 
                     VarInsnNode i10 = (VarInsnNode) i9.getPrevious();
 
-                    FieldInsnNode i11 = (FieldInsnNode) i10.getPrevious(); // Experiences array
+                    // Experiences array
+                    FieldInsnNode i11 = (FieldInsnNode) i10.getPrevious();
 
                     InsnList insnList = new InsnList();
                     MappingsHelper.addInstructions(insnList,
@@ -62,7 +64,8 @@ public class ExperienceGainedTransformer implements Transformer {
                                     ExperienceGainedEvent.class.getName().replace(".", "/")),
                             new InsnNode(Opcodes.DUP),
 
-                            new VarInsnNode(Opcodes.ILOAD, i2.var), // Skill ID
+                            // Skill ID
+                            new VarInsnNode(Opcodes.ILOAD, i2.var),
 
                             new FieldInsnNode(Opcodes.GETSTATIC, i.owner, i.name, i.desc),
                             new VarInsnNode(Opcodes.ILOAD, i2.var),
@@ -72,7 +75,8 @@ public class ExperienceGainedTransformer implements Transformer {
                             new VarInsnNode(Opcodes.ILOAD, i2.var),
                             new InsnNode(Opcodes.IALOAD),
 
-                            new VarInsnNode(Opcodes.ILOAD, i9.var), // New skill XP
+                            // New skill XP
+                            new VarInsnNode(Opcodes.ILOAD, i9.var),
 
                             new MethodInsnNode(Opcodes.INVOKESPECIAL,
                                     ExperienceGainedEvent.class.getName().replace(".", "/"),
@@ -87,8 +91,7 @@ public class ExperienceGainedTransformer implements Transformer {
                     );
                     m.instructions.insertBefore(i11, insnList);
                     break;
-                } catch (ClassCastException | NullPointerException e) {
-                    //swallow
+                } catch (ClassCastException | NullPointerException ignored) {
                 }
             }
         }

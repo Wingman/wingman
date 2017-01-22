@@ -40,10 +40,6 @@ public class PropertiesSettings {
         properties.put(key, value);
     }
 
-    public String get(String key) {
-        return (String) properties.get(key);
-    }
-
     public void save() {
         try {
             properties.store(new FileOutputStream(file), fileComments);
@@ -52,8 +48,12 @@ public class PropertiesSettings {
         }
     }
 
+    public String get(String key) {
+        return (String) properties.get(key);
+    }
+
     public boolean getBoolean(String key) {
-        return get(key).equals("true");
+        return "true".equals(get(key));
     }
 
     public int getInteger(String key) {

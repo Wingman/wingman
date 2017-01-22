@@ -21,7 +21,7 @@ public class StaticsBridger implements Transformer {
 
     @Override
     public boolean canTransform(String name) {
-        return name.equals("client");
+        return "client".equals(name);
     }
 
     @Override
@@ -42,9 +42,6 @@ public class StaticsBridger implements Transformer {
 
     private void transformMethods(ClassNode clazz) {
         for (MethodInfo m : methods) {
-            Type obfType = Type.getType(m.type);
-            Type obfDesc = Type.getType(m.desc);
-            Type deobfType = Type.getType(m.realType);
             Type deobfDesc = Type.getType(m.realDesc);
 
             MethodNode method = new MethodNode(
@@ -59,8 +56,12 @@ public class StaticsBridger implements Transformer {
 
             int index = 1;
 
-            Type[] obfArgs = obfDesc.getArgumentTypes();
+            Type[] obfArgs = Type
+                    .getType(m.desc)
+                    .getArgumentTypes();
+
             Type[] deobfArgs = deobfDesc.getArgumentTypes();
+
             for (int i = 0; i < deobfArgs.length; i++) {
                 Type obfArg = obfArgs[i];
                 Type deobfArg = deobfArgs[i];
@@ -69,7 +70,7 @@ public class StaticsBridger implements Transformer {
                         new VarInsnNode(deobfArg.getOpcode(Opcodes.ILOAD), index++)
                 );
 
-                if (deobfArg.getDescriptor().equals("J") || deobfArg.getDescriptor().equals("D")) {
+                if ("J".equals(deobfArg.getDescriptor()) || "D".equals(deobfArg.getDescriptor())) {
                     index++;
                 }
 
@@ -94,6 +95,9 @@ public class StaticsBridger implements Transformer {
                             m.desc,
                             false)
             );
+
+            Type obfType = Type.getType(m.type);
+            Type deobfType = Type.getType(m.realType);
 
             if (!obfType.equals(deobfType)) {
                 MappingsHelper.addInstructions(insnList,
@@ -145,7 +149,7 @@ public class StaticsBridger implements Transformer {
                 }
 
                 if (f.getter != 1) {
-                    if (f.type.equals("I")) {
+                    if ("I".equals(f.type)) {
                         MappingsHelper.addInstructions(insnList,
                                 new LdcInsnNode(new Integer("" + f.getter)),
                                 new InsnNode(Opcodes.IMUL)
@@ -189,7 +193,7 @@ public class StaticsBridger implements Transformer {
                 }
 
                 if (f.getter != 1) {
-                    if (f.type.equals("I")) {
+                    if ("I".equals(f.type)) {
                         MappingsHelper.addInstructions(insnList,
                                 new LdcInsnNode(new Integer("" + f.setter)),
                                 new InsnNode(Opcodes.IMUL)
@@ -212,7 +216,7 @@ public class StaticsBridger implements Transformer {
         }
     }
 
-    {
+    public StaticsBridger() {
         for (Set<FieldInfo> fieldInfoSet : MappingsHelper.obfFields.values()) {
             for (FieldInfo fieldInfo : fieldInfoSet) {
                 if (fieldInfo.isStatic) {

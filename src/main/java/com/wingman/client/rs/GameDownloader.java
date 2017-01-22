@@ -27,9 +27,9 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
 
     private static HttpClient httpClient = new HttpClient();
 
-    static String runeScapeUrl = null;
-    static String pageSource = null;
-    static String archiveName = null;
+    protected static String runeScapeUrl = null;
+    protected static String pageSource = null;
+    protected static String archiveName = null;
     private static int remoteArchiveSize = 0;
 
     private static StartProgressBar progressBar = new StartProgressBar();

@@ -164,7 +164,8 @@ public class MappingsHelper {
                 obfClasses.put(classInfo.name, classInfo.realName);
                 deobfClasses.put(classInfo.realName, classInfo.name);
             } else {
-                System.out.println("Missing generated API for class " + classInfo.realName + " (" + classInfo.name + ")");
+                System.out.println("Missing generated API for class "
+                        + classInfo.realName + " (" + classInfo.name + ")");
             }
         }
 
@@ -179,10 +180,9 @@ public class MappingsHelper {
                         .getDescriptor()
                         .replace("[", "");
 
-                if (argumentDescriptor.startsWith("L")) {
-                    if (!doesClassExist(argumentDescriptor)) {
-                        shouldContinue = false;
-                    }
+                if (argumentDescriptor.startsWith("L")
+                        && !doesClassExist(argumentDescriptor)) {
+                    shouldContinue = false;
                 }
             }
 
@@ -195,10 +195,9 @@ public class MappingsHelper {
                     .getDescriptor()
                     .replace("[", "");
 
-            if (realTypeDescriptor.startsWith("L")) {
-                if (!doesClassExist(realTypeDescriptor)) {
-                    continue;
-                }
+            if (realTypeDescriptor.startsWith("L")
+                    && !doesClassExist(realTypeDescriptor)) {
+                continue;
             }
 
             obfMethods.computeIfAbsent(methodInfo.owner, k -> new HashSet<>())
@@ -220,10 +219,9 @@ public class MappingsHelper {
                     .getDescriptor()
                     .replace("[", "");
 
-            if (realTypeDescriptor.startsWith("L")) {
-                if (!doesClassExist(realTypeDescriptor)) {
-                    continue;
-                }
+            if (realTypeDescriptor.startsWith("L")
+                    && !doesClassExist(realTypeDescriptor)) {
+                continue;
             }
 
             obfFields.computeIfAbsent(fieldInfo.owner, k -> new HashSet<>())
@@ -241,14 +239,16 @@ public class MappingsHelper {
     }
 
     private static boolean doesClassExist(String className) {
-        className = className.replace("/", ".");
+        String cleanClassName = className
+                .replace("/", ".");
 
-        if (className.startsWith("L")) {
-            className = className.substring(1, className.length() - 1);
+        if (cleanClassName.startsWith("L")) {
+            cleanClassName = cleanClassName
+                    .substring(1, cleanClassName.length() - 1);
         }
 
         try {
-            Class.forName(className);
+            Class.forName(cleanClassName);
         } catch (ClassNotFoundException e) {
             return false;
         }

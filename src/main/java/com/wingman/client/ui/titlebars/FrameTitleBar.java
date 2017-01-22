@@ -111,8 +111,7 @@ public class FrameTitleBar extends OnyxTitleBar {
         String version = "Developer";
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Util.getFile("/version.properties")))) {
             version = reader.readLine();
-        } catch (NullPointerException e)  {
-            //swallow
+        } catch (NullPointerException ignored)  {
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -33,14 +33,22 @@ public class OnyxStyleFactory extends SynthStyleFactory {
     public static final Font ROBOTO_REGULAR = new Font("Roboto", Font.PLAIN, 12);
     public static final Font ROBOTO_MEDIUM = new Font("Roboto Medium", Font.PLAIN, 12);
 
+    private static final int TEXT_COMPONENT_BORDER_SIZE = 3;
+
+    private static SynthStyle textFieldStyle = new TextFieldStyle();
+    private static SynthStyle panelStyle = new PanelStyle();
+    private static SynthStyle comboBoxStyle = new ComboBoxStyle();
+
     private ImageIcon checkBoxIcon;
     private ImageIcon checkBoxIconChecked;
 
     public OnyxStyleFactory() {
         GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
-            graphicsEnvironment.registerFont(Font.createFont(Font.TRUETYPE_FONT, Util.getFile("/fonts/Roboto-Regular.ttf")));
-            graphicsEnvironment.registerFont(Font.createFont(Font.TRUETYPE_FONT, Util.getFile("/fonts/Roboto-Medium.ttf")));
+            graphicsEnvironment.registerFont(Font
+                    .createFont(Font.TRUETYPE_FONT, Util.getFile("/fonts/Roboto-Regular.ttf")));
+            graphicsEnvironment.registerFont(Font
+                    .createFont(Font.TRUETYPE_FONT, Util.getFile("/fonts/Roboto-Medium.ttf")));
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
         }
@@ -72,21 +80,13 @@ public class OnyxStyleFactory extends SynthStyleFactory {
         }
     };
 
-    private static SynthStyle textFieldStyle = new TextFieldStyle();
-    private static SynthStyle panelStyle = new PanelStyle();
-    private static SynthStyle comboBoxStyle = new ComboBoxStyle();
-
     @Override
     public SynthStyle getStyle(JComponent c, Region id) {
         if (id == Region.PANEL) {
             return panelStyle;
-        }
-
-        if (id == Region.BUTTON) {
+        } else if (id == Region.BUTTON) {
             c.setOpaque(false);
-        }
-
-        if (id == Region.LABEL) {
+        } else if (id == Region.LABEL) {
             Color background = c.getBackground();
             if (background == null || background instanceof UIResource) {
                 c.setOpaque(false);
@@ -100,7 +100,10 @@ public class OnyxStyleFactory extends SynthStyleFactory {
             if (border == null || border instanceof UIResource) {
                 textComponent.setBorder(new CompoundBorder(
                         BorderFactory.createLineBorder(BASE_BRIGHTER, 1),
-                        new EmptyBorder(3, 3, 3, 3)
+                        new EmptyBorder(TEXT_COMPONENT_BORDER_SIZE,
+                                TEXT_COMPONENT_BORDER_SIZE,
+                                TEXT_COMPONENT_BORDER_SIZE,
+                                TEXT_COMPONENT_BORDER_SIZE)
                 ));
             }
 
@@ -123,17 +126,13 @@ public class OnyxStyleFactory extends SynthStyleFactory {
             checkBox.setRolloverEnabled(false);
             checkBox.setIcon(checkBoxIcon);
             checkBox.setSelectedIcon(checkBoxIconChecked);
-        }
-
-        if (id == Region.COMBO_BOX) {
+        } else if (id == Region.COMBO_BOX) {
             if (c.getBorder() == null) {
                 c.setBorder(BorderFactory.createLineBorder(OnyxStyleFactory.BASE_BRIGHTER));
             }
 
             return comboBoxStyle;
-        }
-
-        if (id == Region.PROGRESS_BAR) {
+        } else if (id == Region.PROGRESS_BAR) {
             Color foreground = c.getForeground();
             if (foreground == null || foreground instanceof UIResource) {
                 c.setForeground(BASE_BLUE);
