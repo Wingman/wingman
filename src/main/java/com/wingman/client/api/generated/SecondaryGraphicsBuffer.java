@@ -3,7 +3,6 @@ package com.wingman.client.api.generated;
 import java.awt.Graphics;
 import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
-import java.lang.SuppressWarnings;
 
 @SuppressWarnings("all")
 public interface SecondaryGraphicsBuffer extends AbstractGraphicsBuffer, ImageObserver, ImageProducer {
