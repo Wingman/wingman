@@ -12,6 +12,7 @@ import com.google.gson.stream.JsonReader;
 import com.squareup.okhttp.Response;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.net.HttpClient;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
 
@@ -159,11 +160,47 @@ public class MappingsHelper {
 
     private static void populateHelperFields() {
         for (ClassInfo classInfo : CLASSES) {
-            obfClasses.put(classInfo.name, classInfo.realName);
-            deobfClasses.put(classInfo.realName, classInfo.name);
+            if (doesClassExist("com.wingman.client.api.generated." + classInfo.realName)) {
+                obfClasses.put(classInfo.name, classInfo.realName);
+                deobfClasses.put(classInfo.realName, classInfo.name);
+            } else {
+                System.out.println("Missing generated API for class " + classInfo.realName + " (" + classInfo.name + ")");
+            }
         }
 
         for (MethodInfo methodInfo : METHODS) {
+            boolean shouldContinue = true;
+
+            Type[] realArgumentTypes = Type
+                    .getArgumentTypes(methodInfo.realDesc);
+
+            for (Type argumentType : realArgumentTypes) {
+                String argumentDescriptor = argumentType
+                        .getDescriptor()
+                        .replace("[", "");
+
+                if (argumentDescriptor.startsWith("L")) {
+                    if (!doesClassExist(argumentDescriptor)) {
+                        shouldContinue = false;
+                    }
+                }
+            }
+
+            if (!shouldContinue) {
+                continue;
+            }
+
+            String realTypeDescriptor = Type
+                    .getType(methodInfo.realType)
+                    .getDescriptor()
+                    .replace("[", "");
+
+            if (realTypeDescriptor.startsWith("L")) {
+                if (!doesClassExist(realTypeDescriptor)) {
+                    continue;
+                }
+            }
+
             obfMethods.computeIfAbsent(methodInfo.owner, k -> new HashSet<>())
                     .add(methodInfo);
 
@@ -178,6 +215,17 @@ public class MappingsHelper {
         }
 
         for (FieldInfo fieldInfo : FIELDS) {
+            String realTypeDescriptor = Type
+                    .getType(fieldInfo.realType)
+                    .getDescriptor()
+                    .replace("[", "");
+
+            if (realTypeDescriptor.startsWith("L")) {
+                if (!doesClassExist(realTypeDescriptor)) {
+                    continue;
+                }
+            }
+
             obfFields.computeIfAbsent(fieldInfo.owner, k -> new HashSet<>())
                     .add(fieldInfo);
 
@@ -190,5 +238,21 @@ public class MappingsHelper {
                 }
             }
         }
+    }
+
+    private static boolean doesClassExist(String className) {
+        className = className.replace("/", ".");
+
+        if (className.startsWith("L")) {
+            className = className.substring(1, className.length() - 1);
+        }
+
+        try {
+            Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+
+        return true;
     }
 }
