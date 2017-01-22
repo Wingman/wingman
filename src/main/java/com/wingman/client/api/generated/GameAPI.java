@@ -97,6 +97,10 @@ public abstract class GameAPI {
         return getterInstance.getGameState();
     }
 
+    public static GrandExchangeOffer[] getGrandExchangeOffers() {
+        return getterInstance.getGrandExchangeOffers();
+    }
+
     public static LinkedNodeList[][][] getGroundItems() {
         return getterInstance.getGroundItems();
     }
@@ -243,6 +247,10 @@ public abstract class GameAPI {
 
         public static void setGameState(int value) {
             setterInstance.setGameState(value);
+        }
+
+        public static void setGrandExchangeOffers(GrandExchangeOffer[] value) {
+            setterInstance.setGrandExchangeOffers(value);
         }
 
         public static void setGroundItems(LinkedNodeList[][][] value) {

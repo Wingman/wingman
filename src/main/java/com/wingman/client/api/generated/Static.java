@@ -51,6 +51,8 @@ public interface Static {
 
     int getGameState();
 
+    GrandExchangeOffer[] getGrandExchangeOffers();
+
     LinkedNodeList[][][] getGroundItems();
 
     NodeTable getItemContainers();
@@ -124,6 +126,8 @@ public interface Static {
         void setGameSettings(int[] value);
 
         void setGameState(int value);
+
+        void setGrandExchangeOffers(GrandExchangeOffer[] value);
 
         void setGroundItems(LinkedNodeList[][][] value);
 
