@@ -13,5 +13,5 @@ public @interface PluginDependency {
 
     String id();
 
-    String minVersion();
+    String version();
 }
