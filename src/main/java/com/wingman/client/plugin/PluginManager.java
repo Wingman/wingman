@@ -264,7 +264,7 @@ public final class PluginManager {
                         }
                     }
                 } catch (ReflectiveOperationException e) {
-                    Throwables.propagate(e);
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -288,7 +288,7 @@ public final class PluginManager {
                     try {
                         method.invoke(instance, event);
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        Throwables.propagate(e);
+                        throw new RuntimeException(e);
                     }
                 }
             });

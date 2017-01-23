@@ -52,7 +52,7 @@ public class TransformingClassLoader extends URLClassLoader {
                     transformers.add(transformer);
                 }
             } catch (Exception e) {
-                Throwables.propagate(e);
+                throw new RuntimeException(e);
             }
         }
 
@@ -77,7 +77,7 @@ public class TransformingClassLoader extends URLClassLoader {
             try {
                 classNode = transformer.transform(classNode);
             } catch (Exception e) {
-                Throwables.propagate(e);
+                throw new RuntimeException(e);
             }
         }
 

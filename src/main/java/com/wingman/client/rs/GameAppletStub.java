@@ -31,7 +31,7 @@ public class GameAppletStub implements AppletStub {
         try {
             return new URL(GameDownloader.runeScapeUrl);
         } catch (IOException e) {
-            throw Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -40,7 +40,7 @@ public class GameAppletStub implements AppletStub {
         try {
             return new URL(GameDownloader.runeScapeUrl + GameDownloader.archiveName);
         } catch (IOException e) {
-            throw Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
     }
 

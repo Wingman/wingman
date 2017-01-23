@@ -114,7 +114,7 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
             if (!failedOnce) {
                 return getPageSource(1, true);
             } else {
-                throw Throwables.propagate(e);
+                throw new RuntimeException(e);
             }
         }
     }

@@ -152,7 +152,7 @@ public class MappingsHelper {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
 
         populateHelperFields();

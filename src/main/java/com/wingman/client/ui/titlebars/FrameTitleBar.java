@@ -59,7 +59,7 @@ public class FrameTitleBar extends OnyxTitleBar {
                 }
             });
         } catch (IOException e) {
-            throw Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
     }
 

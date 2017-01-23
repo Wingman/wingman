@@ -44,7 +44,7 @@ public class HttpClient extends OkHttpClient {
         downloadUrlAsync(url, new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-                Throwables.propagate(e);
+                throw new RuntimeException(e);
             }
 
             @Override

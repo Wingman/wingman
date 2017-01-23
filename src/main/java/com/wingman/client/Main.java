@@ -32,7 +32,7 @@ public class Main {
             createDirectory(ClientSettings.PLUGINS_DIR.toFile());
             createDirectory(ClientSettings.SETTINGS_DIR.toFile());
         } catch (IOException e) {
-            Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
 
         setupLookAndFeel();
@@ -89,7 +89,7 @@ public class Main {
             UIManager.setLookAndFeel(synthLookAndFeel);
             SynthLookAndFeel.setStyleFactory(new OnyxStyleFactory());
         } catch (UnsupportedLookAndFeelException  e) {
-            Throwables.propagate(e);
+            throw new RuntimeException(e);
         }
 
         // Prevent the applet from overlapping the menus

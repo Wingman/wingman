@@ -75,7 +75,7 @@ public class GameLoader extends SwingWorker<Void, Void>{
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    Throwables.propagate(e);
+                    throw new RuntimeException(e);
                 }
             }
 
