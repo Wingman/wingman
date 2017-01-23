@@ -1,7 +1,7 @@
 package com.wingman.client.ui.titlebars;
 
 import com.google.common.base.Throwables;
-import com.wingman.client.Util;
+import com.wingman.client.util.FileUtil;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.ui.Client;
 import com.wingman.client.ui.components.HoverButton;
@@ -32,7 +32,7 @@ public class FrameTitleBar extends OnyxTitleBar {
 
         try {
             this.add(Box.createHorizontalStrut(5));
-            this.add(new JLabel(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/icon_16x16.png")))));
+            this.add(new JLabel(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/icon_16x16.png")))));
             this.add(Box.createHorizontalStrut(7));
 
             this.add(makeTitleText());
@@ -64,7 +64,7 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeExpandButton() throws IOException {
-        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/expand.png"))));
+        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/expand.png"))));
         hoverButton.setMargin(new Insets(3, 0, 3, 0));
         hoverButton.addActionListener(new ActionListener() {
             @Override
@@ -92,7 +92,7 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeSettingsButton() throws IOException {
-        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/settings.png"))));
+        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/settings.png"))));
         hoverButton.setMargin(new Insets(3, 3, 3, 3));
         hoverButton.addActionListener(new ActionListener() {
             @Override
@@ -109,7 +109,7 @@ public class FrameTitleBar extends OnyxTitleBar {
 
     private JLabel makeTitleText() {
         String version = "Developer";
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Util.getFile("/version.properties")))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtil.getFile("/version.properties")))) {
             version = reader.readLine();
         } catch (NullPointerException ignored)  {
         } catch (IOException e) {
@@ -122,7 +122,7 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeMinimizeButton() throws IOException {
-        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/minimize.png"))));
+        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/minimize.png"))));
         hoverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -133,8 +133,8 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeMaximizeButton() throws IOException {
-        final ImageIcon maximizeIcon = new ImageIcon(ImageIO.read(Util.getFile("/images/icons/maximize.png")));
-        final ImageIcon maximizeIcon2 = new ImageIcon(ImageIO.read(Util.getFile("/images/icons/unmaximize.png")));
+        final ImageIcon maximizeIcon = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/maximize.png")));
+        final ImageIcon maximizeIcon2 = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/unmaximize.png")));
 
         final HoverButton hoverButton = new HoverButton(maximizeIcon);
         hoverButton.addActionListener(new ActionListener() {
@@ -157,7 +157,7 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeExitButton() throws IOException {
-        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/exit.png"))));
+        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/exit.png"))));
         hoverButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

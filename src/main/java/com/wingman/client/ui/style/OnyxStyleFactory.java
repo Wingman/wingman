@@ -1,6 +1,6 @@
 package com.wingman.client.ui.style;
 
-import com.wingman.client.Util;
+import com.wingman.client.util.FileUtil;
 import com.wingman.client.ui.style.synthstyles.ComboBoxStyle;
 import com.wingman.client.ui.style.synthstyles.PanelStyle;
 import com.wingman.client.ui.style.synthstyles.TextFieldStyle;
@@ -46,16 +46,16 @@ public class OnyxStyleFactory extends SynthStyleFactory {
         GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         try {
             graphicsEnvironment.registerFont(Font
-                    .createFont(Font.TRUETYPE_FONT, Util.getFile("/fonts/Roboto-Regular.ttf")));
+                    .createFont(Font.TRUETYPE_FONT, FileUtil.getFile("/fonts/Roboto-Regular.ttf")));
             graphicsEnvironment.registerFont(Font
-                    .createFont(Font.TRUETYPE_FONT, Util.getFile("/fonts/Roboto-Medium.ttf")));
+                    .createFont(Font.TRUETYPE_FONT, FileUtil.getFile("/fonts/Roboto-Medium.ttf")));
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
         }
 
         try {
-            checkBoxIcon = new ImageIcon(Util.getFileAsBytes("/images/icons/unchecked.png"));
-            checkBoxIconChecked = new ImageIcon(Util.getFileAsBytes("/images/icons/checked.png"));
+            checkBoxIcon = new ImageIcon(FileUtil.getFileAsBytes("/images/icons/unchecked.png"));
+            checkBoxIconChecked = new ImageIcon(FileUtil.getFileAsBytes("/images/icons/checked.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -154,8 +154,8 @@ public class OnyxStyleFactory extends SynthStyleFactory {
             }
             try {
                 ((JCheckBox) c).setRolloverEnabled(false);
-                ((JCheckBox) c).setIcon(new ImageIcon(Util.getFileAsBytes("/images/icons/unchecked.png")));
-                ((JCheckBox) c).setSelectedIcon(new ImageIcon(Util.getFileAsBytes("/images/icons/checked.png")));
+                ((JCheckBox) c).setIcon(new ImageIcon(FileUtil.getFileAsBytes("/images/icons/unchecked.png")));
+                ((JCheckBox) c).setSelectedIcon(new ImageIcon(FileUtil.getFileAsBytes("/images/icons/checked.png")));
             } catch (IOException e) {
                 e.printStackTrace();
             }

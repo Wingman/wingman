@@ -1,7 +1,7 @@
 package com.wingman.client.ui;
 
 import com.wingman.client.ClientSettings;
-import com.wingman.client.Util;
+import com.wingman.client.util.FileUtil;
 import com.wingman.client.api.settings.PropertiesSettings;
 import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
@@ -77,13 +77,13 @@ public class Client {
 
         try {
             ArrayList<Image> icons = new ArrayList<>();
-            icons.add(ImageIO.read(Util.getFile("/images/icons/icon_16x16.png")));
-            icons.add(ImageIO.read(Util.getFile("/images/icons/icon_32x32.png")));
-            icons.add(ImageIO.read(Util.getFile("/images/icons/icon_64x64.png")));
-            icons.add(ImageIO.read(Util.getFile("/images/icons/icon_128x128.png")));
+            icons.add(ImageIO.read(FileUtil.getFile("/images/icons/icon_16x16.png")));
+            icons.add(ImageIO.read(FileUtil.getFile("/images/icons/icon_32x32.png")));
+            icons.add(ImageIO.read(FileUtil.getFile("/images/icons/icon_64x64.png")));
+            icons.add(ImageIO.read(FileUtil.getFile("/images/icons/icon_128x128.png")));
             frame.setIconImages(icons);
 
-            JLabel loadingImage = new JLabel(new ImageIcon(Util.getFileAsBytes("/images/loading.png")));
+            JLabel loadingImage = new JLabel(new ImageIcon(FileUtil.getFileAsBytes("/images/loading.png")));
             framePanel.add(loadingImage, BorderLayout.CENTER);
         } catch (IOException e) {
             e.printStackTrace();

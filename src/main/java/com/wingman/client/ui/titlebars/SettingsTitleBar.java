@@ -1,7 +1,7 @@
 package com.wingman.client.ui.titlebars;
 
 import com.google.common.base.Throwables;
-import com.wingman.client.Util;
+import com.wingman.client.util.FileUtil;
 import com.wingman.client.ui.components.HoverButton;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 
@@ -18,14 +18,14 @@ public class SettingsTitleBar extends OnyxTitleBar {
 
         try {
             // WINGMAN ICON
-            JLabel icon = new JLabel(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/icon_16x16.png"))));
+            JLabel icon = new JLabel(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/icon_16x16.png"))));
 
             // TITLE LABEL
             JLabel titleLabel = new JLabel("Wingman/Plugin Settings");
             titleLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
 
             // CLOSE BUTTON
-            HoverButton close = new HoverButton(new ImageIcon(ImageIO.read(Util.getFile("/images/icons/exit.png"))));
+            HoverButton close = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/exit.png"))));
             close.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

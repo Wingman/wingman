@@ -1,6 +1,6 @@
 package com.wingman.client.ui;
 
-import com.wingman.client.Util;
+import com.wingman.client.util.FileUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,7 +15,7 @@ public class ClientTrayIcon extends TrayIcon {
     public SystemTray tray;
 
     public ClientTrayIcon() throws IOException, AWTException {
-        super(ImageIO.read(Util.getFile("/images/icons/icon_16x16.png")));
+        super(ImageIO.read(FileUtil.getFile("/images/icons/icon_16x16.png")));
         if (SystemTray.isSupported()) {
             popup = new PopupMenu();
 

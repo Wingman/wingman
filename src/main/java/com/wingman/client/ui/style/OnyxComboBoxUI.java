@@ -1,6 +1,6 @@
 package com.wingman.client.ui.style;
 
-import com.wingman.client.Util;
+import com.wingman.client.util.FileUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
@@ -16,7 +16,7 @@ public class OnyxComboBoxUI extends SynthComboBoxUI {
     @Override
     protected JButton createArrowButton() {
         try {
-            return new JButton(new ImageIcon(Util.getFileAsBytes("/images/icons/downarrow.png")));
+            return new JButton(new ImageIcon(FileUtil.getFileAsBytes("/images/icons/downarrow.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }

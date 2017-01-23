@@ -13,7 +13,7 @@ import java.util.Map;
 public class ComponentBorderResizer extends MouseAdapter {
 
     private static Map<Integer, Integer> cursors = new HashMap<>();
-    {
+    static {
         cursors.put(1, Cursor.N_RESIZE_CURSOR);
         cursors.put(2, Cursor.W_RESIZE_CURSOR);
         cursors.put(4, Cursor.S_RESIZE_CURSOR);
