@@ -1,6 +1,5 @@
 package com.wingman.client.rs;
 
-import com.google.common.base.Throwables;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.generated.GameAPI;
 import com.wingman.client.api.generated.Static;

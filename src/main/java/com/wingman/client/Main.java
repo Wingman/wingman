@@ -6,7 +6,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
-import com.google.common.base.Throwables;
 import com.wingman.client.ui.Client;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import org.slf4j.LoggerFactory;

@@ -1,6 +1,5 @@
 package com.wingman.client.classloader;
 
-import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
 import com.wingman.client.api.transformer.Transformer;
 import com.wingman.client.api.transformer.Transformers;

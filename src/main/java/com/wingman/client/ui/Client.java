@@ -1,7 +1,6 @@
 package com.wingman.client.ui;
 
 import com.wingman.client.ClientSettings;
-import com.wingman.client.util.FileUtil;
 import com.wingman.client.api.settings.PropertiesSettings;
 import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
@@ -16,6 +15,7 @@ import com.wingman.client.ui.style.OnyxScrollBarUI;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
+import com.wingman.client.util.FileUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

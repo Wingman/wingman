@@ -1,7 +1,5 @@
 package com.wingman.client.rs;
 
-import com.google.common.base.Throwables;
-
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.io.IOException;

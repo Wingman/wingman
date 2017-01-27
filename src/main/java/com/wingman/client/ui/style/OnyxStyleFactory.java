@@ -1,9 +1,9 @@
 package com.wingman.client.ui.style;
 
-import com.wingman.client.util.FileUtil;
 import com.wingman.client.ui.style.synthstyles.ComboBoxStyle;
 import com.wingman.client.ui.style.synthstyles.PanelStyle;
 import com.wingman.client.ui.style.synthstyles.TextFieldStyle;
+import com.wingman.client.util.FileUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;

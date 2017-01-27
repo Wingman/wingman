@@ -1,6 +1,5 @@
 package com.wingman.client.api.mapping;
 
-import com.google.common.base.Throwables;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
@@ -180,7 +179,7 @@ public class MappingsHelper {
                         .getDescriptor()
                         .replace("[", "");
 
-                if (argumentDescriptor.startsWith("L")
+                if (argumentDescriptor.charAt(0) == 'L'
                         && !doesClassExist(argumentDescriptor)) {
                     shouldContinue = false;
                 }
@@ -195,7 +194,7 @@ public class MappingsHelper {
                     .getDescriptor()
                     .replace("[", "");
 
-            if (realTypeDescriptor.startsWith("L")
+            if (realTypeDescriptor.charAt(0) == 'L'
                     && !doesClassExist(realTypeDescriptor)) {
                 continue;
             }
@@ -219,7 +218,7 @@ public class MappingsHelper {
                     .getDescriptor()
                     .replace("[", "");
 
-            if (realTypeDescriptor.startsWith("L")
+            if (realTypeDescriptor.charAt(0) == 'L'
                     && !doesClassExist(realTypeDescriptor)) {
                 continue;
             }
@@ -242,7 +241,7 @@ public class MappingsHelper {
         String cleanClassName = className
                 .replace("/", ".");
 
-        if (cleanClassName.startsWith("L")) {
+        if (cleanClassName.charAt(0) == 'L') {
             cleanClassName = cleanClassName
                     .substring(1, cleanClassName.length() - 1);
         }

@@ -1,6 +1,5 @@
 package com.wingman.client.rs;
 
-import com.google.common.base.Throwables;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;

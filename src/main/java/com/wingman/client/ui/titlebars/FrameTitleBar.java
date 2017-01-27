@@ -1,11 +1,10 @@
 package com.wingman.client.ui.titlebars;
 
-import com.google.common.base.Throwables;
-import com.wingman.client.util.FileUtil;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.ui.Client;
 import com.wingman.client.ui.components.HoverButton;
 import com.wingman.client.ui.style.OnyxStyleFactory;
+import com.wingman.client.util.FileUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
