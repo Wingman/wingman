@@ -1,9 +1,9 @@
 package com.wingman.client.plugin;
 
-import com.google.common.base.Throwables;
 import com.wingman.client.api.plugin.Plugin;
 import com.wingman.client.api.plugin.PluginDependencies;
 import com.wingman.client.api.plugin.PluginDependency;
+import com.wingman.client.api.plugin.PluginHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +18,8 @@ import java.util.List;
  */
 public class PluginContainer {
 
-    public final Plugin pluginData;
+    public final Plugin info;
+    public final PluginHelper helper;
     public final List<PluginDependency> originalDependencies = new ArrayList<>();
     public final List<PluginContainer> dependencies = new ArrayList<>();
     public final Object instance;
@@ -33,7 +34,7 @@ public class PluginContainer {
      */
     public PluginContainer(Class clazz) {
         try {
-            pluginData = (Plugin) clazz.getAnnotation(Plugin.class);
+            info = (Plugin) clazz.getAnnotation(Plugin.class);
 
             if (clazz.isAnnotationPresent(PluginDependencies.class)) {
                 originalDependencies.addAll(Arrays.asList(((PluginDependencies) clazz.getAnnotation(PluginDependencies.class)).value()));
@@ -44,6 +45,7 @@ public class PluginContainer {
             Method setupMethod = null;
             Method activateMethod = null;
             Method deactivateMethod = null;
+
             for (Method method : clazz.getMethods()) {
                 if (method.isAnnotationPresent(Plugin.Setup.class)) {
                     setupMethod = method;
@@ -53,16 +55,19 @@ public class PluginContainer {
                     deactivateMethod = method;
                 }
             }
+
             this.setupMethod = setupMethod;
             this.activateMethod = activateMethod;
             this.deactivateMethod = deactivateMethod;
 
             instance = clazz.newInstance();
 
+            helper = new PluginHelperImpl(this);
+
             for (Field field : clazz.getFields()) {
                 if (field.isAnnotationPresent(Plugin.Helper.class)) {
                     field.setAccessible(true);
-                    field.set(instance, new PluginHelperImpl(this));
+                    field.set(instance, helper);
                 }
             }
         } catch (Exception e) {
@@ -76,7 +81,7 @@ public class PluginContainer {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    public void invokeSetupMethod() throws InvocationTargetException, IllegalAccessException {
+    public void setup() throws InvocationTargetException, IllegalAccessException {
         invokeMethod(setupMethod);
     }
 
@@ -86,7 +91,7 @@ public class PluginContainer {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    public void invokeActivateMethod() throws InvocationTargetException, IllegalAccessException {
+    public void activate() throws InvocationTargetException, IllegalAccessException {
         invokeMethod(activateMethod);
     }
 
@@ -96,12 +101,12 @@ public class PluginContainer {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    public void invokeDeactivateMethod() throws InvocationTargetException, IllegalAccessException {
+    public void deactivate() throws InvocationTargetException, IllegalAccessException {
         invokeMethod(deactivateMethod);
     }
 
     /**
-     * invokes a {@link Method}.
+     * Invokes a {@link Method}.
      *
      * @param method the method to safely invoke
      */
@@ -109,17 +114,5 @@ public class PluginContainer {
         if (method != null) {
             method.invoke(instance);
         }
-    }
-
-    public Method getSetupMethod() {
-        return setupMethod;
-    }
-
-    public Method getRefreshMethod() {
-        return refreshMethod;
-    }
-
-    public Method getDeactivateMethod() {
-        return deactivateMethod;
     }
 }

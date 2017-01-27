@@ -181,14 +181,14 @@ public class Client {
      * @param plugin PluginContainer of the plugin
      */
     public static void addPluginToggle(final PluginContainer plugin) {
-        String pluginTitle = plugin.pluginData.name() + " (" + plugin.pluginData.version() + ")";
+        String pluginTitle = plugin.info.name() + " (" + plugin.info.version() + ")";
         SettingsItem item = new SettingsItem(pluginTitle);
         final JCheckBox pCheckbox = new JCheckBox();
 
         //look for past setting
-        if (activePluginsSettings.get(plugin.pluginData.id()) != null) //settings exist
+        if (activePluginsSettings.get(plugin.info.id()) != null) //settings exist
         {
-            if (activePluginsSettings.get(plugin.pluginData.id()).equalsIgnoreCase("true"))
+            if (activePluginsSettings.get(plugin.info.id()).equalsIgnoreCase("true"))
             {
                 pCheckbox.setSelected(true);
             } else {
@@ -198,7 +198,7 @@ public class Client {
         //no setting saved, use defaultToggle from plugin's annotation
         else
         {
-            pCheckbox.setSelected(plugin.pluginData.defaultToggle().equalsIgnoreCase("true"));
+            pCheckbox.setSelected(plugin.info.defaultToggle().equalsIgnoreCase("true"));
         }
 
         //listen for GUI toggle
@@ -210,23 +210,23 @@ public class Client {
                     try
                     {
                         PluginManager.activatePlugin(plugin);
-                        activePluginsSettings.update(plugin.pluginData.id(), "true");
+                        activePluginsSettings.update(plugin.info.id(), "true");
                     }
                     //failed to activate plugin
                     catch (IllegalAccessException | InvocationTargetException e)
                     {
                         //force plugin toggle OFF
                         pCheckbox.setSelected(false);
-                        activePluginsSettings.update(plugin.pluginData.id(), "false");
+                        activePluginsSettings.update(plugin.info.id(), "false");
                         activePluginsSettings.save();
-                        new PluginLoadingException(plugin.pluginData.id(), e.toString())
+                        new PluginLoadingException(plugin.info.id(), e.toString())
                                 .printStackTrace();
                     }
                 }
                 else
                 {
                     PluginManager.deactivatePlugin(plugin);
-                    activePluginsSettings.update(plugin.pluginData.id(), "false");
+                    activePluginsSettings.update(plugin.info.id(), "false");
                 }
                 activePluginsSettings.save();
             }

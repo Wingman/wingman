@@ -38,7 +38,7 @@ public class PluginHelperImpl implements PluginHelper {
      */
     @Override
     public String getPluginResourceDir() {
-        return "/resources/" + container.pluginData.id().toLowerCase() + "/";
+        return "/resources/" + container.info.id().toLowerCase() + "/";
     }
 
     /**
@@ -118,7 +118,7 @@ public class PluginHelperImpl implements PluginHelper {
     public Set<String> getDependencyResourceDirs() {
         Set<String> dependencyResourceDirs = new HashSet<>();
         for (PluginContainer pluginContainer : container.dependencies) {
-            dependencyResourceDirs.add("/resources/" + pluginContainer.pluginData.id().toLowerCase() + "/");
+            dependencyResourceDirs.add("/resources/" + pluginContainer.info.id().toLowerCase() + "/");
         }
         return dependencyResourceDirs;
     }

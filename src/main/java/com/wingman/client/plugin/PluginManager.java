@@ -1,7 +1,6 @@
 package com.wingman.client.plugin;
 
 import com.github.zafarkhaja.semver.Version;
-import com.google.common.base.Throwables;
 import com.google.common.io.Files;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.event.Event;
@@ -13,7 +12,6 @@ import com.wingman.client.api.plugin.PluginDependency;
 import com.wingman.client.api.settings.PropertiesSettings;
 import com.wingman.client.classloader.PluginClassLoader;
 import com.wingman.client.plugin.exceptions.PluginLoadingException;
-import com.wingman.client.plugin.exceptions.PluginRefreshingException;
 import com.wingman.client.plugin.exceptions.PluginSetupException;
 import com.wingman.client.plugin.toposort.PluginNode;
 import com.wingman.client.ui.Client;
@@ -97,13 +95,13 @@ public final class PluginManager {
         for (Class clazz : plugins) {
             PluginContainer pluginContainer = new PluginContainer(clazz);
 
-            if (!parsedPlugins.contains(pluginContainer.pluginData.id())) {
-                parsedPlugins.add(pluginContainer.pluginData.id());
+            if (!parsedPlugins.contains(pluginContainer.info.id())) {
+                parsedPlugins.add(pluginContainer.info.id());
                 pluginContainers.add(pluginContainer);
             } else {
                 System.out.println(MessageFormat.format(
                         "{0} was not loaded, because a plugin with the same ID had already been loaded.",
-                        pluginContainer.pluginData.id()));
+                        pluginContainer.info.id()));
             }
         }
 
@@ -117,7 +115,7 @@ public final class PluginManager {
         Map<String, PluginContainer> pluginContainerMap = new HashMap<>();
 
         for (PluginContainer pluginContainer : plugins) {
-            pluginContainerMap.put(pluginContainer.pluginData.id(), pluginContainer);
+            pluginContainerMap.put(pluginContainer.info.id(), pluginContainer);
         }
 
         Iterator<PluginContainer> pluginIterator = plugins.iterator();
@@ -132,7 +130,7 @@ public final class PluginManager {
 
                 if (dependencyContainer != null) {
                     Version dependencyVersion = Version
-                            .valueOf(dependencyContainer.pluginData.version());
+                            .valueOf(dependencyContainer.info.version());
 
                     if (dependencyVersion
                             .satisfies(pluginDependency.version())) {
@@ -140,17 +138,17 @@ public final class PluginManager {
                     } else {
                         System.err.println(MessageFormat.format(
                                 "Plugin {0} depends on {1} {2}, found {3}",
-                                pluginContainer.pluginData.id(),
-                                dependencyContainer.pluginData.id(),
+                                pluginContainer.info.id(),
+                                dependencyContainer.info.id(),
                                 pluginDependency.version(),
-                                dependencyContainer.pluginData.version()));
+                                dependencyContainer.info.version()));
 
                         shouldRemove = true;
                     }
                 } else {
                     System.err.println(MessageFormat.format(
                             "Plugin {0} depends on {1} {2}, which could not be found",
-                            pluginContainer.pluginData.id(),
+                            pluginContainer.info.id(),
                             pluginDependency.id(),
                             pluginDependency.version()));
 
@@ -173,14 +171,14 @@ public final class PluginManager {
     private static List<PluginContainer> sortPlugins(List<PluginContainer> plugins) {
         Map<String, PluginNode> pluginNodes = new HashMap<>();
         for (PluginContainer pluginContainer : plugins) {
-            pluginNodes.put(pluginContainer.pluginData.id(), new PluginNode(pluginContainer));
+            pluginNodes.put(pluginContainer.info.id(), new PluginNode(pluginContainer));
         }
 
         plugins = new ArrayList<>(pluginNodes.size() + 1);
 
         for (PluginNode pluginNode : pluginNodes.values()) {
             for (PluginContainer dependencyPlugin : pluginNode.pluginContainer.dependencies) {
-                pluginNode.addChild(pluginNodes.get(dependencyPlugin.pluginData.id()));
+                pluginNode.addChild(pluginNodes.get(dependencyPlugin.info.id()));
             }
         }
 
@@ -319,9 +317,9 @@ public final class PluginManager {
     private static void setupPlugins() {
         for (PluginContainer plugin : plugins) {
             try {
-                plugin.invokeSetupMethod();
+                plugin.setup();
             } catch (InvocationTargetException | IllegalAccessException e) {
-                new PluginSetupException(plugin.pluginData.id(), e.toString())
+                new PluginSetupException(plugin.info.id(), e.toString())
                         .printStackTrace();
             }
         }
@@ -344,21 +342,21 @@ public final class PluginManager {
             activePluginSettings = new PluginSettings();
             for (PluginContainer plugin : plugins) {
                 // Plugin wants to have a toggle added to the settings screen
-                if (plugin.pluginData.canToggle().equalsIgnoreCase("true")) {
+                if (plugin.info.canToggle().equalsIgnoreCase("true")) {
                     Client.addPluginToggle(plugin);
                 }
 
                 // If PropertySetting is (not null && true) or Plugin's defaultToggle=true
-                if ((activePluginSettings.get(plugin.pluginData.id()) != null &&
-                        activePluginSettings.get(plugin.pluginData.id()).equalsIgnoreCase("true")) ||
-                        plugin.pluginData.defaultToggle().equalsIgnoreCase("true")) {
+                if ((activePluginSettings.get(plugin.info.id()) != null &&
+                        activePluginSettings.get(plugin.info.id()).equalsIgnoreCase("true")) ||
+                        plugin.info.defaultToggle().equalsIgnoreCase("true")) {
                     try {
                         activatePlugin(plugin);
                     } catch (InvocationTargetException | IllegalAccessException e) {
-                        new PluginLoadingException(plugin.pluginData.id(), e.toString())
+                        new PluginLoadingException(plugin.info.id(), e.toString())
                                 .printStackTrace();
                         // Set to disabled state so plugin toggle doesn't use defaultToggle
-                        activePluginSettings.update(plugin.pluginData.id(), "false");
+                        activePluginSettings.update(plugin.info.id(), "false");
                         activePluginSettings.save();
                     }
                 }
@@ -378,11 +376,11 @@ public final class PluginManager {
      *         {@code false} otherwise
      */
     public static boolean activatePlugin(PluginContainer plugin) throws InvocationTargetException,IllegalAccessException {
-        plugin.invokeActivateMethod();
+        plugin.activate();
         System.out.println(MessageFormat.format("Activated plugin {0} ({1} {2})",
-                plugin.pluginData.name(),
-                plugin.pluginData.id(),
-                plugin.pluginData.version()));
+                plugin.info.name(),
+                plugin.info.id(),
+                plugin.info.version()));
         return true;
     }
 
@@ -406,13 +404,13 @@ public final class PluginManager {
      */
     public static void deactivatePlugin(PluginContainer plugin) {
         try {
-            plugin.invokeDeactivateMethod();
+            plugin.deactivate();
             System.out.println(MessageFormat.format("Deactivated plugin {0} ({1} {2})",
-                    plugin.pluginData.name(),
-                    plugin.pluginData.id(),
-                    plugin.pluginData.version()));
+                    plugin.info.name(),
+                    plugin.info.id(),
+                    plugin.info.version()));
         } catch (Exception e) {
-            new PluginLoadingException(plugin.pluginData.id(), e.toString())
+            new PluginLoadingException(plugin.info.id(), e.toString())
                     .printStackTrace();
         }
     }
