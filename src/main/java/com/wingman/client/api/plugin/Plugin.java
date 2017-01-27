@@ -46,18 +46,6 @@ public @interface Plugin {
     }
 
     /**
-     * Use this interface to annotate the refresh method. <br>
-     * The refresh method should initialize and cleanup all things that require cross-plugin interaction. <br>
-     * This method should be the only place where you negotiate with other plugins. <br>
-     * This method will be called every time other plugins are loaded or unloaded. <br>
-     * This method must be static.
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.METHOD)
-    @interface Refresh {
-    }
-
-    /**
      * Use this interface to annotate the deactivation method. <br>
      * The deactivation method should cleanup everything. <br>
      * This method must be static. <br>

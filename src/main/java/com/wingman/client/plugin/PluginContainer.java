@@ -24,7 +24,6 @@ public class PluginContainer {
     public final Object instance;
     private final Method setupMethod;
     private final Method activateMethod;
-    private final Method refreshMethod;
     private final Method deactivateMethod;
 
     /**
@@ -44,22 +43,18 @@ public class PluginContainer {
 
             Method setupMethod = null;
             Method activateMethod = null;
-            Method refreshMethod = null;
             Method deactivateMethod = null;
             for (Method method : clazz.getMethods()) {
                 if (method.isAnnotationPresent(Plugin.Setup.class)) {
                     setupMethod = method;
                 } else if (method.isAnnotationPresent(Plugin.Activate.class)) {
                     activateMethod = method;
-                } else if (method.isAnnotationPresent(Plugin.Refresh.class)) {
-                    refreshMethod = method;
                 } else if (method.isAnnotationPresent(Plugin.Deactivate.class)) {
                     deactivateMethod = method;
                 }
             }
             this.setupMethod = setupMethod;
             this.activateMethod = activateMethod;
-            this.refreshMethod = refreshMethod;
             this.deactivateMethod = deactivateMethod;
 
             instance = clazz.newInstance();
@@ -96,16 +91,6 @@ public class PluginContainer {
     }
 
     /**
-     * Attempts to safely invoke the {@link PluginContainer#refreshMethod} of a plugin.
-     *
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     */
-    public void invokeRefreshMethod() throws InvocationTargetException, IllegalAccessException {
-        invokeMethod(refreshMethod);
-    }
-
-    /**
      * Attempts to safely invoke the {@link PluginContainer#deactivateMethod} of a plugin.
      *
      * @throws InvocationTargetException
@@ -128,10 +113,6 @@ public class PluginContainer {
 
     public Method getSetupMethod() {
         return setupMethod;
-    }
-
-    public Method getActivateMethod() {
-        return activateMethod;
     }
 
     public Method getRefreshMethod() {

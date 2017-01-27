@@ -417,24 +417,6 @@ public final class PluginManager {
         }
     }
 
-
-
-    /**
-     * Refreshes all plugins.
-     * <p>
-     * Safely invokes ({@link PluginContainer#refreshMethod}) of all loaded plugins.
-     */
-    public static void refreshPlugins() {
-        for (PluginContainer plugin : plugins) {
-            try {
-                plugin.invokeRefreshMethod();
-            } catch (InvocationTargetException | IllegalAccessException e) {
-                new PluginRefreshingException(plugin.pluginData.id(), e.toString())
-                        .printStackTrace();
-            }
-        }
-    }
-
     private PluginManager() {
         // This class should not be instantiated
     }
