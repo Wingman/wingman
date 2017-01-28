@@ -5,19 +5,17 @@ import com.wingman.client.plugin.PluginContainer;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
+import java.util.Optional;
 
 public interface PluginHelper {
 
     PluginContainer getContainer();
 
-    String getPluginResourceDir();
+    Optional<InputStream> getResourceStream(String filePath) throws IOException;
 
-    InputStream getFileStreamFromResourceDirRoot(String path) throws IOException;
+    Optional<byte[]> getResourceBytes(String filePath) throws IOException;
 
-    byte[] getFileFromResourceDirRoot(String path) throws IOException;
+    Optional<BufferedImage> getResourceImage(String filePath) throws IOException;
 
-    BufferedImage getImageFromResourceDirRoot(String path) throws IOException;
-
-    Set<String> getDependencyResourceDirs();
+    void registerEventClass(Object classInstance);
 }
