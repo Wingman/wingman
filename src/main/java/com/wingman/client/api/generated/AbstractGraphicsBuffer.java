@@ -11,8 +11,16 @@ public interface AbstractGraphicsBuffer {
 
     Image getGraphicsBufferImage();
 
+    int[] getPixels();
+
+    int getWidth();
+
     @SuppressWarnings("all")
     interface Unsafe {
         void setGraphicsBufferImage(Image value);
+
+        void setPixels(int[] value);
+
+        void setWidth(int value);
     }
 }
