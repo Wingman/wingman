@@ -3,8 +3,8 @@ package com.wingman.client.api.mapping;
 public class MethodInfo {
 
     public final String realName;
-    public final String name;
     public final String owner;
+    public final String name;
     public final String type;
     public final String realType;
     public final String desc;
