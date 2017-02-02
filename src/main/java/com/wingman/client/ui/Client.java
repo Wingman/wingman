@@ -131,22 +131,25 @@ public class Client {
                     return new Dimension(80, 20);
                 }
             };
+
             for (int i = 301; i <= 399; i++) {
                 preferredWorld.addItem(i);
             }
+
             int settingsPreferredWorld = 311;
             try {
                 settingsPreferredWorld = Integer.parseInt(clientSettings.get(ClientSettings.PREFERRED_WORLD));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 clientSettings.update(ClientSettings.PREFERRED_WORLD, settingsPreferredWorld);
+                clientSettings.save();
             }
+
             preferredWorld.setSelectedItem(settingsPreferredWorld);
-            preferredWorld.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + (int) e.getItem());
-                }
+
+            preferredWorld.addItemListener(e -> {
+                clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + (int) e.getItem());
+                clientSettings.save();
             });
 
             settingsItem.add(preferredWorld);
@@ -158,12 +161,10 @@ public class Client {
 
             JCheckBox notificationsEnabled = new JCheckBox();
             notificationsEnabled.setSelected(clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED));
-            notificationsEnabled.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    String newState = e.getStateChange() == ItemEvent.SELECTED ? "true" : "false";
-                    clientSettings.update(ClientSettings.NOTIFICATIONS_ENABLED, newState);
-                }
+            notificationsEnabled.addItemListener(e -> {
+                String newState = e.getStateChange() == ItemEvent.SELECTED ? "true" : "false";
+                clientSettings.update(ClientSettings.NOTIFICATIONS_ENABLED, newState);
+                clientSettings.save();
             });
 
             settingsItem.add(notificationsEnabled);

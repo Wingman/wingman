@@ -157,17 +157,14 @@ public class FrameTitleBar extends OnyxTitleBar {
 
     private HoverButton makeExitButton() throws IOException {
         HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/exit.png"))));
-        hoverButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (Client.clientTrayIcon != null) {
-                    Client.clientTrayIcon.detach();
-                }
-                Client.clientSettings.save();
-                PluginManager.deactivatePlugins();
-
-                System.exit(0);
+        hoverButton.addActionListener(e -> {
+            if (Client.clientTrayIcon != null) {
+                Client.clientTrayIcon.detach();
             }
+
+            PluginManager.deactivatePlugins();
+
+            System.exit(0);
         });
         return hoverButton;
     }
