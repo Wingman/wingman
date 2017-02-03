@@ -19,36 +19,36 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * {@link GameDownloader} handles keeping the RuneScape game pack up to date. <br>
+ * Handles keeping the RuneScape gamepack up to date.
+ * <p>
  * It also downloads the RuneScape page source for feeding the game applet with the expected parameters.
  */
-public class GameDownloader extends SwingWorker<Void, Integer>{
+public class GameDownloader extends SwingWorker<Void, Integer> {
+
+    private static final int DOWNLOAD_BUFFER_SIZE = 4096;
 
     private static HttpClient httpClient = new HttpClient();
 
-    protected static String runeScapeUrl = null;
-    protected static String pageSource = null;
-    protected static String archiveName = null;
-    private static int remoteArchiveSize = 0;
+    protected static String runeScapeUrl;
+    protected static String pageSource;
+    protected static String archiveName;
+    private static int remoteArchiveSize;
 
     private static StartProgressBar progressBar = new StartProgressBar();
 
     public GameDownloader() {
         // Make sure GUI modifications take place on the Event Dispatch Thread.
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                progressBar.setMode(StartProgressBar.Mode.CHECKING_FOR_UPDATES);
-                Client.framePanel.add(progressBar, BorderLayout.SOUTH);
-                Client.framePanel.validate();
-            }
+        SwingUtilities.invokeLater(() -> {
+            progressBar.setMode(StartProgressBar.Mode.CHECKING_FOR_UPDATES);
+            Client.framePanel.add(progressBar, BorderLayout.SOUTH);
+            Client.framePanel.validate();
         });
 
         execute();
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void doInBackground() throws IOException {
         pageSource = getPageSource(getWorldFromSettings(), false);
 
         Matcher archiveMatcher = Pattern
@@ -61,12 +61,8 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
             if (!checkGamePackUpToDate()) {
                 startUpdatingGamePack();
             } else {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setMode(StartProgressBar.Mode.NO_UPDATES);
-                    }
-                });
+                SwingUtilities.invokeLater(() ->
+                        progressBar.setMode(StartProgressBar.Mode.NO_UPDATES));
 
                 // Begin the game loading phase
                 new GameLoader();
@@ -77,18 +73,16 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
 
     @Override
     protected void process(List<Integer> chunks) {
-        super.process(chunks);
-        if(chunks.size() > 0) {
+        if (!chunks.isEmpty()) {
             progressBar.setValue(chunks.get(0));
         }
     }
 
     @Override
     protected void done() {
-        super.done();
         // If this method is called and the last mode was DOWNLOADING,
         // assume that downloading is finished.
-        if(progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING) {
+        if (progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING) {
             progressBar.setMode(StartProgressBar.Mode.DOWNLOADING_FINISHED);
         }
     }
@@ -119,39 +113,41 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
     }
 
     /**
-     * Tries to parse the {@link ClientSettings#properties} value for the key {@link ClientSettings#PREFERRED_WORLD}. <br>
-     * If the parsed value begins with 3, the 3 will be omitted before returning the value. <br>
+     * Gets the user-specified world saved in the client settings.
+     * <p>
+     * More specifically, tries to parse the {@link ClientSettings#properties} value
+     * for the key {@link ClientSettings#PREFERRED_WORLD}.
+     * <p>
+     * The parsed value must be in the format "358".
+     * With other words, the value cannot be "58" for world 358. That will be parsed as the world "308".
+     * <p>
      * If the parsing of the value as a number fails, the default world "1" (301) will be returned.
      *
      * @return the saved (and preferred) world from {@link ClientSettings},
      *         or 1 (world 301) if the lookup failed
      */
     private int getWorldFromSettings() {
-        int world = 1;
-
         try {
             String tempWorld = Client.clientSettings.get(ClientSettings.PREFERRED_WORLD);
 
             System.out.println("Attempting to load world " + tempWorld);
 
-            if (tempWorld.charAt(0) == '3') {
-                world = Integer.parseInt(tempWorld.substring(1));
-            } else {
-                world = Integer.parseInt(tempWorld);
-            }
+            return Integer.parseInt(tempWorld.substring(1));
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
 
-        return world;
+        return 1;
     }
 
     /**
-     * Checks if the size of the existing game pack equals what is returned as Content-Length of the latest game pack. <br>
-     * The method does not include any actual revision checks, but it is expected that the size will change between revisions.
+     * Checks if the size of the existing game pack equals what is returned as Content-Length of the latest game pack.
+     * <p>
+     * The method does not include any actual revision checks,
+     * but it is expected that the size will change between revisions.
      *
-     * @return {@code true} if the game pack is of the latest version,
-     *         {@code false} if it is not
+     * @return {@code true} if the locally saved game pack is of the latest version,
+     *         {@code false} otherwise
      */
     private static boolean checkGamePackUpToDate() throws IOException {
         Response response = httpClient
@@ -168,7 +164,10 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
     }
 
     private void startUpdatingGamePack() throws IOException {
-        System.out.println(MessageFormat.format("Updating the gamepack, remote size: {0}, remote archive name: {1}",
+        System.out.println(MessageFormat.format(
+                "Updating the gamepack, " +
+                        "remote size: {0}, " +
+                        "remote archive name: {1}",
                 remoteArchiveSize,
                 archiveName));
 
@@ -194,7 +193,7 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
 
                     final int[] totalRead = {0};
                     final int[] read = {0};
-                    byte[] data = new byte[4096];
+                    byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
 
                     while ((read[0] = input.read(data, 0, data.length)) != -1) {
                         totalRead[0] += read[0];
@@ -211,6 +210,8 @@ public class GameDownloader extends SwingWorker<Void, Integer>{
             }
 
             responseBody.close();
+
+            // Begin the game loading phase
             new GameLoader();
         } else {
             responseBody.close();

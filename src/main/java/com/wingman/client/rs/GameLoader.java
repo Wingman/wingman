@@ -10,22 +10,16 @@ import com.wingman.client.rs.listeners.CanvasMouseListener;
 import com.wingman.client.rs.listeners.CanvasMouseWheelListener;
 import com.wingman.client.ui.Client;
 
-import javax.swing.*;
 import java.applet.Applet;
 import java.awt.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class GameLoader extends SwingWorker<Void, Void>{
+public class GameLoader {
 
-    public static Applet applet = null;
+    private static Applet applet = null;
 
     public GameLoader() {
-        execute();
-    }
-
-    @Override
-    protected Void doInBackground() throws Exception {
         try {
             PluginManager.findAndSetupPlugins();
         } catch (Exception e) {
@@ -85,12 +79,6 @@ public class GameLoader extends SwingWorker<Void, Void>{
             e.printStackTrace();
         }
 
-        return null;
-    }
-
-    @Override
-    protected void done() {
-        super.done();
         Client.framePanel.removeAll();
         Client.framePanel.add(applet, BorderLayout.CENTER);
         Client.framePanel.add(Client.sideBarBox, BorderLayout.EAST);
