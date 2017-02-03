@@ -1,5 +1,6 @@
 package com.wingman.client.api.plugin;
 
+import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.plugin.PluginContainer;
 
 import java.awt.image.BufferedImage;
@@ -18,4 +19,6 @@ public interface PluginHelper {
     Optional<BufferedImage> getResourceImage(String filePath) throws IOException;
 
     void registerEventClass(Object classInstance);
+
+    void registerOverlay(Overlay overlay);
 }

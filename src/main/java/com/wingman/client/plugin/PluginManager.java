@@ -7,6 +7,7 @@ import com.wingman.client.api.event.Event;
 import com.wingman.client.api.event.EventCallback;
 import com.wingman.client.api.event.EventListener;
 import com.wingman.client.api.event.EventListenerList;
+import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.Plugin;
 import com.wingman.client.api.plugin.PluginDependency;
 import com.wingman.client.api.settings.PropertiesSettings;
@@ -27,9 +28,9 @@ import java.util.*;
 
 public final class PluginManager {
 
-    private static Reflections pluginClassLoaderReflections;
-    private static List<PluginContainer> plugins;
+    private static List<PluginContainer> plugins = new ArrayList<>();
 
+    private static Reflections pluginClassLoaderReflections;
     private static Set<Class<? extends Event>> eventClasses = new HashSet<>();
 
     /**
@@ -332,11 +333,6 @@ public final class PluginManager {
      * toggleable then it will add a new item to the settings panel.
      */
     public static void activatePlugins() {
-        if (plugins == null) {
-            System.out.println("Plugins were not activated, because none had been loaded.");
-            return;
-        }
-
         PropertiesSettings activePluginSettings;
         try {
             activePluginSettings = new PluginSettings();
@@ -388,10 +384,6 @@ public final class PluginManager {
      * Deactivate all plugins.
      */
     public static void deactivatePlugins() {
-        if (plugins == null) {
-            System.out.println("Plugins were not deactivated, because none had been loaded.");
-            return;
-        }
         for (PluginContainer plugin : plugins) {
             deactivatePlugin(plugin);
         }
@@ -413,6 +405,18 @@ public final class PluginManager {
             new PluginLoadingException(plugin.info.id(), e.toString())
                     .printStackTrace();
         }
+    }
+
+    public static List<Overlay> getAllOverlays() {
+        List<Overlay> overlays = new ArrayList<>();
+
+        for (PluginContainer plugin : plugins) {
+            for (Overlay overlay : plugin.overlays) {
+                overlays.add(overlay);
+            }
+        }
+
+        return overlays;
     }
 
     private PluginManager() {

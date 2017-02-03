@@ -1,5 +1,6 @@
 package com.wingman.client.plugin;
 
+import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.Plugin;
 import com.wingman.client.api.plugin.PluginDependencies;
 import com.wingman.client.api.plugin.PluginDependency;
@@ -23,6 +24,9 @@ public class PluginContainer {
     public final List<PluginDependency> originalDependencies = new ArrayList<>();
     public final List<PluginContainer> dependencies = new ArrayList<>();
     public final Object instance;
+
+    public final List<Overlay> overlays = new ArrayList<>();
+
     private final Method setupMethod;
     private final Method activateMethod;
     private final Method deactivateMethod;

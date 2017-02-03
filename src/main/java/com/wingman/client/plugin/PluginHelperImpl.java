@@ -2,6 +2,7 @@ package com.wingman.client.plugin;
 
 import com.google.common.io.ByteStreams;
 import com.wingman.client.ClientSettings;
+import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.PluginHelper;
 
 import javax.imageio.ImageIO;
@@ -27,19 +28,19 @@ public class PluginHelperImpl implements PluginHelper {
 
     @Override
     public Optional<InputStream> getResourceStream(String filePath) throws IOException {
-        String resourceFolder = "/resources/"
-                + container.info.id().toLowerCase()
-                + "/";
+        String pluginId = container.info.id().toLowerCase();
 
         InputStream resourceStream = container
                 .instance
                 .getClass()
-                .getResourceAsStream(resourceFolder + filePath);
+                .getClassLoader()
+                .getResourceAsStream(pluginId + "/" + filePath);
 
         if (resourceStream == null) {
             resourceStream = Files.newInputStream(ClientSettings
                     .PLUGINS_DIR
-                    .resolve(resourceFolder)
+                    .resolve("resources")
+                    .resolve(pluginId)
                     .resolve(filePath));
         }
 
@@ -85,5 +86,10 @@ public class PluginHelperImpl implements PluginHelper {
     @Override
     public void registerEventClass(Object classInstance) {
         PluginManager.registerEventClass(classInstance);
+    }
+
+    @Override
+    public void registerOverlay(Overlay overlay) {
+        container.overlays.add(overlay);
     }
 }
