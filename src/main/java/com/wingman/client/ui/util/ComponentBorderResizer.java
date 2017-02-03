@@ -39,11 +39,6 @@ public class ComponentBorderResizer extends MouseAdapter {
     private Point pressed;
     private boolean autoScrolls;
 
-    /**
-     *  Convenience constructor. <br>
-     *  All borders are resizable in increments of a single pixel. <br>
-     *  Components must be registered separately.
-     */
     public ComponentBorderResizer(Component... components) {
         for (Component component : components) {
             component.addMouseListener( this );

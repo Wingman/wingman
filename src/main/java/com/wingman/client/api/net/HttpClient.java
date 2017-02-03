@@ -11,10 +11,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 /**
- * {@link HttpClient} contains the recommended API for handling web requests. <br>
- *
- * It utilizes the {@link OkHttpClient} library for efficient request handling. <br>
- * Request caching is not enabled by default because of potential file conflict in the event of multiple client instances being run at the same time.
+ * {@link HttpClient} contains the recommended API for handling web requests.
+ * <p>
+ * It utilizes the {@link OkHttpClient} library for efficient request handling.
+ * <p>
+ * Request caching is not enabled by default because of potential file conflict
+ * in the event of multiple client instances being run at the same time.
  */
 public class HttpClient extends OkHttpClient {
 
@@ -56,10 +58,10 @@ public class HttpClient extends OkHttpClient {
     }
 
     /**
-     * Constructs a synchronous request to the URL specified. <br>
-     * Returns {@link Response} upon completion.
+     * Constructs a synchronous request to the URL specified.
      *
-     * @param url the URL of your request
+     * @param url the URL of a request
+     * @return the response for the download request
      * @throws IOException if the download failed
      */
     public Response downloadUrlSync(String url) throws IOException {
@@ -108,7 +110,7 @@ public class HttpClient extends OkHttpClient {
     }
 
     /**
-     * Constructs a {@link com.squareup.okhttp.Request.Builder} with request headers attempting to mimic a real browser.
+     * @return a request builder with request headers attempting to mimic a real browser
      */
     public Request.Builder getRequestBuilder() {
         return new Request.Builder()

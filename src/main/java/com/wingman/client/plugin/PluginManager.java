@@ -36,8 +36,10 @@ public final class PluginManager {
      * Loads all plugins annotated with {@link Plugin} found by the client and plugin class loader.
      * <p>
      * This method should only be called once ever.
+     *
+     * @throws IOException if finding/getting plugins from the plugin directory failed
      */
-    public static void findAndSetupPlugins() throws Exception {
+    public static void findAndSetupPlugins() throws IOException {
         System.out.println("Finding and setting up plugins");
 
         pluginClassLoaderReflections = new Reflections(getPluginClassLoader());
@@ -61,6 +63,7 @@ public final class PluginManager {
      * and all of its containing JARs to a {@link PluginClassLoader}.
      *
      * @return a class loader with the supposed plugins within {@link ClientSettings#PLUGINS_DIR}
+     * @throws IOException if getting plugins from the plugin directory failed
      */
     private static PluginClassLoader getPluginClassLoader() throws IOException {
         Set<URL> pluginUrls = new HashSet<>();
@@ -351,8 +354,11 @@ public final class PluginManager {
      * @param plugin the plugin that should be activated
      * @return {@code true} if the plugin was successfully activated;
      *         {@code false} otherwise
+     * @throws InvocationTargetException if activating the plugin failed
+     * @throws IllegalAccessException if activating the plugin failed
      */
-    public static boolean activatePlugin(PluginContainer plugin) throws InvocationTargetException,IllegalAccessException {
+    public static boolean activatePlugin(PluginContainer plugin)
+            throws InvocationTargetException, IllegalAccessException {
         plugin.activate();
         System.out.println(MessageFormat.format("Activated plugin {0} ({1} {2})",
                 plugin.info.name(),

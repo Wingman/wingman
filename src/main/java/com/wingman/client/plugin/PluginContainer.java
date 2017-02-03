@@ -14,7 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * {@link PluginContainer} is the base of the client-plugin layer, providing the client interactability with each and every plugin. <br>
+ * {@link PluginContainer} is the base of the client-plugin layer,
+ * providing the client interactability with each and every plugin.
+ * <p>
  * It wraps a {@link Plugin} annotated {@link Class}.
  */
 public class PluginContainer {
@@ -82,8 +84,8 @@ public class PluginContainer {
     /**
      * Attempts to safely invoke the {@link PluginContainer#setupMethod} of a plugin.
      *
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * @throws InvocationTargetException if invoking the setup method failed
+     * @throws IllegalAccessException if invoking the setup method failed
      */
     public void setup() throws InvocationTargetException, IllegalAccessException {
         invokeMethod(setupMethod);
@@ -92,8 +94,8 @@ public class PluginContainer {
     /**
      * Attempts to safely invoke the {@link PluginContainer#activateMethod} of a plugin.
      *
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * @throws InvocationTargetException if invoking the activate method failed
+     * @throws IllegalAccessException if invoking the activate method failed
      */
     public void activate() throws InvocationTargetException, IllegalAccessException {
         invokeMethod(activateMethod);
@@ -102,8 +104,8 @@ public class PluginContainer {
     /**
      * Attempts to safely invoke the {@link PluginContainer#deactivateMethod} of a plugin.
      *
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
+     * @throws InvocationTargetException if invoking the deactivate method failed
+     * @throws IllegalAccessException if invoking the deactivate method failed
      */
     public void deactivate() throws InvocationTargetException, IllegalAccessException {
         invokeMethod(deactivateMethod);
@@ -113,6 +115,8 @@ public class PluginContainer {
      * Invokes a {@link Method}.
      *
      * @param method the method to safely invoke
+     * @throws InvocationTargetException if invoking the method failed
+     * @throws IllegalAccessException if invoking the method failed
      */
     private void invokeMethod(Method method) throws InvocationTargetException, IllegalAccessException {
         if (method != null) {

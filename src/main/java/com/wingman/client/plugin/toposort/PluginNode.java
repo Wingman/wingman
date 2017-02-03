@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * {@link PluginNode} is for use with the topological sorting functionality.
  *
- * @see PluginManager#sortPlugins(List)
+ * @see PluginManager#sortPlugins()
  */
 public class PluginNode {
 

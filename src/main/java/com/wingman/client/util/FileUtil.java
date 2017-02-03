@@ -26,6 +26,7 @@ public final class FileUtil {
      * @param path a path to a file accessible through the client class loader
      * @return a {@code byte[]} representation of a file accessible through the client class loader,
      *         or an empty array if the file does not exist
+     * @throws IOException if reading the file failed
      */
     public static byte[] getFileAsBytes(String path) throws IOException {
         InputStream inputStream = getFile(path);
