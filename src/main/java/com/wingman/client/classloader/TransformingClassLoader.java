@@ -15,9 +15,7 @@ import java.net.URLClassLoader;
 import java.util.LinkedList;
 
 /**
- * {@link TransformingClassLoader} enables support for injection by {@link Transformer}s. <br>
- *
- * It only transforms classes residing in the {@link com.wingman} package and its subpackages plus classes owned by the RuneScape gamepack.
+ * Enables support for injection by running {@link Transformer} on classes that are being loaded.
  */
 public class TransformingClassLoader extends URLClassLoader {
 

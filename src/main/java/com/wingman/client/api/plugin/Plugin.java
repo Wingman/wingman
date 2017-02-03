@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Use this interface to annotate the main plugin class. <br>
+ * Use this interface to annotate the main plugin class.
  * The main plugin class may be any class.
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -26,9 +26,8 @@ public @interface Plugin {
     String defaultToggle() default "true";
 
     /**
-     * Use this interface to annotate the setup method. <br>
-     * The setup method should perform actions that need to be done before the game is loaded. <br>
-     * This method must be static.
+     * Use this interface to annotate the setup method.
+     * The setup method should perform actions that need to be done before the game is loaded.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
@@ -36,9 +35,8 @@ public @interface Plugin {
     }
 
     /**
-     * Use this interface to annotate the activation method. <br>
-     * The activation method should initialize all things that don't require cross-plugin interaction. <br>
-     * This method must be static.
+     * Use this interface to annotate the activation method.
+     * The activation method should initialize all things that don't require cross-plugin interaction.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
@@ -46,9 +44,8 @@ public @interface Plugin {
     }
 
     /**
-     * Use this interface to annotate the deactivation method. <br>
-     * The deactivation method should cleanup everything. <br>
-     * This method must be static. <br>
+     * Use this interface to annotate the deactivation method.
+     * The deactivation method should cleanup everything.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
@@ -56,8 +53,7 @@ public @interface Plugin {
     }
 
     /**
-     * The field that has this annotation will get injected an instance of {@link PluginHelper}. <br>
-     * This field must be static.
+     * The field that has this annotation will get injected an instance of {@link PluginHelper}.
      */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)

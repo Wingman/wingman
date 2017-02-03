@@ -11,8 +11,8 @@ import org.objectweb.asm.tree.*;
 import java.util.Set;
 
 /**
- * {@link RSMemberInjector} injects members into the game for access through the client. <br>
- *
+ * {@link RSMemberInjector} injects members into the game for access through the client.
+ * <p>
  * Instanced field getters and setters are injected like "type getFieldName()" or "void setFieldName(value)".
  */
 public class RSMemberInjector implements Transformer {

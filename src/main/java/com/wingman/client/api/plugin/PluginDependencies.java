@@ -4,7 +4,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Use this interface to annotate the main plugin class of a plugin that depends several plugins. <br>
+ * Use this interface to annotate the main plugin class of a plugin that depends several plugins.
+ * <p>
  * The value of this annotation is an array of {@link PluginDependency}.
  */
 @Retention(RetentionPolicy.RUNTIME)

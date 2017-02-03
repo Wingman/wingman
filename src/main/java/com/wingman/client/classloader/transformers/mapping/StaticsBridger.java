@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * {@link StaticsBridger} handles bridging the client API with members injected into the game. <br>
+ * Handles bridging the client API with members injected into the game.
  */
 public class StaticsBridger implements Transformer {
 

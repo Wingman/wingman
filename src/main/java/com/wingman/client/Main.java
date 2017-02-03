@@ -40,7 +40,7 @@ public class Main {
     }
 
     /**
-     * Sets up SLF4J logging for {@link System#out} and {@link System#err} at INFO level. <br>
+     * Sets up SLF4J logging for {@link System#out} and {@link System#err} at INFO level.
      * The logger also logs to {@link ClientSettings#LOGGING_FILE}, with the same format as for the console.
      */
     private static void setupConsoleLogging() {

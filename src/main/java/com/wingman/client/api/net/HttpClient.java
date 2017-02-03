@@ -74,7 +74,7 @@ public class HttpClient extends OkHttpClient {
     }
 
     /**
-     * Constructs an asynchronous request to the URL specified, and places it on the OkHttp worker thread. <br>
+     * Constructs an asynchronous request to the URL specified, and places it on the OkHttp worker thread.
      * The instance of {@link Callback} specified in the arguments is called upon completion of the request.
      *
      * @param url the URL of your request
