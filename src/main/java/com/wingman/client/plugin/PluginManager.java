@@ -10,12 +10,11 @@ import com.wingman.client.api.event.EventListenerList;
 import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.Plugin;
 import com.wingman.client.api.plugin.PluginDependency;
-import com.wingman.client.api.settings.PropertiesSettings;
 import com.wingman.client.classloader.PluginClassLoader;
-import com.wingman.client.plugin.exceptions.PluginLoadingException;
+import com.wingman.client.plugin.exceptions.PluginActivationException;
+import com.wingman.client.plugin.exceptions.PluginDeActivationException;
 import com.wingman.client.plugin.exceptions.PluginSetupException;
 import com.wingman.client.plugin.toposort.PluginNode;
-import com.wingman.client.ui.Client;
 import org.reflections.Reflections;
 
 import java.io.File;
@@ -46,10 +45,14 @@ public final class PluginManager {
         Set<Class<?>> pluginClasses = pluginClassLoaderReflections
                 .getTypesAnnotatedWith(Plugin.class);
         plugins = parsePlugins(pluginClasses);
-        plugins = parsePluginDependencies(plugins);
-        plugins = sortPlugins(plugins);
-        setupPlugins();
+
         pluginClassLoaderReflections = null;
+
+        parsePluginDependencies();
+        sortPlugins();
+
+        setupPlugins();
+
         bakeEventListeners();
     }
 
@@ -112,7 +115,7 @@ public final class PluginManager {
     /**
      * Parses dependencies ({@link PluginDependency}) of plugins and attempts to match them with loaded plugins.
      */
-    private static List<PluginContainer> parsePluginDependencies(List<PluginContainer> plugins) {
+    private static void parsePluginDependencies() {
         Map<String, PluginContainer> pluginContainerMap = new HashMap<>();
 
         for (PluginContainer pluginContainer : plugins) {
@@ -161,15 +164,13 @@ public final class PluginManager {
                 pluginIterator.remove();
             }
         }
-
-        return plugins;
     }
 
     /**
      * Sort the loading order of plugins topologically based on dependencies,
      * as to introduce loading dependencies before dependants.
      */
-    private static List<PluginContainer> sortPlugins(List<PluginContainer> plugins) {
+    private static void sortPlugins() {
         Map<String, PluginNode> pluginNodes = new HashMap<>();
         for (PluginContainer pluginContainer : plugins) {
             pluginNodes.put(pluginContainer.info.id(), new PluginNode(pluginContainer));
@@ -194,8 +195,6 @@ public final class PluginManager {
         for (PluginNode pluginNode : stack) {
             plugins.add(pluginNode.pluginContainer);
         }
-
-        return plugins;
     }
 
     /**
@@ -312,7 +311,8 @@ public final class PluginManager {
     }
 
     /**
-     * Sets all plugins up. <br>
+     * Sets all plugins up.
+     *
      * Safely invokes ({@link PluginContainer#setupMethod}) of all detected plugins.
      */
     private static void setupPlugins() {
@@ -333,32 +333,13 @@ public final class PluginManager {
      * toggleable then it will add a new item to the settings panel.
      */
     public static void activatePlugins() {
-        PropertiesSettings activePluginSettings;
-        try {
-            activePluginSettings = new PluginSettings();
-            for (PluginContainer plugin : plugins) {
-                // Plugin wants to have a toggle added to the settings screen
-                if (plugin.info.canToggle().equalsIgnoreCase("true")) {
-                    Client.addPluginToggle(plugin);
-                }
-
-                // If PropertySetting is (not null && true) or Plugin's defaultToggle=true
-                if ((activePluginSettings.get(plugin.info.id()) != null &&
-                        activePluginSettings.get(plugin.info.id()).equalsIgnoreCase("true")) ||
-                        plugin.info.defaultToggle().equalsIgnoreCase("true")) {
-                    try {
-                        activatePlugin(plugin);
-                    } catch (InvocationTargetException | IllegalAccessException e) {
-                        new PluginLoadingException(plugin.info.id(), e.toString())
-                                .printStackTrace();
-                        // Set to disabled state so plugin toggle doesn't use defaultToggle
-                        activePluginSettings.update(plugin.info.id(), "false");
-                        activePluginSettings.save();
-                    }
-                }
+        for (PluginContainer plugin : plugins) {
+            try {
+                activatePlugin(plugin);
+            } catch (Exception e) {
+                new PluginActivationException(plugin.info.id(), e.toString())
+                        .printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -402,7 +383,7 @@ public final class PluginManager {
                     plugin.info.id(),
                     plugin.info.version()));
         } catch (Exception e) {
-            new PluginLoadingException(plugin.info.id(), e.toString())
+            new PluginDeActivationException(plugin.info.id(), e.toString())
                     .printStackTrace();
         }
     }
