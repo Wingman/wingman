@@ -28,10 +28,10 @@ public class ClientSettings extends PropertiesSettings {
 
     public ClientSettings() throws IOException {
         super("Wingman.properties", "Wingman client settings");
+        checkKeys();
     }
 
-    @Override
-    public void checkKeys() {
+    private void checkKeys() {
         Map<String, Object> defaultProperties = ImmutableMap.<String, Object>builder()
                 .put(NOTIFICATIONS_ENABLED, "true")
                 .put(PREFERRED_WORLD, "301")

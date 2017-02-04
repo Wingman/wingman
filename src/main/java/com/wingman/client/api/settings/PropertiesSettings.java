@@ -29,11 +29,6 @@ public class PropertiesSettings {
 
         this.properties = new Properties();
         this.properties.load(new FileReader(file));
-
-        checkKeys();
-    }
-
-    public void checkKeys() {
     }
 
     public void update(String key, Object value) {
