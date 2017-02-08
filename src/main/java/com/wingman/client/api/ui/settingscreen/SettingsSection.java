@@ -230,11 +230,12 @@ public class SettingsSection {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        int i = 0;
-        for (SettingsItem item : items) {
+        for (int i = 0; i < items.size(); i++) {
+            SettingsItem item = items.get(i);
+
             JPanel itemPanel = item.build();
 
-            if (i++ % 2 == 1) {
+            if (i % 2 == 1) {
                 itemPanel.setBackground(OnyxStyleFactory.BASE_DARKER);
             }
 

@@ -16,6 +16,8 @@ import java.util.Set;
  */
 public class StaticsBridger implements Transformer {
 
+    private static final int NO_GETTER = 1;
+
     private final Set<FieldInfo> fields = new HashSet<>();
     private final Set<MethodInfo> methods = new HashSet<>();
 
@@ -148,10 +150,10 @@ public class StaticsBridger implements Transformer {
                     );
                 }
 
-                if (f.getter != 1) {
+                if (f.getter != NO_GETTER) {
                     if ("I".equals(f.type)) {
                         MappingsHelper.addInstructions(insnList,
-                                new LdcInsnNode(new Integer("" + f.getter)),
+                                new LdcInsnNode(Integer.valueOf("" + f.getter)),
                                 new InsnNode(Opcodes.IMUL)
                         );
                     } else {
@@ -192,10 +194,10 @@ public class StaticsBridger implements Transformer {
                     );
                 }
 
-                if (f.getter != 1) {
+                if (f.getter != NO_GETTER) {
                     if ("I".equals(f.type)) {
                         MappingsHelper.addInstructions(insnList,
-                                new LdcInsnNode(new Integer("" + f.setter)),
+                                new LdcInsnNode(Integer.valueOf("" + f.setter)),
                                 new InsnNode(Opcodes.IMUL)
                         );
                     } else {

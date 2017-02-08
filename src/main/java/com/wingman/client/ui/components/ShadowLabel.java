@@ -7,14 +7,6 @@ import java.awt.*;
 
 public class ShadowLabel extends JLabel {
 
-    public ShadowLabel() {
-        super();
-    }
-
-    public ShadowLabel(String text) {
-        super(text);
-    }
-
     private int leftX;
     private int leftY;
 
@@ -23,6 +15,14 @@ public class ShadowLabel extends JLabel {
 
     private Color leftColor = OnyxStyleFactory.BASE;
     private Color rightColor = OnyxStyleFactory.BASE;
+
+    public ShadowLabel() {
+        super();
+    }
+
+    public ShadowLabel(String text) {
+        super(text);
+    }
 
     public void setLeftShadow(int x, int y, Color color) {
         leftX = x;
@@ -63,19 +63,17 @@ public class ShadowLabel extends JLabel {
 
         char[] chars = getText().toCharArray();
 
-        for(int i = 0; i < chars.length; i++) {
-            char character = chars[i];
-
+        for (char c : chars) {
             g.setColor(leftColor);
-            g.drawString("" + character, x - leftX, height - leftY);
+            g.drawString("" + c, x - leftX, height - leftY);
 
             g.setColor(rightColor);
-            g.drawString("" + character, x + rightX, height + rightY);
+            g.drawString("" + c, x + rightX, height + rightY);
 
             g.setColor(getForeground());
-            g.drawString("" + character, x, height);
+            g.drawString("" + c, x, height);
 
-            x += fontMetrics.charWidth(character);
+            x += fontMetrics.charWidth(c);
         }
 
         ((Graphics2D) g).setRenderingHint(

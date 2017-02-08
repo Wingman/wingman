@@ -183,14 +183,9 @@ public class SettingsScreen extends JDialog {
                 for (SettingsSection section : sections) {
                     for (SettingsItem item : section.items) {
                         if (item.getDescription().toLowerCase().contains(searchString)) {
-
-                            List<SettingsItem> settingsList = settingsToDraw.get(section);
-                            if (settingsList == null) {
-                                settingsList = new ArrayList<>();
-                                settingsToDraw.put(section, settingsList);
-                            }
-
-                            settingsList.add(item);
+                           settingsToDraw
+                                    .computeIfAbsent(section, k -> new ArrayList<>())
+                                    .add(item);
                         }
                     }
 

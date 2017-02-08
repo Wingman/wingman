@@ -247,8 +247,9 @@ public final class PluginManager {
                 try {
                     Class<?>[] argTypes = method.getParameterTypes();
                     if (argTypes.length > 0) {
-                        Class<?> checkClass;
-                        if (Event.class.isAssignableFrom(checkClass = argTypes[0])) {
+                        Class<?> checkClass = argTypes[0];
+
+                        if (Event.class.isAssignableFrom(checkClass)) {
                             final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
 
                             Set subTypesOfEventClass = pluginClassLoaderReflections

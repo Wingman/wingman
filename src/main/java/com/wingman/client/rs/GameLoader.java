@@ -17,7 +17,7 @@ import java.net.URL;
 
 public class GameLoader {
 
-    private static Applet applet = null;
+    private static Applet applet;
 
     public GameLoader() {
         try {

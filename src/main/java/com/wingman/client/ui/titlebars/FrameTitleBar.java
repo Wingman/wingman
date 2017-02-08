@@ -9,8 +9,6 @@ import com.wingman.client.util.FileUtil;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -63,92 +61,98 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeExpandButton() throws IOException {
-        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/expand.png"))));
+        HoverButton hoverButton
+                = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/expand.png"))));
+
         hoverButton.setMargin(new Insets(3, 0, 3, 0));
-        hoverButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                boolean maximized = (Client.frame.getExtendedState() & Frame.MAXIMIZED_HORIZ) != 0;
-                Client.sideBarBox.setVisible(!Client.sideBarBox.isVisible());
-                Client.frame.revalidate();
-                Client.frame.repaint();
-                int newWidth = Client.frame.getWidth();
-                if (Client.sideBarBox.isVisible()) {
-                    if (!maximized) {
-                        newWidth += Client.sideBarBox.getWidth();
-                    }
-                } else {
-                    if (!maximized) {
-                        newWidth -= Client.sideBarBox.getWidth();
-                    }
+        hoverButton.addActionListener(e -> {
+            boolean maximized = (Client.frame.getExtendedState() & Frame.MAXIMIZED_HORIZ) != 0;
+
+            Client.sideBarBox.setVisible(!Client.sideBarBox.isVisible());
+
+            Client.frame.revalidate();
+            Client.frame.repaint();
+
+            int newWidth = Client.frame.getWidth();
+
+            if (Client.sideBarBox.isVisible()) {
+                if (!maximized) {
+                    newWidth += Client.sideBarBox.getWidth();
                 }
-                Client.frame.setSize(new Dimension(newWidth, Client.frame.getHeight()));
-                Client.frame.revalidate();
-                Client.frame.repaint();
+            } else {
+                if (!maximized) {
+                    newWidth -= Client.sideBarBox.getWidth();
+                }
             }
+
+            Client.frame.setSize(new Dimension(newWidth, Client.frame.getHeight()));
+
+            Client.frame.revalidate();
+            Client.frame.repaint();
         });
+
         return hoverButton;
     }
 
     private HoverButton makeSettingsButton() throws IOException {
-        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/settings.png"))));
+        HoverButton hoverButton
+                = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/settings.png"))));
+
         hoverButton.setMargin(new Insets(3, 3, 3, 3));
-        hoverButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (Client.settingsScreen.isVisible()) {
-                    Client.settingsScreen.setVisible(false);
-                } else {
-                    Client.settingsScreen.setVisible(true);
-                }
+        hoverButton.addActionListener(e -> {
+            if (Client.settingsScreen.isVisible()) {
+                Client.settingsScreen.setVisible(false);
+            } else {
+                Client.settingsScreen.setVisible(true);
             }
         });
+
         return hoverButton;
     }
 
     private JLabel makeTitleText() {
         String version = "Developer";
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtil.getFile("/version.properties")))) {
+
+        try (BufferedReader reader
+                     = new BufferedReader(new InputStreamReader(FileUtil.getFile("/version.properties")))) {
             version = reader.readLine();
         } catch (NullPointerException ignored)  {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         JLabel titleLabel = new JLabel("Wingman " + version);
+
         titleLabel.setForeground(OnyxStyleFactory.SECONDARY_TEXT_COLOR);
         titleLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
+
         return titleLabel;
     }
 
     private HoverButton makeMinimizeButton() throws IOException {
-        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/minimize.png"))));
-        hoverButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Client.frame.setState(JFrame.ICONIFIED);
-            }
-        });
+        HoverButton hoverButton
+                = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/minimize.png"))));
+        hoverButton.addActionListener(e -> Client.frame.setState(JFrame.ICONIFIED));
         return hoverButton;
     }
 
     private HoverButton makeMaximizeButton() throws IOException {
-        final ImageIcon maximizeIcon = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/maximize.png")));
-        final ImageIcon maximizeIcon2 = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/unmaximize.png")));
+        ImageIcon maximizeIcon = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/maximize.png")));
+        ImageIcon maximizeIcon2 = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/unmaximize.png")));
 
-        final HoverButton hoverButton = new HoverButton(maximizeIcon);
-        hoverButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (parent.isResizable()) {
-                    if ((parent.getExtendedState() & JFrame.MAXIMIZED_BOTH) == 0) {
-                        parent.getRootPane().setBorder(BorderFactory.createEmptyBorder());
-                        parent.setExtendedState(parent.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-                        hoverButton.setIcon(maximizeIcon2);
-                    } else {
-                        parent.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.BASE));
-                        parent.setExtendedState(JFrame.NORMAL);
-                        hoverButton.setIcon(maximizeIcon);
-                    }
+        HoverButton hoverButton = new HoverButton(maximizeIcon);
+        hoverButton.addActionListener(e -> {
+            if (parent.isResizable()) {
+                if ((parent.getExtendedState() & JFrame.MAXIMIZED_BOTH) == 0) {
+                    parent.getRootPane().setBorder(BorderFactory.createEmptyBorder());
+                    parent.setExtendedState(parent.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+                    hoverButton.setIcon(maximizeIcon2);
+                } else {
+                    parent.getRootPane().setBorder(BorderFactory.createMatteBorder(
+                            0, 4, 4, 4,
+                            OnyxStyleFactory.BASE));
+                    parent.setExtendedState(JFrame.NORMAL);
+                    hoverButton.setIcon(maximizeIcon);
                 }
             }
         });
@@ -156,7 +160,8 @@ public class FrameTitleBar extends OnyxTitleBar {
     }
 
     private HoverButton makeExitButton() throws IOException {
-        HoverButton hoverButton = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/exit.png"))));
+        HoverButton hoverButton
+                = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/exit.png"))));
         hoverButton.addActionListener(e -> {
             if (Client.clientTrayIcon != null) {
                 Client.clientTrayIcon.detach();

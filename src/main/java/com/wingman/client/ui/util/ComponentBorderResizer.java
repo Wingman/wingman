@@ -201,7 +201,9 @@ public class ComponentBorderResizer extends MouseAdapter {
     private int getDragDistance(int larger, int smaller, int snapSize) {
         int halfway = snapSize / 2;
         int drag = larger - smaller;
-        drag += (drag < 0) ? -halfway : halfway;
+        drag += drag < 0
+                ? -halfway
+                : halfway;
         drag = (drag / snapSize) * snapSize;
         return drag;
     }
@@ -210,13 +212,17 @@ public class ComponentBorderResizer extends MouseAdapter {
      *  Adjusts the drag value to be within the minimum and maximum range.
      */
     private int getDragBounded(int drag, int snapSize, int dimension, int minimum, int maximum) {
-        while (dimension + drag < minimum) {
-            drag += snapSize;
+        int newDrag = drag;
+
+        while (dimension + newDrag < minimum) {
+            newDrag += snapSize;
         }
-        while (dimension + drag > maximum) {
-            drag -= snapSize;
+
+        while (dimension + newDrag > maximum) {
+            newDrag -= snapSize;
         }
-        return drag;
+
+        return newDrag;
     }
 
     /**

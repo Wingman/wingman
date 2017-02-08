@@ -1,10 +1,14 @@
 package com.wingman.client.api.enums;
 
-public interface GameState {
+public class GameState {
 
-    int TITLE = 10;
-    int LOGIN = 20;
-    int LOADING = 25;
-    int PLAYING = 30;
-    int DISCONNECTED = 40;
+    public static final int TITLE = 10;
+    public static final int LOGIN = 20;
+    public static final int LOADING = 25;
+    public static final int PLAYING = 30;
+    public static final int DISCONNECTED = 40;
+
+    private GameState() {
+        // This class should not be instantiated
+    }
 }

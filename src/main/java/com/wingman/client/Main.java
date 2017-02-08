@@ -72,10 +72,9 @@ public class Main {
     }
 
     private static void createDirectory(File directory) throws IOException {
-        if (!directory.exists()) {
-            if (!directory.mkdirs()) {
-                throw new IOException("Couldn't create directory " + directory);
-            }
+        if (!directory.exists()
+                && !directory.mkdirs()) {
+            throw new IOException("Couldn't create directory " + directory);
         }
     }
 
@@ -94,5 +93,9 @@ public class Main {
         // Prevent the applet from overlapping the menus
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+    }
+
+    private Main() {
+        // This class should not be instantiated
     }
 }

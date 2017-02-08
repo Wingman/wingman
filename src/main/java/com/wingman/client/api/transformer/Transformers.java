@@ -52,4 +52,8 @@ public class Transformers {
             }
         }
     }
+
+    private Transformers() {
+        // This class should not be instantiated
+    }
 }

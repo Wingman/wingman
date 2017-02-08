@@ -12,12 +12,26 @@ import org.objectweb.asm.tree.*;
 
 public class ExternalPlayerMovedTransformer implements Transformer {
 
+    private static final int TYPE_BECAME_LOCAL_PLAYER = 0;
+    private static final int TYPE_CHANGED_PLANE = 1;
+    private static final int TYPE_MOVED_TO_ADJACENT_REGION = 2;
+
+    // https://i.imgur.com/CcHDBkd.png
+    private static final int MOVED_SOUTHWEST = 0;
+    private static final int MOVED_SOUTH = 1;
+    private static final int MOVED_SOUTHEAST = 2;
+    private static final int MOVED_WEST = 3;
+    private static final int MOVED_EAST = 4;
+    private static final int MOVED_NORTHWEST = 5;
+    private static final int MOVED_NORTH = 6;
+    private static final int MOVED_NORTHEAST = 7;
+
     public static void runHook(BitBuffer bitBuffer, int playerId) {
         int startPosition = bitBuffer.getBitPosition();
 
         int type = bitBuffer.getBits(2);
 
-        if (type == 0) {
+        if (type == TYPE_BECAME_LOCAL_PLAYER) {
             if (bitBuffer.getBits(1) != 0) {
                 runHook(bitBuffer, playerId);
             }
@@ -40,7 +54,7 @@ public class ExternalPlayerMovedTransformer implements Transformer {
                     oldX, oldY, oldPlane,
                     newX, newY, oldPlane)
             );
-        } else if (type == 1) {
+        } else if (type == TYPE_CHANGED_PLANE) {
             int deltaPlane = bitBuffer.getBits(2);
 
             int currentPos = GameAPI.getExternalPlayerLocations()[playerId];
@@ -57,7 +71,7 @@ public class ExternalPlayerMovedTransformer implements Transformer {
                     oldX, oldY, oldPlane,
                     oldX, oldY, newPlane)
             );
-        } else if (type == 2) {
+        } else if (type == TYPE_MOVED_TO_ADJACENT_REGION) {
             int data = bitBuffer.getBits(5);
 
             int deltaPlane = data >> 3;
@@ -73,38 +87,38 @@ public class ExternalPlayerMovedTransformer implements Transformer {
             int newX = oldX;
             int newY = oldY;
 
-            if(direction == 0) {
+            if(direction == MOVED_SOUTHWEST) {
                 --newX;
                 --newY;
             }
 
-            if(direction == 1) {
+            if(direction == MOVED_SOUTH) {
                 --newY;
             }
 
-            if(direction == 2) {
+            if(direction == MOVED_SOUTHEAST) {
                 ++newX;
                 --newY;
             }
 
-            if(direction == 3) {
+            if(direction == MOVED_WEST) {
                 --newX;
             }
 
-            if(direction == 4) {
+            if(direction == MOVED_EAST) {
                 ++newX;
             }
 
-            if(direction == 5) {
+            if(direction == MOVED_NORTHWEST) {
                 --newX;
                 ++newY;
             }
 
-            if(direction == 6) {
+            if(direction == MOVED_NORTH) {
                 ++newY;
             }
 
-            if(direction == 7) {
+            if(direction == MOVED_NORTHEAST) {
                 ++newX;
                 ++newY;
             }
@@ -116,6 +130,8 @@ public class ExternalPlayerMovedTransformer implements Transformer {
                     newX, newY, newPlane)
             );
         } else {
+            // Type 3 = moved to non-adjacent region
+
             int data = bitBuffer.getBits(18);
 
             int deltaPlane = data >> 16;

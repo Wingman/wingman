@@ -7,9 +7,8 @@ import java.awt.event.MouseEvent;
 
 public class HoverButton extends JButton {
 
-    public float opacity = 0.5F;
-
-    boolean hovering = false;
+    private float opacity = 0.5F;
+    private boolean hovering = false;
 
     public HoverButton(ImageIcon imageIcon) {
         this();
@@ -32,6 +31,14 @@ public class HoverButton extends JButton {
             }
         });
         this.setFocusPainted(false);
+    }
+
+    public float getOpacity() {
+        return opacity;
+    }
+
+    public void setOpacity(float opacity) {
+        this.opacity = opacity;
     }
 
     @Override

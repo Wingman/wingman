@@ -16,11 +16,11 @@ public class TextFieldStyle extends SynthStyle {
             return OnyxStyleFactory.BASE_DARKER;
         } else if (type.equals(ColorType.TEXT_FOREGROUND)) {
             switch (context.getComponentState()) {
-                case SynthConstants.ENABLED:
-                    return OnyxStyleFactory.PRIMARY_TEXT_COLOR;
-
                 case SynthConstants.DISABLED:
                     return OnyxStyleFactory.SECONDARY_TEXT_COLOR;
+
+                default:
+                    return OnyxStyleFactory.PRIMARY_TEXT_COLOR;
             }
         }
         return null;

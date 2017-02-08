@@ -254,4 +254,8 @@ public class MappingsHelper {
 
         return true;
     }
+
+    private MappingsHelper() {
+        // This class should not be instantiated
+    }
 }

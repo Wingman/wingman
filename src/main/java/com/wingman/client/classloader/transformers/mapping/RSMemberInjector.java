@@ -17,6 +17,8 @@ import java.util.Set;
  */
 public class RSMemberInjector implements Transformer {
 
+    private static final int NO_GETTER = 1;
+
     @Override
     public boolean canTransform(String name) {
         return MappingsHelper.obfClasses.get(name) != null
@@ -176,10 +178,10 @@ public class RSMemberInjector implements Transformer {
                     );
                 }
 
-                if (f.getter != 1) {
+                if (f.getter != NO_GETTER) {
                     if ("I".equals(f.type)) {
                         MappingsHelper.addInstructions(insnList,
-                                new LdcInsnNode(new Integer("" + f.getter)),
+                                new LdcInsnNode(Integer.valueOf("" + f.getter)),
                                 new InsnNode(Opcodes.IMUL)
                         );
                     } else {
@@ -225,10 +227,10 @@ public class RSMemberInjector implements Transformer {
                     );
                 }
 
-                if (f.getter != 1) {
+                if (f.getter != NO_GETTER) {
                     if ("I".equals(f.type)) {
                         MappingsHelper.addInstructions(insnList,
-                                new LdcInsnNode(new Integer("" + f.setter)),
+                                new LdcInsnNode(Integer.valueOf("" + f.setter)),
                                 new InsnNode(Opcodes.IMUL)
                         );
                     } else {

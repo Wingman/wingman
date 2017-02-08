@@ -19,10 +19,9 @@ public class PropertiesSettings {
                 .resolve(settingsFileName)
                 .toFile();
 
-        if (!this.file.exists()) {
-            if (!this.file.createNewFile()) {
-                throw new IOException("Couldn't create file " + file);
-            }
+        if (!this.file.exists()
+                && !this.file.createNewFile()) {
+            throw new IOException("Couldn't create file " + file);
         }
 
         this.fileComments = fileComments;

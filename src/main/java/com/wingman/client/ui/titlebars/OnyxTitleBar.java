@@ -37,8 +37,8 @@ public class OnyxTitleBar extends JMenuBar {
                 int thisX = parent.getLocation().x;
                 int thisY = parent.getLocation().y;
 
-                int xMoved = (thisX + e.getX()) - (thisX + initialClick.x);
-                int yMoved = (thisY + e.getY()) - (thisY + initialClick.y);
+                int xMoved = thisX + e.getX() - (thisX + initialClick.x);
+                int yMoved = thisY + e.getY() - (thisY + initialClick.y);
 
                 int X = thisX + xMoved;
                 int Y = thisY + yMoved;

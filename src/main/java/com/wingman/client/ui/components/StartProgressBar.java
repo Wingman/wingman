@@ -9,20 +9,13 @@ import java.awt.*;
  */
 public class StartProgressBar extends JProgressBar {
 
-    private static final String DOWNLOAD_PROGRESS_MESSAGE;
-    private static final String DOWNLOAD_COMPLETE_MESSAGE;
-    private static final String UPDATE_CHECK_MESSAGE;
-    private static final String NO_UPDATES_MESSAGE;
+    private static final String DOWNLOAD_PROGRESS_MESSAGE = "Downloading Oldschool Runescape %.1f%%";
+    private static final String DOWNLOAD_COMPLETE_MESSAGE = "Download complete. Launching Oldschool Runescape...";
+    private static final String UPDATE_CHECK_MESSAGE = "Checking for updates...";
+    private static final String NO_UPDATES_MESSAGE = "No updates detected. Launching Oldschool Runescape...";
 
     private Mode mode;
     private UI ui;
-
-    static {
-        DOWNLOAD_PROGRESS_MESSAGE = "Downloading Oldschool Runescape %.1f%%";
-        DOWNLOAD_COMPLETE_MESSAGE = "Download complete. Launching Oldschool Runescape...";
-        UPDATE_CHECK_MESSAGE = "Checking for updates...";
-        NO_UPDATES_MESSAGE = "No updates detected. Launching Oldschool Runescape...";
-    }
 
     /**
      * Modes the progress bar can be in.
@@ -39,27 +32,27 @@ public class StartProgressBar extends JProgressBar {
      * color of text when the bar is/isn't overlapping.
      */
     private class UI extends BasicProgressBarUI {
-        int animationCount = 0;
-        boolean finalFrame = false;
 
-        static final int INDETERMINATE_START_FULL_COUNT = 1;
+        private static final int INDETERMINATE_START_FULL_COUNT = 1;
+
+        private int animationCount;
+        private boolean finalFrame;
 
         @Override
         protected Color getSelectionBackground() {
-            // Color of the text when the bar *is not* overlapping.
+            // Color of the text when the bar *is not* overlapping
             return StartProgressBar.this.getForeground();
         }
 
         @Override
         protected Color getSelectionForeground() {
-            // Color of the text when the bar *is* overlapping.
+            // Color of the text when the bar *is* overlapping
             return StartProgressBar.this.getBackground();
         }
 
         @Override
         protected Rectangle getBox(Rectangle r) {
-            // This is where we customize the box painting at each frame.
-
+            // This is where we customize the box painting at each frame
             Rectangle box = super.getBox(r);
 
             // Ratio of animation completion
@@ -88,14 +81,14 @@ public class StartProgressBar extends JProgressBar {
         super(min, max);
         setStringPainted(true);
 
-        // Use our custom BasicProgressBarUI to make sure text is readable
-        // when the bar is overlapping. Also, use a custom indeterminate animation.
+        // Use our custom BasicProgressBarUI to make sure text is readable when the bar is overlapping.
+        // Also, use a custom indeterminate animation.
         ui = new UI();
         setUI(ui);
     }
 
     public StartProgressBar() {
-        this(0,0);
+        this(0, 0);
     }
 
     @Override
@@ -112,22 +105,25 @@ public class StartProgressBar extends JProgressBar {
     /**
      * Sets the progress bar's mode.
      *
-     * @param mode The mode.
+     * @param mode the mode to set
      */
     public void setMode(Mode mode) {
         switch(mode) {
             case CHECKING_FOR_UPDATES:
-                super.setValue(0); // change progress without changing string.
+                // Change progress without changing string
+                super.setValue(0);
                 setString(UPDATE_CHECK_MESSAGE);
                 break;
             case DOWNLOADING_FINISHED:
-                super.setValue(getMaximum()); // change progress without changing string.
+                // Change progress without changing string
+                super.setValue(getMaximum());
                 setString(DOWNLOAD_COMPLETE_MESSAGE);
                 ui.animationCount = UI.INDETERMINATE_START_FULL_COUNT;
                 setIndeterminate(true);
                 break;
             case NO_UPDATES:
-                super.setValue(0); // change progress without changing string.
+                // Change progress without changing string
+                super.setValue(0);
                 setString(NO_UPDATES_MESSAGE);
                 setIndeterminate(true);
                 break;
