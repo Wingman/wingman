@@ -59,5 +59,7 @@ public class ClientSettings extends PropertiesSettings {
                 properties.remove(k);
             }
         }
+
+        save();
     }
 }
