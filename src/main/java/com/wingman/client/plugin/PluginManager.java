@@ -9,6 +9,7 @@ import com.wingman.client.api.event.EventListener;
 import com.wingman.client.api.event.EventListenerList;
 import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.Plugin;
+import com.wingman.client.api.plugin.PluginContainer;
 import com.wingman.client.api.plugin.PluginDependency;
 import com.wingman.client.classloader.PluginClassLoader;
 import com.wingman.client.plugin.exceptions.PluginActivationException;
@@ -27,7 +28,7 @@ import java.util.*;
 
 public final class PluginManager {
 
-    private static List<PluginContainer> plugins = new ArrayList<>();
+    private static List<PluginContainerImpl> plugins = new ArrayList<>();
 
     private static Reflections pluginClassLoaderReflections;
     private static Set<Class<? extends Event>> eventClasses = new HashSet<>();
@@ -90,25 +91,25 @@ public final class PluginManager {
     }
 
     /**
-     * Constructs a list of {@link PluginContainer} out of a collection of classes supposed to be plugin classes.
+     * Constructs a list of {@link PluginContainerImpl} out of a collection of classes supposed to be plugin classes.
      *
      * @param plugins a collection of plugin classes
-     * @return a list containing {@link PluginContainer}-wrapped classes
+     * @return a list containing {@link PluginContainerImpl}-wrapped classes
      */
-    private static List<PluginContainer> parsePlugins(Collection<Class<?>> plugins) {
-        List<PluginContainer> pluginContainers = new LinkedList<>();
+    private static List<PluginContainerImpl> parsePlugins(Collection<Class<?>> plugins) {
+        List<PluginContainerImpl> pluginContainers = new LinkedList<>();
         Set<String> parsedPlugins = new HashSet<>();
 
         for (Class clazz : plugins) {
-            PluginContainer pluginContainer = new PluginContainer(clazz);
+            PluginContainerImpl pluginContainer = new PluginContainerImpl(clazz);
 
-            if (!parsedPlugins.contains(pluginContainer.info.id())) {
-                parsedPlugins.add(pluginContainer.info.id());
+            if (!parsedPlugins.contains(pluginContainer.getInfo().id())) {
+                parsedPlugins.add(pluginContainer.getInfo().id());
                 pluginContainers.add(pluginContainer);
             } else {
                 System.out.println(MessageFormat.format(
                         "{0} was not loaded, because a plugin with the same ID had already been loaded.",
-                        pluginContainer.info.id()));
+                        pluginContainer.getInfo().id()));
             }
         }
 
@@ -119,43 +120,43 @@ public final class PluginManager {
      * Parses dependencies ({@link PluginDependency}) of plugins and attempts to match them with loaded plugins.
      */
     private static void parsePluginDependencies() {
-        Map<String, PluginContainer> pluginContainerMap = new HashMap<>();
+        Map<String, PluginContainerImpl> pluginContainerMap = new HashMap<>();
 
-        for (PluginContainer pluginContainer : plugins) {
-            pluginContainerMap.put(pluginContainer.info.id(), pluginContainer);
+        for (PluginContainerImpl pluginContainer : plugins) {
+            pluginContainerMap.put(pluginContainer.getInfo().id(), pluginContainer);
         }
 
-        Iterator<PluginContainer> pluginIterator = plugins.iterator();
+        Iterator<PluginContainerImpl> pluginIterator = plugins.iterator();
         while (pluginIterator.hasNext()) {
-            PluginContainer pluginContainer = pluginIterator.next();
+            PluginContainerImpl pluginContainer = pluginIterator.next();
 
             boolean shouldRemove = false;
 
-            for (PluginDependency pluginDependency : pluginContainer.originalDependencies) {
-                PluginContainer dependencyContainer = pluginContainerMap
+            for (PluginDependency pluginDependency : pluginContainer.getOriginalDependencies()) {
+                PluginContainerImpl dependencyContainer = pluginContainerMap
                         .get(pluginDependency.id());
 
                 if (dependencyContainer != null) {
                     Version dependencyVersion = Version
-                            .valueOf(dependencyContainer.info.version());
+                            .valueOf(dependencyContainer.getInfo().version());
 
                     if (dependencyVersion
                             .satisfies(pluginDependency.version())) {
-                        pluginContainer.dependencies.add(dependencyContainer);
+                        pluginContainer.getDependencies().add(dependencyContainer);
                     } else {
                         System.err.println(MessageFormat.format(
                                 "Plugin {0} depends on {1} {2}, found {3}",
-                                pluginContainer.info.id(),
-                                dependencyContainer.info.id(),
+                                pluginContainer.getInfo().id(),
+                                dependencyContainer.getInfo().id(),
                                 pluginDependency.version(),
-                                dependencyContainer.info.version()));
+                                dependencyContainer.getInfo().version()));
 
                         shouldRemove = true;
                     }
                 } else {
                     System.err.println(MessageFormat.format(
                             "Plugin {0} depends on {1} {2}, which could not be found",
-                            pluginContainer.info.id(),
+                            pluginContainer.getInfo().id(),
                             pluginDependency.id(),
                             pluginDependency.version()));
 
@@ -175,15 +176,15 @@ public final class PluginManager {
      */
     private static void sortPlugins() {
         Map<String, PluginNode> pluginNodes = new HashMap<>();
-        for (PluginContainer pluginContainer : plugins) {
-            pluginNodes.put(pluginContainer.info.id(), new PluginNode(pluginContainer));
+        for (PluginContainerImpl pluginContainer : plugins) {
+            pluginNodes.put(pluginContainer.getInfo().id(), new PluginNode(pluginContainer));
         }
 
         plugins = new ArrayList<>(pluginNodes.size() + 1);
 
         for (PluginNode pluginNode : pluginNodes.values()) {
-            for (PluginContainer dependencyPlugin : pluginNode.pluginContainer.dependencies) {
-                pluginNode.addChild(pluginNodes.get(dependencyPlugin.info.id()));
+            for (PluginContainer dependencyPlugin : pluginNode.pluginContainer.getDependencies()) {
+                pluginNode.addChild(pluginNodes.get(dependencyPlugin.getInfo().id()));
             }
         }
 
@@ -317,14 +318,14 @@ public final class PluginManager {
     /**
      * Sets all plugins up.
      *
-     * Safely invokes ({@link PluginContainer#setupMethod}) of all detected plugins.
+     * Safely invokes ({@link PluginContainerImpl#setupMethod}) of all detected plugins.
      */
     private static void setupPlugins() {
-        for (PluginContainer plugin : plugins) {
+        for (PluginContainerImpl plugin : plugins) {
             try {
                 plugin.setup();
             } catch (InvocationTargetException | IllegalAccessException e) {
-                new PluginSetupException(plugin.info.id(), e.toString())
+                new PluginSetupException(plugin.getInfo().id(), e.toString())
                         .printStackTrace();
             }
         }
@@ -337,11 +338,11 @@ public final class PluginManager {
      * toggleable then it will add a new item to the settings panel.
      */
     public static void activatePlugins() {
-        for (PluginContainer plugin : plugins) {
+        for (PluginContainerImpl plugin : plugins) {
             try {
                 activatePlugin(plugin);
             } catch (Exception e) {
-                new PluginActivationException(plugin.info.id(), e.toString())
+                new PluginActivationException(plugin.getInfo().id(), e.toString())
                         .printStackTrace();
             }
         }
@@ -358,13 +359,17 @@ public final class PluginManager {
      * @throws InvocationTargetException if activating the plugin failed
      * @throws IllegalAccessException if activating the plugin failed
      */
-    public static boolean activatePlugin(PluginContainer plugin)
+    public static boolean activatePlugin(PluginContainerImpl plugin)
             throws InvocationTargetException, IllegalAccessException {
+        Plugin info = plugin.getInfo();
+
         plugin.activate();
+
         System.out.println(MessageFormat.format("Activated plugin {0} ({1} {2})",
-                plugin.info.name(),
-                plugin.info.id(),
-                plugin.info.version()));
+                info.name(),
+                info.id(),
+                info.version()));
+
         return true;
     }
 
@@ -372,7 +377,7 @@ public final class PluginManager {
      * Deactivate all plugins.
      */
     public static void deactivatePlugins() {
-        for (PluginContainer plugin : plugins) {
+        for (PluginContainerImpl plugin : plugins) {
             deactivatePlugin(plugin);
         }
     }
@@ -382,15 +387,18 @@ public final class PluginManager {
      *
      * @param plugin the plugin that should be deactivated
      */
-    public static void deactivatePlugin(PluginContainer plugin) {
+    public static void deactivatePlugin(PluginContainerImpl plugin) {
+        Plugin info = plugin.getInfo();
+
         try {
             plugin.deactivate();
+
             System.out.println(MessageFormat.format("Deactivated plugin {0} ({1} {2})",
-                    plugin.info.name(),
-                    plugin.info.id(),
-                    plugin.info.version()));
+                    info.name(),
+                    info.id(),
+                    info.version()));
         } catch (Exception e) {
-            new PluginDeActivationException(plugin.info.id(), e.toString())
+            new PluginDeActivationException(info.id(), e.toString())
                     .printStackTrace();
         }
     }
@@ -398,8 +406,8 @@ public final class PluginManager {
     public static List<Overlay> getAllOverlays() {
         List<Overlay> overlays = new ArrayList<>();
 
-        for (PluginContainer plugin : plugins) {
-            for (Overlay overlay : plugin.overlays) {
+        for (PluginContainerImpl plugin : plugins) {
+            for (Overlay overlay : plugin.getOverlays()) {
                 overlays.add(overlay);
             }
         }

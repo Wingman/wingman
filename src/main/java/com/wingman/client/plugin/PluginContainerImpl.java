@@ -1,10 +1,7 @@
 package com.wingman.client.plugin;
 
 import com.wingman.client.api.overlay.Overlay;
-import com.wingman.client.api.plugin.Plugin;
-import com.wingman.client.api.plugin.PluginDependencies;
-import com.wingman.client.api.plugin.PluginDependency;
-import com.wingman.client.api.plugin.PluginHelper;
+import com.wingman.client.api.plugin.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -14,20 +11,20 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * {@link PluginContainer} is the base of the client-plugin layer,
+ * {@link PluginContainerImpl} is the base of the client-plugin layer,
  * providing the client interactability with each and every plugin.
  * <p>
  * It wraps a {@link Plugin} annotated {@link Class}.
  */
-public class PluginContainer {
+public class PluginContainerImpl implements PluginContainer {
 
-    public final Plugin info;
-    public final PluginHelper helper;
-    public final List<PluginDependency> originalDependencies = new ArrayList<>();
-    public final List<PluginContainer> dependencies = new ArrayList<>();
-    public final Object instance;
+    private final Plugin info;
+    private final PluginHelper helper;
+    private final List<PluginDependency> originalDependencies = new ArrayList<>();
+    private final List<PluginContainer> dependencies = new ArrayList<>();
+    private final Object instance;
 
-    public final List<Overlay> overlays = new ArrayList<>();
+    private final List<Overlay> overlays = new ArrayList<>();
 
     private final Method setupMethod;
     private final Method activateMethod;
@@ -38,7 +35,7 @@ public class PluginContainer {
      *
      * @param clazz a {@link Plugin} annotated class
      */
-    public PluginContainer(Class clazz) {
+    public PluginContainerImpl(Class clazz) {
         try {
             info = (Plugin) clazz.getAnnotation(Plugin.class);
 
@@ -81,8 +78,37 @@ public class PluginContainer {
         }
     }
 
+    @Override
+    public Plugin getInfo() {
+        return info;
+    }
+
+    @Override
+    public PluginHelper getHelper() {
+        return helper;
+    }
+
+    public List<PluginDependency> getOriginalDependencies() {
+        return originalDependencies;
+    }
+
+    @Override
+    public List<PluginContainer> getDependencies() {
+        return dependencies;
+    }
+
+    @Override
+    public Object getInstance() {
+        return instance;
+    }
+
+    @Override
+    public List<Overlay> getOverlays() {
+        return overlays;
+    }
+
     /**
-     * Attempts to safely invoke the {@link PluginContainer#setupMethod} of a plugin.
+     * Attempts to safely invoke the {@link PluginContainerImpl#setupMethod} of a plugin.
      *
      * @throws InvocationTargetException if invoking the setup method failed
      * @throws IllegalAccessException if invoking the setup method failed
@@ -92,7 +118,7 @@ public class PluginContainer {
     }
 
     /**
-     * Attempts to safely invoke the {@link PluginContainer#activateMethod} of a plugin.
+     * Attempts to safely invoke the {@link PluginContainerImpl#activateMethod} of a plugin.
      *
      * @throws InvocationTargetException if invoking the activate method failed
      * @throws IllegalAccessException if invoking the activate method failed
@@ -102,7 +128,7 @@ public class PluginContainer {
     }
 
     /**
-     * Attempts to safely invoke the {@link PluginContainer#deactivateMethod} of a plugin.
+     * Attempts to safely invoke the {@link PluginContainerImpl#deactivateMethod} of a plugin.
      *
      * @throws InvocationTargetException if invoking the deactivate method failed
      * @throws IllegalAccessException if invoking the deactivate method failed

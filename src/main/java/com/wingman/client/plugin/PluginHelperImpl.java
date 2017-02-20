@@ -15,23 +15,23 @@ import java.util.Optional;
 
 public class PluginHelperImpl implements PluginHelper {
 
-    public PluginContainer container;
+    public PluginContainerImpl container;
 
-    public PluginHelperImpl(PluginContainer container) {
+    public PluginHelperImpl(PluginContainerImpl container) {
         this.container = container;
     }
 
     @Override
-    public PluginContainer getContainer() {
+    public PluginContainerImpl getContainer() {
         return container;
     }
 
     @Override
     public Optional<InputStream> getResourceStream(String filePath) throws IOException {
-        String pluginId = container.info.id().toLowerCase();
+        String pluginId = container.getInfo().id().toLowerCase();
 
         InputStream resourceStream = container
-                .instance
+                .getInstance()
                 .getClass()
                 .getClassLoader()
                 .getResourceAsStream(pluginId + "/" + filePath);
@@ -90,6 +90,6 @@ public class PluginHelperImpl implements PluginHelper {
 
     @Override
     public void registerOverlay(Overlay overlay) {
-        container.overlays.add(overlay);
+        container.getOverlays().add(overlay);
     }
 }
