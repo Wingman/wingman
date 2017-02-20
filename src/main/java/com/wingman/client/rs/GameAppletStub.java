@@ -13,12 +13,18 @@ public class GameAppletStub implements AppletStub {
 
     private Map<String, String> parameters = new HashMap<>();
 
-    public GameAppletStub() {
+    private String runeScapeUrl;
+    private String archiveName;
+
+    public GameAppletStub(String runeScapeUrl, String pageSource, String archiveName) {
+        this.runeScapeUrl = runeScapeUrl;
+        this.archiveName = archiveName;
+
         System.out.println("Loading applet parameters");
 
         Matcher parameterMatcher = Pattern
                 .compile("=([0-9]+)=([\\S]+)")
-                .matcher(GameDownloader.pageSource);
+                .matcher(pageSource);
 
         while (parameterMatcher.find()) {
             parameters.put(parameterMatcher.group(1), parameterMatcher.group(2));
@@ -27,7 +33,7 @@ public class GameAppletStub implements AppletStub {
 
     public URL getDocumentBase() {
         try {
-            return new URL(GameDownloader.runeScapeUrl);
+            return new URL(runeScapeUrl);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -36,7 +42,7 @@ public class GameAppletStub implements AppletStub {
     @Override
     public URL getCodeBase() {
         try {
-            return new URL(GameDownloader.runeScapeUrl + GameDownloader.archiveName);
+            return new URL(runeScapeUrl + archiveName);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
