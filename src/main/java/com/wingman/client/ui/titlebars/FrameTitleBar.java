@@ -65,31 +65,7 @@ public class FrameTitleBar extends OnyxTitleBar {
                 = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/expand.png"))));
 
         hoverButton.setMargin(new Insets(3, 0, 3, 0));
-        hoverButton.addActionListener(e -> {
-            boolean maximized = (Client.frame.getExtendedState() & Frame.MAXIMIZED_HORIZ) != 0;
-
-            Client.sideBarBox.setVisible(!Client.sideBarBox.isVisible());
-
-            Client.frame.revalidate();
-            Client.frame.repaint();
-
-            int newWidth = Client.frame.getWidth();
-
-            if (Client.sideBarBox.isVisible()) {
-                if (!maximized) {
-                    newWidth += Client.sideBarBox.getWidth();
-                }
-            } else {
-                if (!maximized) {
-                    newWidth -= Client.sideBarBox.getWidth();
-                }
-            }
-
-            Client.frame.setSize(new Dimension(newWidth, Client.frame.getHeight()));
-
-            Client.frame.revalidate();
-            Client.frame.repaint();
-        });
+        // TODO: Add click listener when side bars are implemented
 
         return hoverButton;
     }

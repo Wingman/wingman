@@ -81,7 +81,6 @@ public class GameLoader {
 
         Client.framePanel.removeAll();
         Client.framePanel.add(applet, BorderLayout.CENTER);
-        Client.framePanel.add(Client.sideBarBox, BorderLayout.EAST);
         Client.frame.pack();
     }
 }

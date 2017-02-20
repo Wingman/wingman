@@ -33,8 +33,6 @@ public class Client {
     public static SettingsScreen settingsScreen;
     public static PropertiesSettings clientSettings;
 
-    public static SideBarBox sideBarBox;
-
     public static ClientTrayIcon clientTrayIcon;
 
     public Client() {
@@ -42,7 +40,6 @@ public class Client {
 
         skinUIComponents();
 
-        sideBarBox = new SideBarBox();
         settingsScreen = new SettingsScreen();
         try {
             clientSettings = new ClientSettings();
@@ -168,18 +165,6 @@ public class Client {
      * Adds the default client frame/program listeners.
      */
     private void addListeners() {
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowStateChanged(WindowEvent e) {
-                if (sideBarBox.isVisible()) {
-                    if (frame.getWidth() < ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth()) {
-                        frame.setSize(new Dimension(ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth() + 8, frame.getHeight()));
-                        frame.revalidate();
-                    }
-                }
-            }
-        });
-
         new ComponentBorderResizer(frame);
     }
 }
