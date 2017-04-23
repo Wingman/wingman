@@ -75,6 +75,14 @@ public abstract class GameAPI {
         return getterInstance.getClientPlane();
     }
 
+    public static int[] getCurrentLevels() {
+        return getterInstance.getCurrentLevels();
+    }
+
+    public static int[] getExpLevels() {
+        return getterInstance.getExpLevels();
+    }
+
     public static int[] getExternalPlayerLocations() {
         return getterInstance.getExternalPlayerLocations();
     }
@@ -163,6 +171,10 @@ public abstract class GameAPI {
         return getterInstance.getResizableMode();
     }
 
+    public static int[] getSkillExperiencePoints() {
+        return getterInstance.getSkillExperiencePoints();
+    }
+
     public static int[][][] getTileHeights() {
         return getterInstance.getTileHeights();
     }
@@ -229,6 +241,14 @@ public abstract class GameAPI {
 
         public static void setClientPlane(int value) {
             setterInstance.setClientPlane(value);
+        }
+
+        public static void setCurrentLevels(int[] value) {
+            setterInstance.setCurrentLevels(value);
+        }
+
+        public static void setExpLevels(int[] value) {
+            setterInstance.setExpLevels(value);
         }
 
         public static void setExternalPlayerLocations(int[] value) {
@@ -317,6 +337,10 @@ public abstract class GameAPI {
 
         public static void setResizableMode(boolean value) {
             setterInstance.setResizableMode(value);
+        }
+
+        public static void setSkillExperiencePoints(int[] value) {
+            setterInstance.setSkillExperiencePoints(value);
         }
 
         public static void setTileHeights(int[][][] value) {

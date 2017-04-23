@@ -39,6 +39,10 @@ public interface Static {
 
     int getClientPlane();
 
+    int[] getCurrentLevels();
+
+    int[] getExpLevels();
+
     int[] getExternalPlayerLocations();
 
     int getFps();
@@ -83,6 +87,8 @@ public interface Static {
 
     boolean getResizableMode();
 
+    int[] getSkillExperiencePoints();
+
     int[][][] getTileHeights();
 
     byte[][][] getTileSettings();
@@ -116,6 +122,10 @@ public interface Static {
         void setCanvas(Canvas value);
 
         void setClientPlane(int value);
+
+        void setCurrentLevels(int[] value);
+
+        void setExpLevels(int[] value);
 
         void setExternalPlayerLocations(int[] value);
 
@@ -160,6 +170,8 @@ public interface Static {
         void setRepaintFlag(int value);
 
         void setResizableMode(boolean value);
+
+        void setSkillExperiencePoints(int[] value);
 
         void setTileHeights(int[][][] value);
 
