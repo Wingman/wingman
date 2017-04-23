@@ -2,9 +2,11 @@ package com.wingman.client.ui;
 
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.settings.PropertiesSettings;
+import com.wingman.client.api.transformer.Transformers;
 import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
-import com.wingman.client.rs.GameDownloader;
+import com.wingman.client.plugin.PluginManager;
+import com.wingman.client.rs.Game;
 import com.wingman.client.ui.style.OnyxComboBoxUI;
 import com.wingman.client.ui.style.OnyxOptionPaneUI;
 import com.wingman.client.ui.style.OnyxScrollBarUI;
@@ -17,8 +19,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -33,8 +33,6 @@ public class Client {
     public static SettingsScreen settingsScreen;
     public static PropertiesSettings clientSettings;
 
-    public static SideBarBox sideBarBox;
-
     public static ClientTrayIcon clientTrayIcon;
 
     public Client() {
@@ -42,7 +40,6 @@ public class Client {
 
         skinUIComponents();
 
-        sideBarBox = new SideBarBox();
         settingsScreen = new SettingsScreen();
         try {
             clientSettings = new ClientSettings();
@@ -91,7 +88,21 @@ public class Client {
         frame.setVisible(true);
         frame.toFront();
 
-        new GameDownloader();
+        try {
+            PluginManager.findAndSetupPlugins();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Transformers.removeUnusedTransformers();
+
+        Game game = new Game();
+
+        framePanel.removeAll();
+        framePanel.add(game.getApplet(), BorderLayout.CENTER);
+        frame.pack();
+
+        PluginManager.activatePlugins();
     }
 
     private void skinUIComponents() {
@@ -168,18 +179,6 @@ public class Client {
      * Adds the default client frame/program listeners.
      */
     private void addListeners() {
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowStateChanged(WindowEvent e) {
-                if (sideBarBox.isVisible()) {
-                    if (frame.getWidth() < ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth()) {
-                        frame.setSize(new Dimension(ClientSettings.APPLET_INITIAL_SIZE.width + sideBarBox.getWidth() + 8, frame.getHeight()));
-                        frame.revalidate();
-                    }
-                }
-            }
-        });
-
         new ComponentBorderResizer(frame);
     }
 }

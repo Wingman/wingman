@@ -27,14 +27,13 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
 
     private static final int DOWNLOAD_BUFFER_SIZE = 4096;
 
-    private static HttpClient httpClient = new HttpClient();
+    private HttpClient httpClient = new HttpClient();
+    private StartProgressBar progressBar = new StartProgressBar();
 
-    protected static String runeScapeUrl;
-    protected static String pageSource;
-    protected static String archiveName;
-    private static int remoteArchiveSize;
-
-    private static StartProgressBar progressBar = new StartProgressBar();
+    private String runeScapeUrl;
+    private String pageSource;
+    private String archiveName;
+    private int remoteArchiveSize;
 
     public GameDownloader() {
         // Make sure GUI modifications take place on the Event Dispatch Thread.
@@ -63,11 +62,9 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
             } else {
                 SwingUtilities.invokeLater(() ->
                         progressBar.setMode(StartProgressBar.Mode.NO_UPDATES));
-
-                // Begin the game loading phase
-                new GameLoader();
             }
         }
+
         return null;
     }
 
@@ -75,15 +72,6 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
     protected void process(List<Integer> chunks) {
         if (!chunks.isEmpty()) {
             progressBar.setValue(chunks.get(0));
-        }
-    }
-
-    @Override
-    protected void done() {
-        // If this method is called and the last mode was DOWNLOADING,
-        // assume that downloading is finished.
-        if (progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING) {
-            progressBar.setMode(StartProgressBar.Mode.DOWNLOADING_FINISHED);
         }
     }
 
@@ -149,7 +137,7 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
      * @return {@code true} if the locally saved game pack is of the latest version,
      *         {@code false} otherwise
      */
-    private static boolean checkGamePackUpToDate() throws IOException {
+    private boolean checkGamePackUpToDate() throws IOException {
         Response response = httpClient
                 .downloadUrlSync(runeScapeUrl + archiveName);
 
@@ -210,12 +198,30 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
             }
 
             responseBody.close();
-
-            // Begin the game loading phase
-            new GameLoader();
         } else {
             responseBody.close();
             throw new IOException("Failed to download the gamepack");
         }
+    }
+
+    @Override
+    protected void done() {
+        // If this method is called and the last mode was DOWNLOADING,
+        // assume that downloading is finished.
+        if (progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING) {
+            progressBar.setMode(StartProgressBar.Mode.DOWNLOADING_FINISHED);
+        }
+    }
+
+    public String getRuneScapeUrl() {
+        return runeScapeUrl;
+    }
+
+    public String getPageSource() {
+        return pageSource;
+    }
+
+    public String getArchiveName() {
+        return archiveName;
     }
 }

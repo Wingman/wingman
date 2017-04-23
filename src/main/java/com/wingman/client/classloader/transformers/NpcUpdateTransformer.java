@@ -1,5 +1,6 @@
 package com.wingman.client.classloader.transformers;
 
+import com.wingman.client.api.event.Event;
 import com.wingman.client.api.events.NpcUpdateEvent;
 import com.wingman.client.api.generated.GameAPI;
 import com.wingman.client.api.generated.NPC;
@@ -7,7 +8,6 @@ import com.wingman.client.api.mapping.FieldInfo;
 import com.wingman.client.api.mapping.MappingsHelper;
 import com.wingman.client.api.mapping.MethodInfo;
 import com.wingman.client.api.transformer.Transformer;
-import com.wingman.client.plugin.PluginManager;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
@@ -38,7 +38,7 @@ public class NpcUpdateTransformer implements Transformer {
             type = NpcUpdateEvent.Type.CREATE;
         }
 
-        PluginManager.callEvent(new NpcUpdateEvent(
+        Event.callEvent(new NpcUpdateEvent(
                 npc,
                 type,
                 index)
@@ -49,7 +49,7 @@ public class NpcUpdateTransformer implements Transformer {
 
     // Used for removing NPCs.
     public static void runHook(int index) {
-        PluginManager.callEvent(new NpcUpdateEvent(
+        Event.callEvent(new NpcUpdateEvent(
                 GameAPI.getNpcs()[index],
                 NpcUpdateEvent.Type.DELETE,
                 index)

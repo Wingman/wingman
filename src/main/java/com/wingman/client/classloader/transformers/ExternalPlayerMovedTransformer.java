@@ -1,12 +1,12 @@
 package com.wingman.client.classloader.transformers;
 
+import com.wingman.client.api.event.Event;
 import com.wingman.client.api.events.ExternalPlayerMovedEvent;
 import com.wingman.client.api.generated.BitBuffer;
 import com.wingman.client.api.generated.GameAPI;
 import com.wingman.client.api.mapping.MappingsHelper;
 import com.wingman.client.api.mapping.MethodInfo;
 import com.wingman.client.api.transformer.Transformer;
-import com.wingman.client.plugin.PluginManager;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
@@ -48,7 +48,7 @@ public class ExternalPlayerMovedTransformer implements Transformer {
             int newX = deltaX + oldX & 255;
             int newY = deltaY + oldY & 255;
 
-            PluginManager.callEvent(new ExternalPlayerMovedEvent(
+            Event.callEvent(new ExternalPlayerMovedEvent(
                     playerId,
                     ExternalPlayerMovedEvent.Type.ADDED_TO_LOCAL,
                     oldX, oldY, oldPlane,
@@ -65,7 +65,7 @@ public class ExternalPlayerMovedTransformer implements Transformer {
 
             int newPlane = deltaPlane + oldPlane & 3;
 
-            PluginManager.callEvent(new ExternalPlayerMovedEvent(
+            Event.callEvent(new ExternalPlayerMovedEvent(
                     playerId,
                     ExternalPlayerMovedEvent.Type.PLANE_CHANGE,
                     oldX, oldY, oldPlane,
@@ -123,7 +123,7 @@ public class ExternalPlayerMovedTransformer implements Transformer {
                 ++newY;
             }
 
-            PluginManager.callEvent(new ExternalPlayerMovedEvent(
+            Event.callEvent(new ExternalPlayerMovedEvent(
                     playerId,
                     ExternalPlayerMovedEvent.Type.ADJACENT_REGION,
                     oldX, oldY, oldPlane,
@@ -148,7 +148,7 @@ public class ExternalPlayerMovedTransformer implements Transformer {
             int newX = deltaX + oldX & 255;
             int newY = deltaY + oldY & 255;
 
-            PluginManager.callEvent(new ExternalPlayerMovedEvent(
+            Event.callEvent(new ExternalPlayerMovedEvent(
                     playerId,
                     ExternalPlayerMovedEvent.Type.NONADJACENT_REGION,
                     oldX, oldY, oldPlane,
