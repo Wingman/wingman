@@ -93,6 +93,9 @@ public class Main {
         // Prevent the applet from overlapping the menus
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+
+        // Reduce game flickering when resizing window
+        System.setProperty("sun.awt.noerasebackground", "true");
     }
 
     private Main() {
