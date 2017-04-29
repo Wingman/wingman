@@ -49,12 +49,12 @@ public final class PluginManager {
                 .getTypesAnnotatedWith(Plugin.class);
         plugins = parsePlugins(pluginClasses);
 
-        pluginClassLoaderReflections = null;
-
         parsePluginDependencies();
         sortPlugins();
 
         setupPlugins();
+
+        pluginClassLoaderReflections = null;
 
         bakeEventListeners();
     }
