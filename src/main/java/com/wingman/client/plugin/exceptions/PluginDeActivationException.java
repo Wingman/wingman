@@ -9,7 +9,7 @@ import java.text.MessageFormat;
  */
 public class PluginDeActivationException extends RuntimeException {
 
-    public PluginDeActivationException(String pluginId, String message) {
-        super(MessageFormat.format("{0} deactivation error: {1}", pluginId, message));
+    public PluginDeActivationException(String pluginId, Throwable cause) {
+        super(MessageFormat.format("{0} deactivation failed", pluginId), cause);
     }
 }

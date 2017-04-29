@@ -309,7 +309,7 @@ public final class PluginManager {
             try {
                 plugin.setup();
             } catch (InvocationTargetException | IllegalAccessException e) {
-                new PluginSetupException(plugin.getInfo().id(), e.toString())
+                new PluginSetupException(plugin.getInfo().id(), e)
                         .printStackTrace();
             }
         }
@@ -326,7 +326,7 @@ public final class PluginManager {
             try {
                 activatePlugin(plugin);
             } catch (Exception e) {
-                new PluginActivationException(plugin.getInfo().id(), e.toString())
+                new PluginActivationException(plugin.getInfo().id(), e)
                         .printStackTrace();
             }
         }
@@ -382,7 +382,7 @@ public final class PluginManager {
                     info.id(),
                     info.version()));
         } catch (Exception e) {
-            new PluginDeActivationException(info.id(), e.toString())
+            new PluginDeActivationException(info.id(), e)
                     .printStackTrace();
         }
     }

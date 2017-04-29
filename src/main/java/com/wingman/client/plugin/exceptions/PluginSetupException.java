@@ -7,7 +7,7 @@ import java.text.MessageFormat;
  */
 public class PluginSetupException extends RuntimeException {
 
-    public PluginSetupException(String pluginId, String message) {
-        super(MessageFormat.format("{0} setup error: {1}", pluginId, message));
+    public PluginSetupException(String pluginId, Throwable cause) {
+        super(MessageFormat.format("{0} setup failed", pluginId), cause);
     }
 }
