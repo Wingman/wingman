@@ -1,6 +1,5 @@
 package com.wingman.client.api.generated;
 
-import java.awt.Canvas;
 import java.util.Map;
 
 @SuppressWarnings("all")
@@ -35,7 +34,7 @@ public interface Static {
 
     int getCameraZ();
 
-    Canvas getCanvas();
+    Client getClientInstance();
 
     int getClientPlane();
 
@@ -119,7 +118,7 @@ public interface Static {
 
         void setCameraZ(int value);
 
-        void setCanvas(Canvas value);
+        void setClientInstance(Client value);
 
         void setClientPlane(int value);
 

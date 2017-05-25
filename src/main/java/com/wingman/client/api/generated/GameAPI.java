@@ -1,6 +1,5 @@
 package com.wingman.client.api.generated;
 
-import java.awt.Canvas;
 import java.util.Map;
 
 @SuppressWarnings("all")
@@ -67,8 +66,8 @@ public abstract class GameAPI {
         return getterInstance.getCameraZ();
     }
 
-    public static Canvas getCanvas() {
-        return getterInstance.getCanvas();
+    public static Client getClientInstance() {
+        return getterInstance.getClientInstance();
     }
 
     public static int getClientPlane() {
@@ -235,8 +234,8 @@ public abstract class GameAPI {
             setterInstance.setCameraZ(value);
         }
 
-        public static void setCanvas(Canvas value) {
-            setterInstance.setCanvas(value);
+        public static void setClientInstance(Client value) {
+            setterInstance.setClientInstance(value);
         }
 
         public static void setClientPlane(int value) {
