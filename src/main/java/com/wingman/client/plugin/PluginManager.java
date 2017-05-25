@@ -391,9 +391,7 @@ public final class PluginManager {
         List<Overlay> overlays = new ArrayList<>();
 
         for (PluginContainerImpl plugin : plugins) {
-            for (Overlay overlay : plugin.getOverlays()) {
-                overlays.add(overlay);
-            }
+            overlays.addAll(plugin.getOverlays());
         }
 
         return overlays;

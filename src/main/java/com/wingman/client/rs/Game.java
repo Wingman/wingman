@@ -81,7 +81,7 @@ public class Game {
             applet.init();
             applet.start();
 
-            while (GameAPI.getCanvas() == null) {
+            while (GameAPI.getClientInstance().getCanvas() == null) {
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -89,8 +89,11 @@ public class Game {
                 }
             }
 
-            GameAPI.getCanvas().addMouseListener(new CanvasMouseListener());
-            GameAPI.getCanvas().addMouseWheelListener(new CanvasMouseWheelListener());
+            GameAPI.getClientInstance().getCanvas()
+                    .addMouseListener(new CanvasMouseListener());
+
+            GameAPI.getClientInstance().getCanvas()
+                    .addMouseWheelListener(new CanvasMouseWheelListener());
         } catch (MalformedURLException | ClassNotFoundException
                 | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
