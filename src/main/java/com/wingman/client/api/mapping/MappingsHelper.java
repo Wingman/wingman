@@ -38,9 +38,6 @@ public class MappingsHelper {
     public static final Map<String, Set<FieldInfo>> obfFields = new HashMap<>();
     public static final Map<String, FieldInfo> deobfFields = new HashMap<>();
 
-    private static BigInteger integerModulus = new BigInteger("4294967296");
-    private static BigInteger longModulus = new BigInteger("18446744073709551616");
-
     public static void addInstructions(InsnList list, AbstractInsnNode... instructions) {
         for (AbstractInsnNode i : instructions) {
             list.add(i);
@@ -62,20 +59,6 @@ public class MappingsHelper {
             start = start.getNext();
         }
         return null;
-    }
-
-    public static long getMMI(long multiplier, boolean isInt) {
-        BigInteger modulus = isInt ? integerModulus : longModulus;
-
-        BigInteger multiplierInt = BigInteger.valueOf(multiplier);
-        BigInteger gcd = multiplierInt.gcd(modulus);
-
-        if (gcd.equals(BigInteger.ONE)) {
-            BigInteger result = multiplierInt.modInverse(modulus);
-            return isInt ? result.intValue() : result.longValue();
-        }
-
-        return isInt ? gcd.intValue() : gcd.longValue();
     }
 
     public static String toUpperCaseFirstCharacter(String name) {
