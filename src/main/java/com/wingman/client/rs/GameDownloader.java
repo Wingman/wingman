@@ -147,56 +147,68 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
     }
 
     private void startUpdatingGamePack() throws IOException {
-        System.out.println(MessageFormat.format(
-                "Updating the gamepack, " +
-                        "remote size: {0}, " +
-                        "remote archive name: {1}",
-                remoteArchiveSize,
-                archiveName));
+        boolean downloadSucceeded = false;
 
-        progressBar.setMinimum(0);
-        progressBar.setMaximum(remoteArchiveSize);
-        progressBar.setMode(StartProgressBar.Mode.DOWNLOADING);
+        do {
+            System.out.println(MessageFormat.format(
+                    "Updating the gamepack, " +
+                            "remote size: {0}, " +
+                            "remote archive name: {1}",
+                    remoteArchiveSize,
+                    archiveName));
 
-        Request request = httpClient
-                .getRequestBuilder()
-                .url(runeScapeUrl + archiveName)
-                .build();
+            progressBar.setMinimum(0);
+            progressBar.setMaximum(remoteArchiveSize);
+            progressBar.setMode(StartProgressBar.Mode.DOWNLOADING);
 
-        Response response = httpClient
-                .newCall(request)
-                .execute();
+            Request request = httpClient
+                    .getRequestBuilder()
+                    .url(runeScapeUrl + archiveName)
+                    .build();
 
-        ResponseBody responseBody = response.body();
+            Response response = httpClient
+                    .newCall(request)
+                    .execute();
 
-        if (response.isSuccessful()) {
-            try (InputStream input = responseBody.byteStream()) {
-                if (input != null) {
-                    FileOutputStream output = new FileOutputStream(ClientSettings.APPLET_JAR_FILE.toFile());
+            ResponseBody responseBody = response.body();
 
-                    final int[] totalRead = {0};
-                    final int[] read = {0};
-                    byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
+            if (response.isSuccessful()) {
+                try (InputStream input = responseBody.byteStream()) {
+                    if (input != null) {
+                        FileOutputStream output = new FileOutputStream(ClientSettings.APPLET_JAR_FILE.toFile());
 
-                    while ((read[0] = input.read(data, 0, data.length)) != -1) {
-                        totalRead[0] += read[0];
-                        output.write(data, 0, read[0]);
+                        final int[] totalRead = {0};
+                        final int[] read = {0};
+                        byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
 
-                        publish(totalRead[0]);
+                        while ((read[0] = input.read(data, 0, data.length)) != -1) {
+                            totalRead[0] += read[0];
+                            output.write(data, 0, read[0]);
+
+                            publish(totalRead[0]);
+                        }
+
+                        if (totalRead[0] == remoteArchiveSize) {
+                            downloadSucceeded = true;
+                            publish(remoteArchiveSize);
+                        } else {
+                            System.out.println(MessageFormat.format(
+                                    "Updating the gamepack failed! Malformed response (received {0}/{1} bytes)",
+                                    totalRead[0], remoteArchiveSize));
+                        }
+
+                        input.close();
+                        output.close();
+                    } else {
+                        System.out.println("Updating the gamepack failed! Response stream was null");
                     }
-
-                    publish(remoteArchiveSize);
-
-                    input.close();
-                    output.close();
                 }
+            } else {
+                System.out.println("Updating the gamepack failed! Response code was " + response.code());
             }
 
             responseBody.close();
-        } else {
-            responseBody.close();
-            throw new IOException("Failed to download the gamepack");
-        }
+        } while (!downloadSucceeded);
     }
 
     @Override
