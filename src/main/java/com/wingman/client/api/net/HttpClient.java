@@ -97,7 +97,7 @@ public class HttpClient extends OkHttpClient {
      * @throws IOException if the download failed
      * @throws NumberFormatException if the Content-Length returned is not a number
      */
-    public long getContentLength(String url) throws IOException, NumberFormatException {
+    public int getContentLength(String url) throws IOException, NumberFormatException {
         Request request = getRequestBuilder()
                 .url(url)
                 .head()
@@ -106,7 +106,11 @@ public class HttpClient extends OkHttpClient {
         Response response = newCall(request)
                 .execute();
 
-        return Integer.parseInt(response.header("Content-Length"));
+        int length = Integer.parseInt(response.header("Content-Length"));
+
+        response.body().close();
+
+        return length;
     }
 
     /**

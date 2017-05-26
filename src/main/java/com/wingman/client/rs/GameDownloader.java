@@ -138,13 +138,8 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
      *         {@code false} otherwise
      */
     private boolean checkGamePackUpToDate() throws IOException {
-        Response response = httpClient
-                .downloadUrlSync(runeScapeUrl + archiveName);
-
-        remoteArchiveSize = Integer
-                .parseInt(response.header("Content-Length"));
-
-        response.body().close();
+        remoteArchiveSize = httpClient
+                .getContentLength(runeScapeUrl + archiveName);
 
         return ClientSettings.APPLET_JAR_FILE
                 .toFile()
