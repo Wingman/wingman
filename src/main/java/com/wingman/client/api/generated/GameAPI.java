@@ -18,8 +18,8 @@ public abstract class GameAPI {
         return getterInstance.getItemDefinition(itemId);
     }
 
-    public static NPCDefinition getNpcDefinition(int itemId) {
-        return getterInstance.getNpcDefinition(itemId);
+    public static NPCDefinition getNpcDefinition(int npcId) {
+        return getterInstance.getNpcDefinition(npcId);
     }
 
     public static ObjectDefinition getObjectDefinition(int objectId) {

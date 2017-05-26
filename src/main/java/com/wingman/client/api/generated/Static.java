@@ -10,7 +10,7 @@ public interface Static {
 
     ItemDefinition getItemDefinition(int itemId);
 
-    NPCDefinition getNpcDefinition(int itemId);
+    NPCDefinition getNpcDefinition(int npcId);
 
     ObjectDefinition getObjectDefinition(int objectId);
 
