@@ -87,38 +87,38 @@ public class ExternalPlayerMovedTransformer implements Transformer {
             int newX = oldX;
             int newY = oldY;
 
-            if(direction == MOVED_SOUTHWEST) {
+            if (direction == MOVED_SOUTHWEST) {
                 --newX;
                 --newY;
             }
 
-            if(direction == MOVED_SOUTH) {
+            if (direction == MOVED_SOUTH) {
                 --newY;
             }
 
-            if(direction == MOVED_SOUTHEAST) {
+            if (direction == MOVED_SOUTHEAST) {
                 ++newX;
                 --newY;
             }
 
-            if(direction == MOVED_WEST) {
+            if (direction == MOVED_WEST) {
                 --newX;
             }
 
-            if(direction == MOVED_EAST) {
+            if (direction == MOVED_EAST) {
                 ++newX;
             }
 
-            if(direction == MOVED_NORTHWEST) {
+            if (direction == MOVED_NORTHWEST) {
                 --newX;
                 ++newY;
             }
 
-            if(direction == MOVED_NORTH) {
+            if (direction == MOVED_NORTH) {
                 ++newY;
             }
 
-            if(direction == MOVED_NORTHEAST) {
+            if (direction == MOVED_NORTHEAST) {
                 ++newX;
                 ++newY;
             }
@@ -169,8 +169,8 @@ public class ExternalPlayerMovedTransformer implements Transformer {
     @Override
     public ClassNode transform(ClassNode clazz) {
         for (MethodNode m : clazz.methods) {
-            if (!m.name.equals(decodeExternalPlayerMovement.name) ||
-                    !m.desc.equals(decodeExternalPlayerMovement.desc)) {
+            if (!m.name.equals(decodeExternalPlayerMovement.name)
+                    || !m.desc.equals(decodeExternalPlayerMovement.desc)) {
                 continue;
             }
 

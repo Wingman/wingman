@@ -183,7 +183,7 @@ public class SettingsScreen extends JDialog {
                 for (SettingsSection section : sections) {
                     for (SettingsItem item : section.items) {
                         if (item.getDescription().toLowerCase().contains(searchString)) {
-                           settingsToDraw
+                            settingsToDraw
                                     .computeIfAbsent(section, k -> new ArrayList<>())
                                     .add(item);
                         }
@@ -290,10 +290,10 @@ public class SettingsScreen extends JDialog {
     private JPanel makeNothingFoundPanel() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        JLabel errorLabel = new JLabel("<html><div style='text-align: center;'>" +
-                "<b style='font-size:14px'>Couldn't find anything matching your search query</b><br><br>" +
-                "The search function looks for results using settings section names,<br>" +
-                "their description, plugin IDs and the descriptions of the section's settings");
+        JLabel errorLabel = new JLabel("<html><div style='text-align: center;'>"
+                + "<b style='font-size:14px'>Couldn't find anything matching your search query</b><br><br>"
+                + "The search function looks for results using settings section names,<br>"
+                + "their description, plugin IDs and the descriptions of the section's settings");
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         panel.add(errorLabel, BorderLayout.CENTER);

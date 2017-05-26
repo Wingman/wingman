@@ -1,7 +1,7 @@
 package com.wingman.client.api.events;
 
+import com.wingman.client.api.event.AbstractEventListener;
 import com.wingman.client.api.event.Event;
-import com.wingman.client.api.event.EventListener;
 import com.wingman.client.api.event.EventListenerList;
 
 public class ExternalPlayerMovedEvent extends Event {
@@ -17,7 +17,10 @@ public class ExternalPlayerMovedEvent extends Event {
     public final int newY;
     public final int newPlane;
 
-    public ExternalPlayerMovedEvent(int playerId, Type type, int oldX, int oldY, int oldPlane, int newX, int newY, int newPlane) {
+    public ExternalPlayerMovedEvent(int playerId, Type type,
+                                    int oldX, int oldY, int oldPlane,
+                                    int newX, int newY, int newPlane) {
+
         this.playerId = playerId;
         this.type = type;
         this.oldX = oldX;
@@ -29,7 +32,7 @@ public class ExternalPlayerMovedEvent extends Event {
     }
 
     @Override
-    public EventListener[] getListeners() {
+    public AbstractEventListener[] getListeners() {
         return eventListenerList.listeners;
     }
 

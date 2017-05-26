@@ -5,17 +5,17 @@ import java.util.Set;
 
 public class EventListenerList {
 
-    public EventListener[] listeners;
+    public AbstractEventListener[] listeners;
 
-    private Set<EventListener> dynamicListeners = new HashSet<>();
+    private Set<AbstractEventListener> dynamicListeners = new HashSet<>();
 
-    public void register(EventListener eventListener) {
+    public void register(AbstractEventListener eventListener) {
         dynamicListeners.add(eventListener);
     }
 
     public void bake() {
         if (dynamicListeners != null) {
-            listeners = dynamicListeners.toArray(new EventListener[dynamicListeners.size()]);
+            listeners = dynamicListeners.toArray(new AbstractEventListener[dynamicListeners.size()]);
             dynamicListeners = null;
         }
     }

@@ -75,6 +75,15 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
         }
     }
 
+    @Override
+    protected void done() {
+        // If this method is called and the last mode was DOWNLOADING,
+        // assume that downloading is finished.
+        if (progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING) {
+            progressBar.setMode(StartProgressBar.Mode.DOWNLOADING_FINISHED);
+        }
+    }
+
     /**
      * Downloads the page source from the official OldSchool RuneScape web client page.
      *
@@ -151,9 +160,9 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
 
         do {
             System.out.println(MessageFormat.format(
-                    "Updating the gamepack, " +
-                            "remote size: {0}, " +
-                            "remote archive name: {1}",
+                    "Updating the gamepack, "
+                            + "remote size: {0}, "
+                            + "remote archive name: {1}",
                     remoteArchiveSize,
                     archiveName));
 
@@ -209,15 +218,6 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
 
             responseBody.close();
         } while (!downloadSucceeded);
-    }
-
-    @Override
-    protected void done() {
-        // If this method is called and the last mode was DOWNLOADING,
-        // assume that downloading is finished.
-        if (progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING) {
-            progressBar.setMode(StartProgressBar.Mode.DOWNLOADING_FINISHED);
-        }
     }
 
     public String getRuneScapeUrl() {

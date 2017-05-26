@@ -6,7 +6,7 @@ import com.wingman.client.classloader.transformers.mapping.StaticsBridger;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Transformers {
+public final class Transformers {
 
     /**
      * Contains transformers that can modify classes.

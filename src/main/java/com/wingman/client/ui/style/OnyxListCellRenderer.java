@@ -14,7 +14,10 @@ public class OnyxListCellRenderer<E> implements ListCellRenderer<E> {
     }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends E> list, E value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends E> list, E value,
+                                                  int index,
+                                                  boolean isSelected, boolean cellHasFocus) {
+
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
@@ -24,8 +27,8 @@ public class OnyxListCellRenderer<E> implements ListCellRenderer<E> {
         panel.add(Box.createHorizontalStrut(15));
 
         if (centerLabel) {
-           panel.add(Box.createHorizontalGlue(), 0);
-           panel.add(Box.createHorizontalGlue());
+            panel.add(Box.createHorizontalGlue(), 0);
+            panel.add(Box.createHorizontalGlue());
         }
 
         if (isSelected && selectedColor != null) {

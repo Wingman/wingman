@@ -3,9 +3,9 @@ package com.wingman.client.plugin;
 import com.github.zafarkhaja.semver.Version;
 import com.google.common.io.Files;
 import com.wingman.client.ClientSettings;
+import com.wingman.client.api.event.AbstractEventListener;
 import com.wingman.client.api.event.Event;
 import com.wingman.client.api.event.EventCallback;
-import com.wingman.client.api.event.EventListener;
 import com.wingman.client.api.event.EventListenerList;
 import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.Plugin;
@@ -285,7 +285,7 @@ public final class PluginManager {
 
             eventClasses.add(eventClass);
 
-            eventListenerList.register(new EventListener() {
+            eventListenerList.register(new AbstractEventListener() {
                 @Override
                 public void runEvent(Event event) {
                     try {

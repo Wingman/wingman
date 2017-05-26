@@ -1,7 +1,7 @@
 package com.wingman.client.api.events;
 
+import com.wingman.client.api.event.AbstractEventListener;
 import com.wingman.client.api.event.Event;
-import com.wingman.client.api.event.EventListener;
 import com.wingman.client.api.event.EventListenerList;
 import com.wingman.client.api.generated.ItemDefinition;
 
@@ -16,7 +16,7 @@ public class ItemDefinitionCachedEvent extends Event {
     }
 
     @Override
-    public EventListener[] getListeners() {
+    public AbstractEventListener[] getListeners() {
         return eventListenerList.listeners;
     }
 }

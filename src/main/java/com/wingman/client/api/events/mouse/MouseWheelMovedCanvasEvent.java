@@ -1,7 +1,7 @@
 package com.wingman.client.api.events.mouse;
 
+import com.wingman.client.api.event.AbstractEventListener;
 import com.wingman.client.api.event.Event;
-import com.wingman.client.api.event.EventListener;
 import com.wingman.client.api.event.EventListenerList;
 
 import java.awt.event.MouseWheelEvent;
@@ -16,7 +16,7 @@ public class MouseWheelMovedCanvasEvent extends Event {
         this.mouseWheelEvent = mouseWheelEvent;
     }
 
-    public EventListener[] getListeners() {
+    public AbstractEventListener[] getListeners() {
         return eventListenerList.listeners;
     }
 }

@@ -13,6 +13,7 @@ import java.util.Map;
 public class ComponentBorderResizer extends MouseAdapter {
 
     private static Map<Integer, Integer> cursors = new HashMap<>();
+
     static {
         cursors.put(1, Cursor.N_RESIZE_CURSOR);
         cursors.put(2, Cursor.W_RESIZE_CURSOR);
@@ -106,14 +107,14 @@ public class ComponentBorderResizer extends MouseAdapter {
         bounds = source.getBounds();
 
         if (source instanceof JComponent) {
-            JComponent jc = (JComponent)source;
-            autoScrolls = jc.getAutoscrolls();
-            jc.setAutoscrolls(false);
+            JComponent component = (JComponent) source;
+            autoScrolls = component.getAutoscrolls();
+            component.setAutoscrolls(false);
         }
     }
 
     /**
-     *  Restore the original state of the Component
+     *  Restore the original state of the Component.
      */
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -123,7 +124,7 @@ public class ComponentBorderResizer extends MouseAdapter {
         source.setCursor(sourceCursor);
 
         if (source instanceof JComponent) {
-            ((JComponent)source).setAutoscrolls(autoScrolls);
+            ((JComponent) source).setAutoscrolls(autoScrolls);
         }
     }
 

@@ -4,11 +4,11 @@ import com.wingman.client.api.event.Event;
 
 import java.awt.event.MouseEvent;
 
-public abstract class MouseCanvasEvent extends Event {
+public abstract class AbstractMouseCanvasEvent extends Event {
 
     public MouseEvent mouseEvent;
 
-    public MouseCanvasEvent(MouseEvent mouseEvent) {
+    public AbstractMouseCanvasEvent(MouseEvent mouseEvent) {
         this.mouseEvent = mouseEvent;
     }
 }

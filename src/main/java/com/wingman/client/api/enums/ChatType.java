@@ -1,6 +1,6 @@
 package com.wingman.client.api.enums;
 
-public class ChatType {
+public final class ChatType {
 
     public static final int GAME = 0;
     public static final int PUBLIC = 2;

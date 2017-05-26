@@ -56,19 +56,19 @@ public class StartProgressBar extends JProgressBar {
             Rectangle box = super.getBox(r);
 
             // Ratio of animation completion
-            double ratio = (double) getAnimationIndex()/getFrameCount();
+            double ratio = (double) getAnimationIndex() / getFrameCount();
 
-            if((animationCount & 1) == 0) {
-                box.setLocation(0,0);
+            if ((animationCount & 1) == 0) {
+                box.setLocation(0, 0);
                 box.setSize((int) (progressBar.getWidth() * ratio), (int) box.getHeight());
             } else {
                 box.setLocation((int) (progressBar.getWidth() * ratio), 0);
                 box.setSize((int) (progressBar.getWidth() * (1 - ratio)), (int) box.getHeight());
             }
 
-            if(getAnimationIndex() + 1 == getFrameCount()) {
+            if (getAnimationIndex() + 1 == getFrameCount()) {
                 finalFrame = true;
-            } else if(finalFrame && getAnimationIndex() + 1 < getFrameCount()) {
+            } else if (finalFrame && getAnimationIndex() + 1 < getFrameCount()) {
                 ++animationCount;
                 finalFrame = false;
             }
@@ -95,7 +95,7 @@ public class StartProgressBar extends JProgressBar {
     public void setValue(int n) {
         super.setValue(n);
 
-        if(n < getMaximum()) {
+        if (n < getMaximum()) {
             setString(String.format(DOWNLOAD_PROGRESS_MESSAGE, getPercentComplete() * 100));
         } else {
             setMode(Mode.DOWNLOADING_FINISHED);
@@ -108,7 +108,7 @@ public class StartProgressBar extends JProgressBar {
      * @param mode the mode to set
      */
     public void setMode(Mode mode) {
-        switch(mode) {
+        switch (mode) {
             case CHECKING_FOR_UPDATES:
                 // Change progress without changing string
                 super.setValue(0);

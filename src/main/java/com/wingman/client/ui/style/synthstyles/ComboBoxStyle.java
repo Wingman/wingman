@@ -14,7 +14,7 @@ public class ComboBoxStyle extends SynthStyle {
         if (type.equals(ColorType.BACKGROUND)) {
             return OnyxStyleFactory.BASE_DARKER;
         } else if (type.equals(ColorType.FOREGROUND)) {
-             return OnyxStyleFactory.PRIMARY_TEXT_COLOR;
+            return OnyxStyleFactory.PRIMARY_TEXT_COLOR;
         }
         return null;
     }

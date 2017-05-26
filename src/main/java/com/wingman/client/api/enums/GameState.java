@@ -1,6 +1,6 @@
 package com.wingman.client.api.enums;
 
-public class GameState {
+public final class GameState {
 
     public static final int TITLE = 10;
     public static final int LOGIN = 20;

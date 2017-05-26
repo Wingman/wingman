@@ -40,8 +40,9 @@ public class PluginContainerImpl implements PluginContainer {
             info = (Plugin) clazz.getAnnotation(Plugin.class);
 
             if (clazz.isAnnotationPresent(PluginDependencies.class)) {
-                originalDependencies.addAll(Arrays.asList(((PluginDependencies) clazz.getAnnotation(PluginDependencies.class)).value()));
-            } else if(clazz.isAnnotationPresent(PluginDependency.class)) {
+                originalDependencies.addAll(Arrays
+                        .asList(((PluginDependencies) clazz.getAnnotation(PluginDependencies.class)).value()));
+            } else if (clazz.isAnnotationPresent(PluginDependency.class)) {
                 originalDependencies.add((PluginDependency) clazz.getAnnotation(PluginDependency.class));
             }
 
