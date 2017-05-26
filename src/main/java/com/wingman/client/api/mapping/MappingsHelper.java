@@ -17,7 +17,6 @@ import org.objectweb.asm.tree.InsnList;
 
 import java.io.File;
 import java.io.FileReader;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -25,18 +24,20 @@ import java.util.Set;
 
 public class MappingsHelper {
 
-    public static final ClassInfo[] CLASSES;
-    public static final MethodInfo[] METHODS;
-    public static final FieldInfo[] FIELDS;
+    public static HashCode gamepackHash;
 
-    public static final Map<String, String> obfClasses = new HashMap<>();
-    public static final Map<String, String> deobfClasses = new HashMap<>();
+    public static ClassInfo[] classes;
+    public static MethodInfo[] methods;
+    public static FieldInfo[] fields;
 
-    public static final Map<String, Set<MethodInfo>> obfMethods = new HashMap<>();
-    public static final Map<String, MethodInfo> deobfMethods = new HashMap<>();
+    public static Map<String, String> obfClasses = new HashMap<>();
+    public static Map<String, String> deobfClasses = new HashMap<>();
 
-    public static final Map<String, Set<FieldInfo>> obfFields = new HashMap<>();
-    public static final Map<String, FieldInfo> deobfFields = new HashMap<>();
+    public static Map<String, Set<MethodInfo>> obfMethods = new HashMap<>();
+    public static Map<String, MethodInfo> deobfMethods = new HashMap<>();
+
+    public static Map<String, Set<FieldInfo>> obfFields = new HashMap<>();
+    public static Map<String, FieldInfo> deobfFields = new HashMap<>();
 
     public static void addInstructions(InsnList list, AbstractInsnNode... instructions) {
         for (AbstractInsnNode i : instructions) {
@@ -107,41 +108,45 @@ public class MappingsHelper {
                         .getAsJsonObject();
             }
 
+            gamepackHash = HashCode
+                    .fromString(rootObject
+                            .getAsJsonPrimitive("gameHash")
+                            .getAsString());
+
             Gson gson = new Gson();
 
             JsonArray classes = rootObject.getAsJsonArray("classes");
 
-            CLASSES = new ClassInfo[classes.size()];
+            MappingsHelper.classes = new ClassInfo[classes.size()];
 
             for (int i = 0; i < classes.size(); i++) {
-                CLASSES[i] = gson.fromJson(classes.get(i), ClassInfo.class);
+                MappingsHelper.classes[i] = gson.fromJson(classes.get(i), ClassInfo.class);
             }
 
             JsonArray methods = rootObject.getAsJsonArray("methods");
 
-            METHODS = new MethodInfo[methods.size()];
+            MappingsHelper.methods = new MethodInfo[methods.size()];
 
             for (int i = 0; i < methods.size(); i++) {
-                METHODS[i] = gson.fromJson(methods.get(i), MethodInfo.class);
+                MappingsHelper.methods[i] = gson.fromJson(methods.get(i), MethodInfo.class);
             }
 
             JsonArray fields = rootObject.getAsJsonArray("fields");
 
-            FIELDS = new FieldInfo[fields.size()];
+            MappingsHelper.fields = new FieldInfo[fields.size()];
 
             for (int i = 0; i < fields.size(); i++) {
-                FIELDS[i] = gson.fromJson(fields.get(i), FieldInfo.class);
+                MappingsHelper.fields[i] = gson.fromJson(fields.get(i), FieldInfo.class);
             }
+
+            populateHelperFields();
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
         }
-
-        populateHelperFields();
     }
 
     private static void populateHelperFields() {
-        for (ClassInfo classInfo : CLASSES) {
+        for (ClassInfo classInfo : classes) {
             if (doesClassExist("com.wingman.client.api.generated." + classInfo.realName)) {
                 obfClasses.put(classInfo.name, classInfo.realName);
                 deobfClasses.put(classInfo.realName, classInfo.name);
@@ -151,7 +156,7 @@ public class MappingsHelper {
             }
         }
 
-        for (MethodInfo methodInfo : METHODS) {
+        for (MethodInfo methodInfo : methods) {
             boolean shouldContinue = true;
 
             Type[] realArgumentTypes = Type
@@ -195,7 +200,7 @@ public class MappingsHelper {
             }
         }
 
-        for (FieldInfo fieldInfo : FIELDS) {
+        for (FieldInfo fieldInfo : fields) {
             String realTypeDescriptor = Type
                     .getType(fieldInfo.realType)
                     .getDescriptor()

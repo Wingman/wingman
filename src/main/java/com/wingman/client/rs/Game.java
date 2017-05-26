@@ -1,8 +1,12 @@
 package com.wingman.client.rs;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.generated.GameAPI;
 import com.wingman.client.api.generated.Static;
+import com.wingman.client.api.mapping.MappingsHelper;
 import com.wingman.client.classloader.TransformingClassLoader;
 import com.wingman.client.rs.listeners.CanvasMouseListener;
 import com.wingman.client.rs.listeners.CanvasMouseWheelListener;
@@ -47,6 +51,31 @@ public class Game {
         }
 
         try {
+            boolean hasCorrectMappings = false;
+
+            try {
+                /*
+                    Makes sure that the local mappings
+                    can be used with the local gamepack.
+
+                    If they can't, turn off features
+                    that depend on the mappings.
+                 */
+
+                HashCode gamepackHashCode = Files
+                        .hash(ClientSettings.APPLET_JAR_FILE.toFile(), Hashing.md5());
+
+                hasCorrectMappings = MappingsHelper
+                        .gamepackHash
+                        .equals(gamepackHashCode);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (!hasCorrectMappings) {
+                System.out.println("Mappings are outdated, turning off features depending on them..");
+            }
+
             TransformingClassLoader classLoader = new TransformingClassLoader(
                     new URL[]{ClientSettings.APPLET_JAR_FILE.toUri().toURL()},
                     this.getClass().getClassLoader()
@@ -56,8 +85,10 @@ public class Game {
                     .loadClass("client")
                     .newInstance();
 
-            GameAPI.getterInstance = (Static) clientInstance;
-            GameAPI.Unsafe.setterInstance = (Static.Unsafe) clientInstance;
+            if (hasCorrectMappings) {
+                GameAPI.getterInstance = (Static) clientInstance;
+                GameAPI.Unsafe.setterInstance = (Static.Unsafe) clientInstance;
+            }
 
             applet = (Applet) clientInstance;
             applet.setStub(new GameAppletStub(runeScapeUrl, pageSource, archiveName));
@@ -81,19 +112,21 @@ public class Game {
             applet.init();
             applet.start();
 
-            while (GameAPI.getClientInstance().getCanvas() == null) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+            if (hasCorrectMappings) {
+                while (GameAPI.getClientInstance().getCanvas() == null) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
+
+                GameAPI.getClientInstance().getCanvas()
+                        .addMouseListener(new CanvasMouseListener());
+
+                GameAPI.getClientInstance().getCanvas()
+                        .addMouseWheelListener(new CanvasMouseWheelListener());
             }
-
-            GameAPI.getClientInstance().getCanvas()
-                    .addMouseListener(new CanvasMouseListener());
-
-            GameAPI.getClientInstance().getCanvas()
-                    .addMouseWheelListener(new CanvasMouseWheelListener());
         } catch (MalformedURLException | ClassNotFoundException
                 | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
