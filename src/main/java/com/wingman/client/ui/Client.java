@@ -7,9 +7,6 @@ import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.rs.Game;
-import com.wingman.client.ui.style.OnyxComboBoxUI;
-import com.wingman.client.ui.style.OnyxOptionPaneUI;
-import com.wingman.client.ui.style.OnyxScrollBarUI;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
@@ -37,8 +34,6 @@ public class Client {
 
     public Client() {
         frame = new JFrame();
-
-        skinUIComponents();
 
         settingsScreen = new SettingsScreen();
         try {
@@ -103,13 +98,6 @@ public class Client {
         frame.pack();
 
         PluginManager.activatePlugins();
-    }
-
-    private void skinUIComponents() {
-        UIManager.put("ScrollBarUI", OnyxScrollBarUI.class.getName());
-        UIManager.put("ComboBoxUI", OnyxComboBoxUI.class.getName());
-        UIManager.put("OptionPaneUI", OnyxOptionPaneUI.class.getName());
-        SwingUtilities.updateComponentTreeUI(frame);
     }
 
     /**

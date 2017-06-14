@@ -7,12 +7,10 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.style.OnyxStyleFactory;
 import org.slf4j.LoggerFactory;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
 
 import javax.swing.*;
-import javax.swing.plaf.synth.SynthLookAndFeel;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -82,14 +80,6 @@ public final class Main {
      * Sets up the Look and Feel of the client.
      */
     private static void setupLookAndFeel() {
-        try {
-            SynthLookAndFeel synthLookAndFeel = new SynthLookAndFeel();
-            UIManager.setLookAndFeel(synthLookAndFeel);
-            SynthLookAndFeel.setStyleFactory(new OnyxStyleFactory());
-        } catch (UnsupportedLookAndFeelException  e) {
-            throw new RuntimeException(e);
-        }
-
         // Prevent the applet from overlapping the menus
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
