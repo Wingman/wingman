@@ -107,7 +107,12 @@ public class Client {
 
         framePanel.removeAll();
         framePanel.add(game.getApplet(), BorderLayout.CENTER);
-        frame.pack();
+
+        // If frame is not maximized, pack it
+        if ((frame.getExtendedState() & JFrame.MAXIMIZED_BOTH) == 0) {
+            frame.pack();
+        }
+        frame.validate();
 
         PluginManager.activatePlugins();
     }

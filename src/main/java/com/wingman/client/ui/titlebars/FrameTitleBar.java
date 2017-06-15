@@ -66,9 +66,7 @@ public class FrameTitleBar extends TitleBar {
                 contentPanelPane.setCenter(borderPane);
             });
 
-            this.add(contentPanel);
-
-            this.addMouseListener(new MouseAdapter() {
+            contentPanel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 2) {
@@ -76,6 +74,8 @@ public class FrameTitleBar extends TitleBar {
                     }
                 }
             });
+
+            this.add(contentPanel);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
