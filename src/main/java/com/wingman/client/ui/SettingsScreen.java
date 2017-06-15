@@ -33,7 +33,7 @@ public class SettingsScreen extends JDialog {
     public SettingsScreen() {
         new ComponentBorderResizer(this);
 
-        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.BASE));
+        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 3, 3, 3, OnyxStyleFactory.BASE));
         this.setUndecorated(true);
         this.setJMenuBar(new SettingsTitleBar(this));
 

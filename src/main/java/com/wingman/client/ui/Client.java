@@ -83,7 +83,7 @@ public class Client {
 
         framePanel.add(loadingImagePanel, BorderLayout.CENTER);
 
-        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.BASE));
+        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 3, 3, 3, OnyxStyleFactory.BASE));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.setTitle("Wingman");

@@ -155,7 +155,7 @@ public class FrameTitleBar extends TitleBar {
                     frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
                 } else {
                     frame.getRootPane().setBorder(BorderFactory.createMatteBorder(
-                            0, 4, 4, 4,
+                            0, 3, 3, 3,
                             OnyxStyleFactory.BASE));
                     frame.setExtendedState(JFrame.NORMAL);
                 }
