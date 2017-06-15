@@ -11,6 +11,8 @@ import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
 import com.wingman.client.util.FileUtil;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.layout.BorderPane;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -56,10 +58,6 @@ public class Client {
         addClientSettings();
         addListeners();
 
-        framePanel = new JPanel(new BorderLayout());
-        framePanel.setForeground(OnyxStyleFactory.PRIMARY_TEXT_COLOR);
-        framePanel.setBackground(OnyxStyleFactory.BASE);
-
         try {
             ArrayList<Image> icons = new ArrayList<>();
             icons.add(ImageIO.read(FileUtil.getFile("/images/icons/icon_16x16.png")));
@@ -67,12 +65,23 @@ public class Client {
             icons.add(ImageIO.read(FileUtil.getFile("/images/icons/icon_64x64.png")));
             icons.add(ImageIO.read(FileUtil.getFile("/images/icons/icon_128x128.png")));
             frame.setIconImages(icons);
-
-            JLabel loadingImage = new JLabel(new ImageIcon(FileUtil.getFileAsBytes("/images/loading.png")));
-            framePanel.add(loadingImage, BorderLayout.CENTER);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        JFXPanel loadingImagePanel = AppletFX.createPanel();
+
+        AppletFX.runAndWait(loadingImagePanel, () -> {
+            BorderPane rootPane = (BorderPane) loadingImagePanel
+                    .getScene()
+                    .getRoot();
+
+            rootPane.setId("loadingImagePanel");
+        });
+
+        framePanel = new JPanel(new BorderLayout());
+
+        framePanel.add(loadingImagePanel, BorderLayout.CENTER);
 
         frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 4, 4, 4, OnyxStyleFactory.BASE));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

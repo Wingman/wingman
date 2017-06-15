@@ -26,8 +26,6 @@ public class Game {
         GameDownloader downloader = new GameDownloader() {
             @Override
             protected void done() {
-                super.done();
-
                 synchronized (monitor) {
                     monitor.notify();
                 }

@@ -5,8 +5,12 @@ import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.net.HttpClient;
+import com.wingman.client.ui.AppletFX;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.components.StartProgressBar;
+import javafx.concurrent.Task;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.BorderPane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +18,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,12 +26,12 @@ import java.util.regex.Pattern;
  * <p>
  * It also downloads the RuneScape page source for feeding the game applet with the expected parameters.
  */
-public class GameDownloader extends SwingWorker<Void, Integer> {
+public class GameDownloader extends Task<Double> {
 
     private static final int DOWNLOAD_BUFFER_SIZE = 4096;
 
     private HttpClient httpClient = new HttpClient();
-    private StartProgressBar progressBar = new StartProgressBar();
+    private ProgressBar progressBar = new ProgressBar();
 
     private String runeScapeUrl;
     private String pageSource;
@@ -36,18 +39,32 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
     private int remoteArchiveSize;
 
     public GameDownloader() {
-        // Make sure GUI modifications take place on the Event Dispatch Thread.
         SwingUtilities.invokeLater(() -> {
-            progressBar.setMode(StartProgressBar.Mode.CHECKING_FOR_UPDATES);
-            Client.framePanel.add(progressBar, BorderLayout.SOUTH);
+            JFXPanel progressBarPanel = AppletFX.createPanel();
+
+            AppletFX.runAndWait(progressBarPanel, () -> {
+                BorderPane progressBarPanelPane = (BorderPane) progressBarPanel
+                        .getScene()
+                        .getRoot();
+
+                progressBarPanelPane.setCenter(progressBar);
+            });
+
+            Client.framePanel.add(progressBarPanel, BorderLayout.SOUTH);
             Client.framePanel.validate();
         });
 
-        execute();
+        progressBar
+                .progressProperty()
+                .bind(this.valueProperty());
+
+        new Thread(this).start();
     }
 
     @Override
-    protected Void doInBackground() throws IOException {
+    protected Double call() throws Exception {
+        updateValue(0D);
+
         pageSource = getPageSource(getWorldFromSettings(), false);
 
         Matcher archiveMatcher = Pattern
@@ -60,28 +77,11 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
             if (!checkGamePackUpToDate()) {
                 startUpdatingGamePack();
             } else {
-                SwingUtilities.invokeLater(() ->
-                        progressBar.setMode(StartProgressBar.Mode.NO_UPDATES));
+                updateValue(ProgressBar.INDETERMINATE_PROGRESS);
             }
         }
 
-        return null;
-    }
-
-    @Override
-    protected void process(List<Integer> chunks) {
-        if (!chunks.isEmpty()) {
-            progressBar.setValue(chunks.get(0));
-        }
-    }
-
-    @Override
-    protected void done() {
-        // If this method is called and the last mode was DOWNLOADING,
-        // assume that downloading is finished.
-        if (progressBar.getMode() == StartProgressBar.Mode.DOWNLOADING) {
-            progressBar.setMode(StartProgressBar.Mode.DOWNLOADING_FINISHED);
-        }
+        return ProgressBar.INDETERMINATE_PROGRESS;
     }
 
     /**
@@ -166,10 +166,6 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
                     remoteArchiveSize,
                     archiveName));
 
-            progressBar.setMinimum(0);
-            progressBar.setMaximum(remoteArchiveSize);
-            progressBar.setMode(StartProgressBar.Mode.DOWNLOADING);
-
             Request request = httpClient
                     .getRequestBuilder()
                     .url(runeScapeUrl + archiveName)
@@ -186,24 +182,23 @@ public class GameDownloader extends SwingWorker<Void, Integer> {
                     if (input != null) {
                         FileOutputStream output = new FileOutputStream(ClientSettings.APPLET_JAR_FILE.toFile());
 
-                        final int[] totalRead = {0};
-                        final int[] read = {0};
+                        int totalRead = 0;
+                        int read;
                         byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
 
-                        while ((read[0] = input.read(data, 0, data.length)) != -1) {
-                            totalRead[0] += read[0];
-                            output.write(data, 0, read[0]);
+                        while ((read = input.read(data, 0, data.length)) != -1) {
+                            totalRead += read;
+                            output.write(data, 0, read);
 
-                            publish(totalRead[0]);
+                            updateValue(totalRead / (double) remoteArchiveSize);
                         }
 
-                        if (totalRead[0] == remoteArchiveSize) {
+                        if (totalRead == remoteArchiveSize) {
                             downloadSucceeded = true;
-                            publish(remoteArchiveSize);
                         } else {
                             System.out.println(MessageFormat.format(
                                     "Updating the gamepack failed! Malformed response (received {0}/{1} bytes)",
-                                    totalRead[0], remoteArchiveSize));
+                                    totalRead, remoteArchiveSize));
                         }
 
                         input.close();

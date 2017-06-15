@@ -1,7 +1,105 @@
-.rootPane {
-    -fx-background-color: #3a3a3a;
+.root {
+    PRIMARY_COLOR: #222222;
+    PRIMARY_COLOR_2: #197db4;
+
+    -fx-base: PRIMARY_COLOR;
+    -fx-background: -fx-base;
+
+    -fx-control-inner-background: derive(-fx-background, 15%);
+
+    -fx-dark-text-color: #3a3a3a;
+    -fx-mid-text-color: #555;
+    -fx-light-text-color: #eee;
+
+    -fx-accent: PRIMARY_COLOR_2;
+
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-default-button: derive(PRIMARY_COLOR_2, 30%);
+
+    -fx-cell-hover-color: #555;
 }
 
-Label {
-    -fx-text-fill: #bebebe;
+#loadingImagePanel {
+    -fx-background-image: url("/images/loading.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ *  Buttons                                                                    *
+ *                                                                             *
+ ******************************************************************************/
+
+.button,
+.toggle-button,
+.radio-button > .radio,
+.check-box > .box,
+.menu-button,
+.choice-box,
+.color-picker.split-button > .color-picker-label,
+.combo-box-base,
+.combo-box-base:editable > .arrow-button {
+    -fx-padding: 0.666667em 1em 0.666667em 1em; /* 8 12 8 12 */
+
+    -fx-background-color: PRIMARY_COLOR_2;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-text-fill: -fx-light-text-color;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ *  Text input                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+
+.text-input {
+    -fx-padding: 0.666667em 1em 0.666667em 1em; /* 8 12 8 12 */
+
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background, 50%);
+}
+
+.text-input:focused {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-prompt-text-fill: transparent;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ *  Progress bars                                                              *
+ *                                                                             *
+ ******************************************************************************/
+
+.progress-bar {
+    -fx-max-width: Infinity;
+    -fx-min-height: 20;
+}
+
+.progress-bar > .track {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+.progress-bar > .bar {
+    -fx-background-color: PRIMARY_COLOR_2;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-effect: null;
+}
+
+.progress-bar:indeterminate > .bar {
+    -fx-background-color: PRIMARY_COLOR_2;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-border-width: 0;
+    -fx-effect: null;
 }

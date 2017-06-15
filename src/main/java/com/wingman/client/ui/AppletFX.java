@@ -55,11 +55,7 @@ public class AppletFX {
 
         PlatformImpl.runAndWait(() -> {
             synchronized (SYNC_OBJECT) {
-                BorderPane rootPane = new BorderPane();
-
-                rootPane.getStyleClass().add("rootPane");
-
-                Scene scene = new Scene(rootPane);
+                Scene scene = new Scene(new BorderPane());
                 scene.getStylesheets().add(stylesheetPath);
 
                 panel.setScene(scene);
