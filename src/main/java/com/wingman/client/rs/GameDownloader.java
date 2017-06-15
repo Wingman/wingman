@@ -9,8 +9,10 @@ import com.wingman.client.ui.AppletFX;
 import com.wingman.client.ui.Client;
 import javafx.concurrent.Task;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,9 +31,12 @@ import java.util.regex.Pattern;
 public class GameDownloader extends Task<Double> {
 
     private static final int DOWNLOAD_BUFFER_SIZE = 4096;
+    private static final int BYTES_IN_A_KILOBYTE = 1000;
 
     private HttpClient httpClient = new HttpClient();
+
     private ProgressBar progressBar = new ProgressBar();
+    private Label progressLabel = new Label();
 
     private String runeScapeUrl;
     private String pageSource;
@@ -47,7 +52,12 @@ public class GameDownloader extends Task<Double> {
                         .getScene()
                         .getRoot();
 
-                progressBarPanelPane.setCenter(progressBar);
+                StackPane stackPane = new StackPane();
+
+                stackPane.getChildren()
+                        .addAll(progressBar, progressLabel);
+
+                progressBarPanelPane.setCenter(stackPane);
             });
 
             Client.framePanel.add(progressBarPanel, BorderLayout.SOUTH);
@@ -58,12 +68,17 @@ public class GameDownloader extends Task<Double> {
                 .progressProperty()
                 .bind(this.valueProperty());
 
+        progressLabel
+                .textProperty()
+                .bind(this.messageProperty());
+
         new Thread(this).start();
     }
 
     @Override
     protected Double call() throws Exception {
         updateValue(0D);
+        updateMessage("Downloading game info..");
 
         pageSource = getPageSource(getWorldFromSettings(), false);
 
@@ -75,8 +90,14 @@ public class GameDownloader extends Task<Double> {
             archiveName = archiveMatcher.group(1);
 
             if (!checkGamePackUpToDate()) {
+                updateMessage("Starting download of Oldschool Runescape..");
+
                 startUpdatingGamePack();
+
+                updateMessage("Download complete. Launching Oldschool Runescape..");
             } else {
+                updateMessage("No updates detected. Launching Oldschool Runescape..");
+
                 updateValue(ProgressBar.INDETERMINATE_PROGRESS);
             }
         }
@@ -183,14 +204,43 @@ public class GameDownloader extends Task<Double> {
                         FileOutputStream output = new FileOutputStream(ClientSettings.APPLET_JAR_FILE.toFile());
 
                         int totalRead = 0;
+
                         int read;
                         byte[] data = new byte[DOWNLOAD_BUFFER_SIZE];
+
+                        long startTime = System.nanoTime();
+                        int readSinceStartTime = 0;
+                        int currentSpeed = 0;
 
                         while ((read = input.read(data, 0, data.length)) != -1) {
                             totalRead += read;
                             output.write(data, 0, read);
 
-                            updateValue(totalRead / (double) remoteArchiveSize);
+                            readSinceStartTime += read;
+
+                            long currentTime = System.nanoTime();
+
+                            long timeDelta = currentTime - startTime;
+                            // 1E9 = the amount of nanoseconds in one second
+                            if (timeDelta >= 1E9) {
+                                // Convert bytes per nanosecond to kilobytes per second
+                                // and get the gradient
+                                currentSpeed = (int) Math.ceil(readSinceStartTime / (timeDelta / 1E6));
+
+                                startTime = currentTime;
+                                readSinceStartTime = 0;
+                            }
+
+                            double doneFraction = totalRead / (double) remoteArchiveSize;
+
+                            updateValue(doneFraction);
+
+                            updateMessage(MessageFormat
+                                    .format("Downloading Oldschool Runescape - {0}% done ({1}/{2} kB at {3} kB/s)",
+                                            Math.ceil(doneFraction * 100),
+                                            Math.ceil(totalRead / (double) BYTES_IN_A_KILOBYTE),
+                                            Math.ceil(remoteArchiveSize / (double) BYTES_IN_A_KILOBYTE),
+                                            currentSpeed));
                         }
 
                         if (totalRead == remoteArchiveSize) {

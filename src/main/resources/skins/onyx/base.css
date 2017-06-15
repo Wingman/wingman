@@ -79,7 +79,7 @@
 
 .progress-bar {
     -fx-max-width: Infinity;
-    -fx-min-height: 20;
+    -fx-min-height: 25;
 }
 
 .progress-bar > .track {
