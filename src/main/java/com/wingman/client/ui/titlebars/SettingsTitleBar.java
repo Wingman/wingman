@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class SettingsTitleBar extends OnyxTitleBar {
+public class SettingsTitleBar extends TitleBar {
 
     public SettingsTitleBar(final JDialog parent) {
         super(parent);

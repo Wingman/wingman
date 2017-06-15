@@ -25,7 +25,7 @@ import com.sun.javafx.application.PlatformImpl;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.BorderPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +55,13 @@ public class AppletFX {
 
         PlatformImpl.runAndWait(() -> {
             synchronized (SYNC_OBJECT) {
-                Scene scene = new Scene(new Pane());
+                BorderPane rootPane = new BorderPane();
+
+                rootPane.getStyleClass().add("rootPane");
+
+                Scene scene = new Scene(rootPane);
                 scene.getStylesheets().add(stylesheetPath);
+
                 panel.setScene(scene);
 
                 panels.add(panel);

@@ -1,0 +1,7 @@
+.rootPane {
+    -fx-background-color: #3a3a3a;
+}
+
+Label {
+    -fx-text-fill: #bebebe;
+}

@@ -35,15 +35,13 @@ public class Client {
     public Client() {
         frame = new JFrame();
 
-        settingsScreen = new SettingsScreen();
         try {
             clientSettings = new ClientSettings();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        addClientSettings();
-        addListeners();
+        setStylesheet();
 
         if (clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED)) {
             try {
@@ -52,6 +50,11 @@ public class Client {
                 e.printStackTrace();
             }
         }
+
+        settingsScreen = new SettingsScreen();
+
+        addClientSettings();
+        addListeners();
 
         framePanel = new JPanel(new BorderLayout());
         framePanel.setForeground(OnyxStyleFactory.PRIMARY_TEXT_COLOR);
@@ -168,5 +171,14 @@ public class Client {
      */
     private void addListeners() {
         new ComponentBorderResizer(frame);
+    }
+
+    private void setStylesheet() {
+        String stylesheetPath = AppletFX
+                .class
+                .getResource("/skins/onyx/base.css")
+                .toExternalForm();
+
+        AppletFX.setGlobalStylesheet(stylesheetPath);
     }
 }

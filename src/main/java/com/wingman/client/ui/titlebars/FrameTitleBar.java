@@ -1,92 +1,97 @@
 package com.wingman.client.ui.titlebars;
 
 import com.wingman.client.plugin.PluginManager;
+import com.wingman.client.ui.AppletFX;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.components.HoverButton;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.util.FileUtil;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class FrameTitleBar extends OnyxTitleBar {
+public class FrameTitleBar extends TitleBar {
 
-    public JFrame parent;
+    private ToggleButton maximizeButton;
 
-    public final HoverButton minimizeButton;
-    public final HoverButton maximizeButton;
-    public final HoverButton exitButton;
-
-    public FrameTitleBar(final JFrame parent) {
+    public FrameTitleBar(JFrame parent) {
         super(parent);
-        this.parent = parent;
 
         try {
-            this.add(Box.createHorizontalStrut(5));
-            this.add(new JLabel(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/icon_16x16.png")))));
-            this.add(Box.createHorizontalStrut(7));
+            String stylesheetPath = AppletFX
+                    .class
+                    .getResource("/skins/onyx/frameTitleBar.css")
+                    .toExternalForm();
 
-            this.add(makeTitleText());
-            this.add(Box.createHorizontalGlue());
+            contentPanel
+                    .getScene()
+                    .getStylesheets()
+                    .add(stylesheetPath);
 
-            this.add(makeSettingsButton());
-            this.add(Box.createHorizontalStrut(10));
-            this.add(makeExpandButton());
-            this.add(Box.createHorizontalStrut(20));
+            AppletFX.runAndWait(contentPanel, () -> {
+                BorderPane contentPanelPane = (BorderPane) contentPanel
+                        .getScene()
+                        .getRoot();
 
-            this.add(minimizeButton = makeMinimizeButton());
-            this.add(Box.createHorizontalStrut(10));
-            this.add(maximizeButton = makeMaximizeButton());
-            this.add(Box.createHorizontalStrut(10));
-            this.add(exitButton = makeExitButton());
-            this.add(Box.createHorizontalStrut(2));
+                HBox leftSide = new HBox();
+
+                leftSide.setId("leftSide");
+                leftSide.getChildren()
+                        .addAll(createClientIcon(), createTitleText());
+
+                HBox rightSide = new HBox();
+
+                rightSide.setId("rightSide");
+                rightSide.getChildren()
+                        .addAll(createSettingsButton(),
+                                createExpandButton(),
+                                createMinimizeButton(),
+                                maximizeButton = createMaximizeButton(),
+                                createExitButton());
+
+                BorderPane borderPane = new BorderPane();
+
+                borderPane.setLeft(leftSide);
+                borderPane.setRight(rightSide);
+
+                contentPanelPane.setCenter(borderPane);
+            });
+
+            this.add(contentPanel);
 
             this.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 2) {
-                        maximizeButton.doClick();
+                        maximizeButton.fire();
                     }
                 }
             });
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private HoverButton makeExpandButton() throws IOException {
-        HoverButton hoverButton
-                = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/expand.png"))));
-
-        hoverButton.setMargin(new Insets(3, 0, 3, 0));
-        // TODO: Add click listener when side bars are implemented
-
-        return hoverButton;
+    private Pane createClientIcon() {
+        Pane pane = new Pane();
+        pane.setId("clientIcon");
+        return pane;
     }
 
-    private HoverButton makeSettingsButton() throws IOException {
-        HoverButton hoverButton
-                = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/settings.png"))));
+    private Pane createTitleText() {
+        Pane pane = new Pane();
 
-        hoverButton.setMargin(new Insets(3, 3, 3, 3));
-        hoverButton.addActionListener(e -> {
-            if (Client.settingsScreen.isVisible()) {
-                Client.settingsScreen.setVisible(false);
-            } else {
-                Client.settingsScreen.setVisible(true);
-            }
-        });
+        pane.setId("titleText");
 
-        return hoverButton;
-    }
-
-    private JLabel makeTitleText() {
         String version = "Developer";
 
         try (BufferedReader reader
@@ -97,48 +102,74 @@ public class FrameTitleBar extends OnyxTitleBar {
             e.printStackTrace();
         }
 
-        JLabel titleLabel = new JLabel("Wingman " + version);
+        Label label = new Label("Wingman " + version);
 
-        titleLabel.setForeground(OnyxStyleFactory.SECONDARY_TEXT_COLOR);
-        titleLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
+        pane.getChildren().add(label);
 
-        return titleLabel;
+        return pane;
     }
 
-    private HoverButton makeMinimizeButton() throws IOException {
-        HoverButton hoverButton
-                = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/minimize.png"))));
-        hoverButton.addActionListener(e -> Client.frame.setState(JFrame.ICONIFIED));
-        return hoverButton;
+    private Button createSettingsButton() {
+        Button button = new Button();
+
+        button.setId("settingsButton");
+        button.setOnAction((e) -> {
+            if (Client.settingsScreen.isVisible()) {
+                Client.settingsScreen.setVisible(false);
+            } else {
+                Client.settingsScreen.setVisible(true);
+            }
+        });
+
+        return button;
     }
 
-    private HoverButton makeMaximizeButton() throws IOException {
-        ImageIcon maximizeIcon = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/maximize.png")));
-        ImageIcon maximizeIcon2 = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/unmaximize.png")));
+    private Button createExpandButton() {
+        Button button = new Button();
 
-        HoverButton hoverButton = new HoverButton(maximizeIcon);
-        hoverButton.addActionListener(e -> {
-            if (parent.isResizable()) {
-                if ((parent.getExtendedState() & JFrame.MAXIMIZED_BOTH) == 0) {
-                    parent.getRootPane().setBorder(BorderFactory.createEmptyBorder());
-                    parent.setExtendedState(parent.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-                    hoverButton.setIcon(maximizeIcon2);
+        button.setId("expandButton");
+        // TODO: Add click listener when side bars are implemented
+
+        return button;
+    }
+
+    private Button createMinimizeButton() {
+        Button button = new Button();
+
+        button.setId("minimizeButton");
+        button.setOnAction((e) -> Client.frame.setState(JFrame.ICONIFIED));
+
+        return button;
+    }
+
+    private ToggleButton createMaximizeButton() {
+        ToggleButton button = new ToggleButton();
+
+        button.setId("maximizeButton");
+        button.setOnAction((e) -> {
+            JFrame frame = (JFrame) parent;
+
+            if (frame.isResizable()) {
+                if ((frame.getExtendedState() & JFrame.MAXIMIZED_BOTH) == 0) {
+                    frame.getRootPane().setBorder(BorderFactory.createEmptyBorder());
+                    frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
                 } else {
-                    parent.getRootPane().setBorder(BorderFactory.createMatteBorder(
+                    frame.getRootPane().setBorder(BorderFactory.createMatteBorder(
                             0, 4, 4, 4,
                             OnyxStyleFactory.BASE));
-                    parent.setExtendedState(JFrame.NORMAL);
-                    hoverButton.setIcon(maximizeIcon);
+                    frame.setExtendedState(JFrame.NORMAL);
                 }
             }
         });
-        return hoverButton;
+
+        return button;
     }
 
-    private HoverButton makeExitButton() throws IOException {
-        HoverButton hoverButton
-                = new HoverButton(new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/exit.png"))));
-        hoverButton.addActionListener(e -> {
+    private Button createExitButton() {
+        Button button = new Button();
+
+        button.setId("exitButton");
+        button.setOnAction((e) -> {
             if (Client.clientTrayIcon != null) {
                 Client.clientTrayIcon.detach();
             }
@@ -147,6 +178,7 @@ public class FrameTitleBar extends OnyxTitleBar {
 
             System.exit(0);
         });
-        return hoverButton;
+
+        return button;
     }
 }
