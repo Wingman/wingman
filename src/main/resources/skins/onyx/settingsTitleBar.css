@@ -1,0 +1,39 @@
+#leftSide {
+    -fx-padding: 4 0 0 0;
+    -fx-spacing: 3;
+    -fx-opacity: 0.75;
+}
+
+#clientIcon {
+    -fx-min-width: 32;
+    -fx-min-height: 24;
+    -fx-max-height: 24;
+
+    -fx-background-image: url("/images/icons/icon_16x16.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#titleText Label {
+    -fx-padding: 3 0 0 0;
+}
+
+#rightSide {
+    -fx-spacing: 3;
+}
+
+#rightSide Button {
+    -fx-min-height: 32;
+    -fx-min-width: 32;
+
+    -fx-background-color: transparent;
+    -fx-opacity: 0.4;
+}
+
+#rightSide Button:hover {
+    -fx-opacity: 1;
+}
+
+#exitButton {
+    -fx-graphic: url("/images/icons/exit.png");
+}

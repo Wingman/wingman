@@ -1,47 +1,83 @@
 package com.wingman.client.ui.titlebars;
 
-import com.wingman.client.ui.components.HoverButton;
-import com.wingman.client.ui.style.OnyxStyleFactory;
-import com.wingman.client.util.FileUtil;
+import com.wingman.client.ui.util.AppletFX;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class SettingsTitleBar extends TitleBar {
 
-    public SettingsTitleBar(final JDialog parent) {
+    public SettingsTitleBar(JDialog parent) {
         super(parent);
 
         try {
-            // WINGMAN ICON
-            ImageIcon imageIcon = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/icon_16x16.png")));
-            JLabel icon = new JLabel(imageIcon);
+            String stylesheetPath = AppletFX
+                    .class
+                    .getResource("/skins/onyx/settingsTitleBar.css")
+                    .toExternalForm();
 
-            // TITLE LABEL
-            JLabel titleLabel = new JLabel("Wingman/Plugin Settings");
-            titleLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
+            contentPanel
+                    .getScene()
+                    .getStylesheets()
+                    .add(stylesheetPath);
 
-            // CLOSE BUTTON
-            ImageIcon closeImageIcon = new ImageIcon(ImageIO.read(FileUtil.getFile("/images/icons/exit.png")));
-            HoverButton close = new HoverButton(closeImageIcon);
-            close.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    parent.setVisible(false);
-                }
+            AppletFX.runAndWait(contentPanel, () -> {
+                BorderPane contentPanelPane = (BorderPane) contentPanel
+                        .getScene()
+                        .getRoot();
+
+                HBox leftSide = new HBox();
+
+                leftSide.setId("leftSide");
+                leftSide.getChildren()
+                        .addAll(createClientIcon(), createTitleText());
+
+                HBox rightSide = new HBox();
+
+                rightSide.setId("rightSide");
+                rightSide.getChildren()
+                        .addAll(createExitButton());
+
+                BorderPane borderPane = new BorderPane();
+
+                borderPane.setLeft(leftSide);
+                borderPane.setRight(rightSide);
+
+                contentPanelPane.setCenter(borderPane);
             });
 
-            this.add(Box.createHorizontalStrut(4));
-            this.add(icon);
-            this.add(Box.createHorizontalGlue());
-            this.add(titleLabel);
-            this.add(Box.createHorizontalGlue());
-            this.add(close);
-        } catch (IOException e) {
+            this.add(contentPanel);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Pane createClientIcon() {
+        Pane pane = new Pane();
+        pane.setId("clientIcon");
+        return pane;
+    }
+
+    private Pane createTitleText() {
+        Pane pane = new Pane();
+
+        pane.setId("titleText");
+        pane.getChildren()
+                .add(new Label("Wingman/Plugin Settings"));
+
+        return pane;
+    }
+
+    private Button createExitButton() {
+        Button button = new Button();
+
+        button.setId("exitButton");
+        button.setOnAction((e) -> parent.setVisible(false));
+
+        return button;
     }
 }
