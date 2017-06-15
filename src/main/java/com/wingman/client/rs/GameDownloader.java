@@ -78,9 +78,12 @@ public class GameDownloader extends Task<Double> {
     @Override
     protected Double call() throws Exception {
         updateValue(0D);
-        updateMessage("Downloading game info..");
 
-        pageSource = getPageSource(getWorldFromSettings(), false);
+        int world = getWorldFromSettings();
+
+        updateMessage("Downloading game info from world 3" + world + "..");
+
+        pageSource = getPageSource(world, false);
 
         Matcher archiveMatcher = Pattern
                 .compile("initial_jar=([\\S]+)")
@@ -146,11 +149,10 @@ public class GameDownloader extends Task<Double> {
      */
     private int getWorldFromSettings() {
         try {
-            String tempWorld = Client.clientSettings.get(ClientSettings.PREFERRED_WORLD);
-
-            System.out.println("Attempting to load world " + tempWorld);
-
-            return Integer.parseInt(tempWorld.substring(1));
+            return Integer.parseInt(Client
+                    .clientSettings
+                    .get(ClientSettings.PREFERRED_WORLD)
+                    .substring(1));
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -180,13 +182,6 @@ public class GameDownloader extends Task<Double> {
         boolean downloadSucceeded = false;
 
         do {
-            System.out.println(MessageFormat.format(
-                    "Updating the gamepack, "
-                            + "remote size: {0}, "
-                            + "remote archive name: {1}",
-                    remoteArchiveSize,
-                    archiveName));
-
             Request request = httpClient
                     .getRequestBuilder()
                     .url(runeScapeUrl + archiveName)
@@ -246,19 +241,40 @@ public class GameDownloader extends Task<Double> {
                         if (totalRead == remoteArchiveSize) {
                             downloadSucceeded = true;
                         } else {
-                            System.out.println(MessageFormat.format(
-                                    "Updating the gamepack failed! Malformed response (received {0}/{1} bytes)",
+                            updateMessage(MessageFormat.format(
+                                    "Downloading the game failed, trying again in 5 seconds. " +
+                                            "Reason: Malformed response (received {0}/{1} bytes)",
                                     totalRead, remoteArchiveSize));
+
+                            try {
+                                Thread.sleep(5 * 1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         input.close();
                         output.close();
                     } else {
-                        System.out.println("Updating the gamepack failed! Response stream was null");
+                        updateMessage("Downloading the game failed, trying again in 5 seconds. " +
+                                "Reason: Response stream was null");
+
+                        try {
+                            Thread.sleep(5 * 1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             } else {
-                System.out.println("Updating the gamepack failed! Response code was " + response.code());
+                updateMessage("Downloading the game failed, trying again in 5 seconds. " +
+                        "Reason: Response code was " + response.code());
+
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             responseBody.close();
