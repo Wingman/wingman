@@ -1,4 +1,4 @@
-package com.wingman.client.ui;
+package com.wingman.client.ui.util;
 
 /*
  * Copyright 2017, UniquePassive <https://github.com/uniquepassive>

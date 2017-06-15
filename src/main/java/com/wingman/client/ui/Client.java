@@ -9,6 +9,7 @@ import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.rs.Game;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
+import com.wingman.client.ui.util.AppletFX;
 import com.wingman.client.ui.util.ComponentBorderResizer;
 import com.wingman.client.util.FileUtil;
 import javafx.embed.swing.JFXPanel;

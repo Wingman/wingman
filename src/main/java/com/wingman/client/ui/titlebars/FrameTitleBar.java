@@ -1,9 +1,9 @@
 package com.wingman.client.ui.titlebars;
 
 import com.wingman.client.plugin.PluginManager;
-import com.wingman.client.ui.AppletFX;
 import com.wingman.client.ui.Client;
 import com.wingman.client.ui.style.OnyxStyleFactory;
+import com.wingman.client.ui.util.AppletFX;
 import com.wingman.client.util.FileUtil;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -102,9 +102,8 @@ public class FrameTitleBar extends TitleBar {
             e.printStackTrace();
         }
 
-        Label label = new Label("Wingman " + version);
-
-        pane.getChildren().add(label);
+        pane.getChildren()
+                .add(new Label("Wingman " + version));
 
         return pane;
     }

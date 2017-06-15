@@ -1,6 +1,6 @@
 package com.wingman.client.ui.titlebars;
 
-import com.wingman.client.ui.AppletFX;
+import com.wingman.client.ui.util.AppletFX;
 import javafx.embed.swing.JFXPanel;
 
 import javax.swing.*;
