@@ -1,0 +1,29 @@
+#settingsScreen .header {
+    -fx-background-color: derive(-fx-base, -30%);
+    -fx-padding: 10;
+}
+
+#settingsScreen .header.alternatedColor {
+    -fx-background-color: -fx-background;
+}
+
+#settingsScreen .header > .leftBox {
+    -fx-spacing: 10;
+}
+
+#settingsScreen .header > .leftBox > .owner {
+    -fx-font-weight: bold;
+}
+
+#settingsScreen .item {
+    -fx-min-height: 60;
+    -fx-padding: 10;
+}
+
+#settingsScreen .item.alternatedColor {
+    -fx-background-color: derive(-fx-base, -30%);
+}
+
+.check-box {
+    -fx-label-padding: 0;
+}

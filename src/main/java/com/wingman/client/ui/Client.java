@@ -13,12 +13,13 @@ import com.wingman.client.ui.util.AppletFX;
 import com.wingman.client.ui.util.ComponentBorderResizer;
 import com.wingman.client.util.FileUtil;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -122,25 +123,17 @@ public class Client {
      * Registers a {@link SettingsSection} with client related settings.
      */
     private void addClientSettings() {
-        SettingsSection settingsSection = new SettingsSection("Options", "Click to modify client related settings");
+        SettingsSection settingsSection = new SettingsSection("Wingman", "Client related settings");
 
         {
             SettingsItem settingsItem = new SettingsItem("Preferred game world");
 
-            JComboBox<Integer> preferredWorld = new JComboBox<Integer>() {
-                @Override
-                public Dimension getMaximumSize() {
-                    return new Dimension(80, 20);
-                }
-
-                @Override
-                public Dimension getPreferredSize() {
-                    return new Dimension(80, 20);
-                }
-            };
+            ComboBox<Integer> preferredWorld = new ComboBox<>();
 
             for (int i = 301; i <= 399; i++) {
-                preferredWorld.addItem(i);
+                preferredWorld
+                        .getItems()
+                        .add(i);
             }
 
             int settingsPreferredWorld = 311;
@@ -148,14 +141,14 @@ public class Client {
                 settingsPreferredWorld = Integer.parseInt(clientSettings.get(ClientSettings.PREFERRED_WORLD));
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                clientSettings.update(ClientSettings.PREFERRED_WORLD, settingsPreferredWorld);
+                clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + settingsPreferredWorld);
                 clientSettings.save();
             }
 
-            preferredWorld.setSelectedItem(settingsPreferredWorld);
+            preferredWorld.setValue(settingsPreferredWorld);
 
-            preferredWorld.addItemListener(e -> {
-                clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + (int) e.getItem());
+            preferredWorld.valueProperty().addListener((observable, oldValue, newValue) -> {
+                clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + newValue);
                 clientSettings.save();
             });
 
@@ -166,10 +159,11 @@ public class Client {
         {
             SettingsItem settingsItem = new SettingsItem("Enable notifications");
 
-            JCheckBox notificationsEnabled = new JCheckBox();
+            CheckBox notificationsEnabled = new CheckBox();
+
             notificationsEnabled.setSelected(clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED));
-            notificationsEnabled.addItemListener(e -> {
-                String newState = e.getStateChange() == ItemEvent.SELECTED ? "true" : "false";
+            notificationsEnabled.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                String newState = newValue ? "true" : "false";
                 clientSettings.update(ClientSettings.NOTIFICATIONS_ENABLED, newState);
                 clientSettings.save();
             });

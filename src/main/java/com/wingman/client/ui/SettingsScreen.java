@@ -4,150 +4,150 @@ import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.SettingsTitleBar;
+import com.wingman.client.ui.util.AppletFX;
 import com.wingman.client.ui.util.ComponentBorderResizer;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SettingsScreen extends JDialog {
 
-    private final List<SettingsSection> sections
-            = Collections.synchronizedList(new ArrayList<SettingsSection>());
+    private static final Dimension MINIMUM_SIZE = new Dimension(800, 500);
 
-    private JPanel sectionList = new JPanel();
-    private JScrollPane sectionListScrollPane = new JScrollPane(sectionList);
-    private JPanel nothingFoundPanel;
+    private JFXPanel contentPanePanel;
 
-    private JTextField searchField = new JTextField();
+    private List<SettingsSection> sections = new ArrayList<>();
+    private VBox sectionList = new VBox();
+    private AnchorPane sectionListScrollPaneAnchorPane;
 
-    private JPanel selectedSectionPanel = new JPanel();
+    private TextField searchField;
+
     private SettingsSection selectedSection;
+    private boolean initialSectionHasBeenDeselected;
 
     public SettingsScreen() {
         new ComponentBorderResizer(this);
 
-        this.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 3, 3, 3, OnyxStyleFactory.BASE));
+        this.getRootPane()
+                .setBorder(BorderFactory.createMatteBorder(0, 3, 3, 3, OnyxStyleFactory.BASE));
         this.setUndecorated(true);
         this.setJMenuBar(new SettingsTitleBar(this));
-
-        sectionList.setLayout(new BoxLayout(sectionList, BoxLayout.Y_AXIS));
-        selectedSectionPanel.setLayout(new BoxLayout(selectedSectionPanel, BoxLayout.Y_AXIS));
-
-        sectionListScrollPane.getVerticalScrollBar().setUnitIncrement(15);
 
         JPanel contentPane = new JPanel(new BorderLayout() {
             @Override
             public Dimension minimumLayoutSize(Container target) {
-                return new Dimension(550, 300);
+                return MINIMUM_SIZE;
             }
 
             @Override
             public Dimension preferredLayoutSize(Container target) {
-                return new Dimension(550, 400);
+                return MINIMUM_SIZE;
             }
         });
 
-        contentPane.add(sectionListScrollPane);
-        contentPane.add(searchField, BorderLayout.SOUTH);
+        contentPanePanel = AppletFX.createPanel();
 
-        searchField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                redrawSectionList();
-            }
+        String stylesheetPath = AppletFX
+                .class
+                .getResource("/skins/onyx/settingsScreen.css")
+                .toExternalForm();
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                redrawSectionList();
-            }
+        contentPanePanel
+                .getScene()
+                .getStylesheets()
+                .add(stylesheetPath);
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                redrawSectionList();
-            }
+        AppletFX.runAndWait(contentPanePanel, () -> {
+            sectionList.setId("sectionList");
+
+            ScrollPane _sectionListScrollPane = new ScrollPane();
+            _sectionListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            _sectionListScrollPane.setContent(sectionList);
+            _sectionListScrollPane.setFitToWidth(true);
+
+            BorderPane rootPane = (BorderPane) contentPanePanel
+                    .getScene()
+                    .getRoot();
+
+            rootPane.setId("settingsScreen");
+
+            sectionListScrollPaneAnchorPane = new AnchorPane(_sectionListScrollPane);
+
+            AnchorPane.setTopAnchor(_sectionListScrollPane, 0.0);
+            AnchorPane.setBottomAnchor(_sectionListScrollPane, 0.0);
+            AnchorPane.setLeftAnchor(_sectionListScrollPane, 0.0);
+            AnchorPane.setRightAnchor(_sectionListScrollPane, 0.0);
+
+            rootPane.setCenter(sectionListScrollPaneAnchorPane);
+
+            searchField = new TextField();
+            searchField.setPromptText("Search for a setting");
+            searchField
+                    .textProperty()
+                    .addListener((observable, oldValue, newValue) -> redrawSectionList());
+
+            rootPane.setBottom(searchField);
         });
+
+        contentPane.add(contentPanePanel, BorderLayout.CENTER);
 
         this.setContentPane(contentPane);
         this.pack();
         this.setLocationRelativeTo(null);
-
-        searchField.requestFocusInWindow();
     }
 
     public void registerSection(SettingsSection settingsSection) {
         if (settingsSection != null) {
-            if (!sections.contains(settingsSection)) {
-                sections.add(settingsSection);
-                redrawSectionList();
-            }
-        }
-    }
+            AppletFX.runAndWait(contentPanePanel, () -> {
+                if (!sections.contains(settingsSection)) {
+                    sections.add(settingsSection);
 
-    public void unregisterSection(SettingsSection settingsSection) {
-        if (sections.contains(settingsSection)) {
-            if (settingsSection.equals(selectedSection)) {
-                deselectSection();
-            }
+                    if (sections.size() == 1) {
+                        selectSection(settingsSection);
+                    } else if (!initialSectionHasBeenDeselected) {
+                        deselectSection();
+                        initialSectionHasBeenDeselected = true;
+                    }
 
-            sections.remove(settingsSection);
-            redrawSectionList();
+                    redrawSectionList();
+                }
+            });
         }
     }
 
     private void selectSection(SettingsSection section) {
-        JPanel contentPane = (JPanel) this.getContentPane();
-        contentPane.removeAll();
+        BorderPane builtHeader = section.getSelectedHeader();
 
-        selectedSectionPanel.removeAll();
-
-        JPanel builtHeader = section.getSelectedHeader();
         if (builtHeader == null) {
             builtHeader = section.buildSelectedSectionHeader();
 
-            builtHeader.addMouseListener(new MouseListener() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (selectedSection != null) {
-                        deselectSection();
-                    }
+            builtHeader.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                if (selectedSection != null) {
+                    deselectSection();
                 }
 
-                @Override
-                public void mousePressed(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-
-                }
+                event.consume();
             });
         }
 
-        selectedSectionPanel.add(builtHeader);
-        selectedSectionPanel.add(section.buildSelectedSectionBody());
+        BorderPane rootPane = (BorderPane) contentPanePanel
+                .getScene()
+                .getRoot();
 
-        contentPane.add(selectedSectionPanel);
-
-        this.revalidate();
-        this.repaint();
+        rootPane.setTop(builtHeader);
+        rootPane.setCenter(section.buildSelectedSectionBody());
+        rootPane.setBottom(null);
 
         selectedSection = section;
     }
@@ -155,149 +155,141 @@ public class SettingsScreen extends JDialog {
     private void deselectSection() {
         selectedSection = null;
 
-        JPanel contentPane = (JPanel) this.getContentPane();
-        contentPane.removeAll();
+        BorderPane rootPane = (BorderPane) contentPanePanel
+                .getScene()
+                .getRoot();
 
-        contentPane.add(sectionListScrollPane);
-        contentPane.add(searchField, BorderLayout.SOUTH);
+        rootPane.setTop(null);
+        rootPane.setCenter(sectionListScrollPaneAnchorPane);
+        rootPane.setBottom(searchField);
 
         redrawSectionList();
 
-        searchField.requestFocusInWindow();
+        searchField.requestFocus();
     }
 
     private synchronized void redrawSectionList() {
-        sectionList.removeAll();
+        sectionList
+                .getChildren()
+                .clear();
 
-        final String searchString = searchField.getText().toLowerCase();
+        String searchString = searchField.getText();
 
         List<SettingsSection> sectionsToDraw;
         Map<SettingsSection, List<SettingsItem>> settingsToDraw = new HashMap<>();
 
-        synchronized (sections) {
-            if (searchString.length() == 0) {
-                sectionsToDraw = sections;
-            } else {
-                sectionsToDraw = new ArrayList<>();
+        if (searchString.length() == 0) {
+            sectionsToDraw = sections;
+        } else {
+            sectionsToDraw = new ArrayList<>();
 
-                for (SettingsSection section : sections) {
-                    for (SettingsItem item : section.items) {
-                        if (item.getDescription().toLowerCase().contains(searchString)) {
-                            settingsToDraw
-                                    .computeIfAbsent(section, k -> new ArrayList<>())
-                                    .add(item);
-                        }
+            for (SettingsSection section : sections) {
+                for (SettingsItem item : section.items) {
+                    if (item.getDescription().toLowerCase().contains(searchString)) {
+                        settingsToDraw
+                                .computeIfAbsent(section, k -> new ArrayList<>())
+                                .add(item);
                     }
+                }
 
-                    if (settingsToDraw.containsKey(section)
-                            || section.getOwner().toLowerCase().contains(searchString)
-                            || section.getDescription().toLowerCase().contains(searchString)
-                            || (section.getPluginId() != null
-                            && section.getPluginId().toLowerCase().contains(searchString))) {
+                if (settingsToDraw.containsKey(section)
+                        || section.getOwner().toLowerCase().contains(searchString)
+                        || section.getDescription().toLowerCase().contains(searchString)
+                        || (section.getPluginId() != null
+                        && section.getPluginId().toLowerCase().contains(searchString))) {
 
-                        sectionsToDraw.add(section);
-                    }
+                    sectionsToDraw.add(section);
                 }
             }
         }
 
         if (!sectionsToDraw.isEmpty()) {
-            int i = 0;
-            for (final SettingsSection section : sectionsToDraw) {
-                JPanel builtHeader = section.getListHeader();
+            /*
+                Draw the headers of either all settings
+                sections or items that match the search query.
+             */
 
-                if (builtHeader == null) {
-                    builtHeader = section.buildSectionListHeader();
+            for (int i = 0; i < sectionsToDraw.size(); i++) {
+                SettingsSection section = sectionsToDraw.get(i);
 
-                    builtHeader.addMouseListener(new MouseListener() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
+                BorderPane builtHeader;
+
+                if (searchString.length() != 0) {
+                    builtHeader = section.getSelectedHeader();
+
+                    if (builtHeader == null) {
+                        builtHeader = section.buildSelectedSectionHeader();
+
+                        builtHeader.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                             if (selectedSection == null) {
                                 selectSection(section);
                             }
-                        }
 
-                        @Override
-                        public void mousePressed(MouseEvent e) {
-                        }
+                            event.consume();
+                        });
+                    }
+                } else {
+                    builtHeader = section.getListHeader();
 
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-                        }
+                    if (builtHeader == null) {
+                        builtHeader = section.buildSectionListHeader();
 
-                        @Override
-                        public void mouseEntered(MouseEvent e) {
-                        }
+                        builtHeader.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                            if (selectedSection == null) {
+                                selectSection(section);
+                            }
 
-                        @Override
-                        public void mouseExited(MouseEvent e) {
-                        }
-                    });
+                            event.consume();
+                        });
+                    }
                 }
+
+                builtHeader
+                        .getStyleClass()
+                        .remove("alternatedColor");
+
+                if (settingsToDraw.isEmpty()) {
+                    if (i % 2 != 0) {
+                        builtHeader
+                                .getStyleClass()
+                                .add("alternatedColor");
+                    }
+                }
+
+                sectionList
+                        .getChildren()
+                        .add(builtHeader);
 
                 List<SettingsItem> settings = settingsToDraw.get(section);
-                if (settings != null) {
-                    builtHeader.setBackground(OnyxStyleFactory.BASE_DARKER);
-                } else {
-                    if (i++ % 2 == 0) {
-                        builtHeader.setBackground(OnyxStyleFactory.BASE_DARKER);
-                    } else {
-                        builtHeader.setBackground(OnyxStyleFactory.BASE);
-                    }
-                }
-
-                sectionList.add(builtHeader);
 
                 if (settings != null) {
-                    JPanel panel = new JPanel();
-                    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                    panel.setBackground(OnyxStyleFactory.BASE_DARKER);
+                    VBox itemBox = new VBox();
 
-                    if (sectionsToDraw.size() > 1) {
-                        panel.setBorder(new EmptyBorder(0, 30, 0, 0));
-                    }
+                    for (int j = 0; j < settings.size(); j++) {
+                        SettingsItem item = settings.get(j);
 
-                    int j = 0;
-                    for (SettingsItem item : settings) {
-                        JPanel itemPanel = item.build();
+                        BorderPane itemPane = item.build();
 
-                        if (j++ % 2 == 1) {
-                            itemPanel.setBackground(OnyxStyleFactory.BASE_DARKER);
+                        if (j % 2 != 0) {
+                            itemPane.getStyleClass()
+                                    .add("alternatedColor");
+                        } else {
+                            itemPane.getStyleClass()
+                                    .remove("alternatedColor");
                         }
 
-                        panel.add(itemPanel);
+                        itemBox.getChildren()
+                                .add(itemPane);
                     }
 
-                    sectionList.add(panel);
-                } else {
-                    if (sectionsToDraw.size() == 1) {
-                        sectionList.add(section.buildSelectedSectionBody());
-                    }
+                    sectionList
+                            .getChildren()
+                            .add(itemBox);
                 }
             }
-        } else {
-            if (nothingFoundPanel == null) {
-                nothingFoundPanel = makeNothingFoundPanel();
-            }
-
-            sectionList.add(nothingFoundPanel);
         }
 
         this.revalidate();
         this.repaint();
-    }
-
-    private JPanel makeNothingFoundPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-
-        JLabel errorLabel = new JLabel("<html><div style='text-align: center;'>"
-                + "<b style='font-size:14px'>Couldn't find anything matching your search query</b><br><br>"
-                + "The search function looks for results using settings section names,<br>"
-                + "their description, plugin IDs and the descriptions of the section's settings");
-        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        panel.add(errorLabel, BorderLayout.CENTER);
-
-        return panel;
     }
 }

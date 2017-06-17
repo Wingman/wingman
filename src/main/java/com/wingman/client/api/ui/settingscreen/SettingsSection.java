@@ -1,13 +1,13 @@
 package com.wingman.client.api.ui.settingscreen;
 
 import com.wingman.client.api.plugin.Plugin;
-import com.wingman.client.ui.style.OnyxStyleFactory;
+import javafx.geometry.Pos;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,8 +24,8 @@ public class SettingsSection {
 
     public List<SettingsItem> items = new ArrayList<>();
 
-    private JPanel builtListHeader;
-    private JPanel builtSelectedHeader;
+    private BorderPane builtListHeader;
+    private BorderPane builtSelectedHeader;
 
     /*
         Plugin specific constructors
@@ -95,154 +95,117 @@ public class SettingsSection {
         }
     }
 
-    public JPanel buildSectionListHeader() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+    public BorderPane buildSectionListHeader() {
+        BorderPane panel = new BorderPane();
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.setOpaque(false);
+        panel.getStyleClass()
+                .add("header");
 
-        JLabel ownerLabel = new JLabel(getOwner());
-        ownerLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
-        ownerLabel.setBorder(new EmptyBorder(6, 9, 5, 0));
+        Label ownerLabel = new Label(getOwner());
 
-        JLabel descLabel = new JLabel(getDescription());
-        descLabel.setForeground(OnyxStyleFactory.SECONDARY_TEXT_COLOR);
-        descLabel.setBorder(new EmptyBorder(0, 9, 6, 0));
+        ownerLabel
+                .getStyleClass()
+                .add("owner");
 
-        leftPanel.add(ownerLabel);
-        leftPanel.add(descLabel);
+        VBox leftBox = new VBox(
+                ownerLabel,
+                new Label(getDescription())
+        );
 
-        panel.add(leftPanel);
-        panel.add(Box.createHorizontalGlue());
+        leftBox.getStyleClass()
+                .add("leftBox");
 
-        if (pluginId != null
-                && pluginVersion != null) {
+        BorderPane.setAlignment(leftBox, Pos.CENTER);
 
-            JPanel pluginPanel = new JPanel();
-            pluginPanel.setBorder(new EmptyBorder(0, 0, 0, 10));
-            pluginPanel.setLayout(new BoxLayout(pluginPanel, BoxLayout.Y_AXIS));
-            pluginPanel.setOpaque(false);
-
-            JLabel pluginVersionLabel = new JLabel("Version " + pluginVersion);
-            pluginVersionLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            pluginVersionLabel.setForeground(OnyxStyleFactory.SECONDARY_TEXT_COLOR);
-            pluginVersionLabel.setBorder(new EmptyBorder(6, 9, 5, 0));
-
-            JLabel pluginIdLabel = new JLabel(pluginId);
-            pluginIdLabel.setFont(OnyxStyleFactory.ROBOTO_REGULAR.deriveFont(10f));
-            pluginIdLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            pluginIdLabel.setForeground(OnyxStyleFactory.SECONDARY_TEXT_COLOR);
-            pluginIdLabel.setBorder(new EmptyBorder(0, 9, 6, 0));
-
-            pluginPanel.add(pluginVersionLabel);
-            pluginPanel.add(pluginIdLabel);
-
-            panel.add(pluginPanel);
-        }
+        panel.setLeft(leftBox);
 
         if (toggleListener != null) {
-            JCheckBox checkBox = new JCheckBox();
-            checkBox.setSelected(defaultToggleState);
-            checkBox.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    toggleListener.toggled(e.getStateChange() == ItemEvent.SELECTED);
-                }
-            });
-            checkBox.setBorder(new EmptyBorder(10, 10, 10, 20));
-            checkBox.setOpaque(false);
+            CheckBox enableCheckBox = new CheckBox();
 
-            panel.add(checkBox);
+            enableCheckBox.setSelected(defaultToggleState);
+
+            enableCheckBox
+                    .selectedProperty()
+                    .addListener((observable, oldValue, newValue) -> toggleListener.toggled(newValue));
+
+            BorderPane.setAlignment(enableCheckBox, Pos.CENTER);
+
+            panel.setRight(enableCheckBox);
         }
 
         return builtListHeader = panel;
     }
 
-    public JPanel buildSelectedSectionHeader() {
-        JPanel panel = new JPanel();
-        panel.setBackground(OnyxStyleFactory.BASE_DARKER);
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+    public BorderPane buildSelectedSectionHeader() {
+        BorderPane panel = new BorderPane();
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.setOpaque(false);
+        panel.getStyleClass()
+                .add("header");
 
-        JLabel ownerLabel = new JLabel(getOwner());
-        ownerLabel.setFont(OnyxStyleFactory.ROBOTO_MEDIUM);
-        ownerLabel.setBorder(new EmptyBorder(6, 9, 5, 0));
+        Label ownerLabel;
 
-        JLabel descLabel = new JLabel(getDescription());
-        descLabel.setForeground(OnyxStyleFactory.SECONDARY_TEXT_COLOR);
-        descLabel.setBorder(new EmptyBorder(0, 9, 6, 0));
-
-        leftPanel.add(ownerLabel);
-        leftPanel.add(descLabel);
-
-        panel.add(leftPanel);
-        panel.add(Box.createHorizontalGlue());
-
-        if (pluginId != null
-                && pluginVersion != null) {
-
-            JPanel pluginPanel = new JPanel();
-            pluginPanel.setBorder(new EmptyBorder(0, 0, 0, 10));
-            pluginPanel.setLayout(new BoxLayout(pluginPanel, BoxLayout.Y_AXIS));
-            pluginPanel.setOpaque(false);
-
-            JLabel pluginVersionLabel = new JLabel("Version " + pluginVersion);
-            pluginVersionLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            pluginVersionLabel.setForeground(OnyxStyleFactory.SECONDARY_TEXT_COLOR);
-            pluginVersionLabel.setBorder(new EmptyBorder(6, 9, 5, 0));
-
-            JLabel pluginIdLabel = new JLabel(pluginId);
-            pluginIdLabel.setFont(OnyxStyleFactory.ROBOTO_REGULAR.deriveFont(10f));
-            pluginIdLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-            pluginIdLabel.setForeground(OnyxStyleFactory.SECONDARY_TEXT_COLOR);
-            pluginIdLabel.setBorder(new EmptyBorder(0, 9, 6, 0));
-
-            pluginPanel.add(pluginVersionLabel);
-            pluginPanel.add(pluginIdLabel);
-
-            panel.add(pluginPanel);
+        if (pluginId != null && pluginVersion != null) {
+            ownerLabel = new Label(getOwner() + " (" + getPluginId() + " " + getPluginVersion() + ")");
+        } else {
+            ownerLabel = new Label(getOwner());
         }
 
-        if (toggleListener != null) {
-            JCheckBox checkBox = new JCheckBox();
-            checkBox.setSelected(defaultToggleState);
-            checkBox.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    toggleListener.toggled(e.getStateChange() == ItemEvent.SELECTED);
-                }
-            });
-            checkBox.setBorder(new EmptyBorder(10, 10, 10, 20));
-            checkBox.setOpaque(false);
+        ownerLabel
+                .getStyleClass()
+                .add("owner");
 
-            panel.add(checkBox);
+        VBox leftBox = new VBox(
+                ownerLabel,
+                new Label(getDescription())
+        );
+
+        leftBox.getStyleClass()
+                .add("leftBox");
+
+        BorderPane.setAlignment(leftBox, Pos.CENTER);
+
+        panel.setLeft(leftBox);
+
+        if (toggleListener != null) {
+            CheckBox enableCheckBox = new CheckBox();
+
+            enableCheckBox.setSelected(defaultToggleState);
+
+            enableCheckBox
+                    .selectedProperty()
+                    .addListener((observable, oldValue, newValue) -> toggleListener.toggled(newValue));
+
+            BorderPane.setAlignment(enableCheckBox, Pos.CENTER);
+
+            panel.setRight(enableCheckBox);
         }
 
         return builtSelectedHeader = panel;
     }
 
-    public JScrollPane buildSelectedSectionBody() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    public ScrollPane buildSelectedSectionBody() {
+        VBox itemBox = new VBox();
 
         for (int i = 0; i < items.size(); i++) {
             SettingsItem item = items.get(i);
 
-            JPanel itemPanel = item.build();
+            BorderPane itemPane = item.build();
 
-            if (i % 2 == 1) {
-                itemPanel.setBackground(OnyxStyleFactory.BASE_DARKER);
+            if (i % 2 != 0) {
+                itemPane.getStyleClass()
+                        .add("alternatedColor");
+            } else {
+                itemPane.getStyleClass()
+                        .remove("alternatedColor");
             }
 
-            panel.add(itemPanel);
+            itemBox.getChildren()
+                    .add(itemPane);
         }
 
-        return new JScrollPane(panel);
+        ScrollPane scrollPane = new ScrollPane(itemBox);
+        scrollPane.setFitToWidth(true);
+        return scrollPane;
     }
 
     public String getOwner() {
@@ -261,11 +224,11 @@ public class SettingsSection {
         return pluginId;
     }
 
-    public JPanel getListHeader() {
+    public BorderPane getListHeader() {
         return builtListHeader;
     }
 
-    public JPanel getSelectedHeader() {
+    public BorderPane getSelectedHeader() {
         return builtSelectedHeader;
     }
 }

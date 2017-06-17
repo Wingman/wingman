@@ -56,7 +56,10 @@ public class AppletFX {
         PlatformImpl.runAndWait(() -> {
             synchronized (SYNC_OBJECT) {
                 Scene scene = new Scene(new BorderPane());
-                scene.getStylesheets().add(stylesheetPath);
+
+                scene.getStylesheets()
+                        .addAll(stylesheetPath,
+                                "https://fonts.googleapis.com/css?family=Overpass:300,400,600,700,800,900");
 
                 panel.setScene(scene);
 
