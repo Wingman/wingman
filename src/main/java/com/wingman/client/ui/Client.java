@@ -7,7 +7,6 @@ import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.rs.Game;
-import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
 import com.wingman.client.ui.util.AppletFX;
 import com.wingman.client.ui.util.ComponentBorderResizer;
@@ -85,7 +84,9 @@ public class Client {
 
         framePanel.add(loadingImagePanel, BorderLayout.CENTER);
 
-        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(0, 3, 3, 3, OnyxStyleFactory.BASE));
+        frame.getRootPane().setBorder(BorderFactory.createMatteBorder(
+                0, 3, 3, 3,
+                Color.decode("#222222")));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.setTitle("Wingman");

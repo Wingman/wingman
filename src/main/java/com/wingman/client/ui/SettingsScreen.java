@@ -2,7 +2,6 @@ package com.wingman.client.ui;
 
 import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
-import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.titlebars.SettingsTitleBar;
 import com.wingman.client.ui.util.AppletFX;
 import com.wingman.client.ui.util.ComponentBorderResizer;
@@ -39,8 +38,9 @@ public class SettingsScreen extends JDialog {
     public SettingsScreen() {
         new ComponentBorderResizer(this);
 
-        this.getRootPane()
-                .setBorder(BorderFactory.createMatteBorder(0, 3, 3, 3, OnyxStyleFactory.BASE));
+        this.getRootPane().setBorder(BorderFactory.createMatteBorder(
+                0, 3, 3, 3,
+                Color.decode("#222222")));
         this.setUndecorated(true);
         this.setJMenuBar(new SettingsTitleBar(this));
 

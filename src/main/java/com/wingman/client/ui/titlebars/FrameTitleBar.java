@@ -2,7 +2,6 @@ package com.wingman.client.ui.titlebars;
 
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.style.OnyxStyleFactory;
 import com.wingman.client.ui.util.AppletFX;
 import com.wingman.client.util.FileUtil;
 import javafx.scene.control.Button;
@@ -13,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
@@ -155,7 +155,7 @@ public class FrameTitleBar extends TitleBar {
                 } else {
                     frame.getRootPane().setBorder(BorderFactory.createMatteBorder(
                             0, 3, 3, 3,
-                            OnyxStyleFactory.BASE));
+                            Color.decode("#222222")));
                     frame.setExtendedState(JFrame.NORMAL);
                 }
             }
