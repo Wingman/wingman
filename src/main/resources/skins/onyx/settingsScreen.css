@@ -3,6 +3,11 @@
     -fx-padding: 10;
 }
 
+#settingsScreen .header:hover,
+#settingsScreen .header.alternatedColor:hover {
+    -fx-background-color: derive(-fx-base, 5%);
+}
+
 #settingsScreen .header.alternatedColor {
     -fx-background-color: -fx-background;
 }
