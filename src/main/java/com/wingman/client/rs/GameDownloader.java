@@ -58,19 +58,19 @@ public class GameDownloader extends Task<Double> {
                         .addAll(progressBar, progressLabel);
 
                 progressBarPanelPane.setCenter(stackPane);
+
+                progressBar
+                        .progressProperty()
+                        .bind(this.valueProperty());
+
+                progressLabel
+                        .textProperty()
+                        .bind(this.messageProperty());
             });
 
             Client.framePanel.add(progressBarPanel, BorderLayout.SOUTH);
             Client.framePanel.validate();
         });
-
-        progressBar
-                .progressProperty()
-                .bind(this.valueProperty());
-
-        progressLabel
-                .textProperty()
-                .bind(this.messageProperty());
 
         new Thread(this).start();
     }
