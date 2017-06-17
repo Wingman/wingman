@@ -1,4 +1,4 @@
-package com.wingman.client.api.enums;
+package com.wingman.defaultplugins.devutils.enums;
 
 public final class ChatType {
 

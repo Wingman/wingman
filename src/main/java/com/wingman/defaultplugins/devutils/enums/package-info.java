@@ -3,4 +3,4 @@
  * <p>
  * They may or may not be represented or backed by actual enums.
  */
-package com.wingman.client.api.enums;
+package com.wingman.defaultplugins.devutils.enums;
