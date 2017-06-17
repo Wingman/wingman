@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
  * Class for looking up a player on the high scores. A {@code HiscorePlayer} object represents
  * a single player on the high scores.
  *
- * <br/><br/>
+ * <p>
  *
  * Example use:
  * Retrieving a player from the standard high scores and printing the results to the console.
@@ -158,7 +158,7 @@ public class HiscorePlayer {
 
                 while ((next = in.readLine()) != null && skillPosition < SKILL_ORDER.length) {
                     for (String str : next.split(",")) {
-                        switch(cycler++) {
+                        switch (cycler++) {
                             case 0: // Start new level, read rank and skill name
                                 level = new Level();
                                 level.rank = Integer.parseInt(str);
