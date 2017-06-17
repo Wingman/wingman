@@ -2,8 +2,8 @@ package com.wingman.client.ui;
 
 import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
+import com.wingman.client.ui.skin.SkinManager;
 import com.wingman.client.ui.titlebars.SettingsTitleBar;
-import com.wingman.client.ui.util.AppletFX;
 import com.wingman.client.ui.util.ComponentBorderResizer;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.ScrollPane;
@@ -56,19 +56,14 @@ public class SettingsScreen extends JDialog {
             }
         });
 
-        contentPanePanel = AppletFX.createPanel();
-
-        String stylesheetPath = AppletFX
-                .class
-                .getResource("/skins/onyx/settingsScreen.css")
-                .toExternalForm();
+        contentPanePanel = SkinManager.createPanel();
 
         contentPanePanel
                 .getScene()
                 .getStylesheets()
-                .add(stylesheetPath);
+                .add(SkinManager.getSettingsScreenStylesheetPath());
 
-        AppletFX.runAndWait(contentPanePanel, () -> {
+        SkinManager.runAndWait(contentPanePanel, () -> {
             sectionList.setId("sectionList");
 
             ScrollPane _sectionListScrollPane = new ScrollPane();
@@ -109,7 +104,7 @@ public class SettingsScreen extends JDialog {
 
     public void registerSection(SettingsSection settingsSection) {
         if (settingsSection != null) {
-            AppletFX.runAndWait(contentPanePanel, () -> {
+            SkinManager.runAndWait(contentPanePanel, () -> {
                 if (!sections.contains(settingsSection)) {
                     sections.add(settingsSection);
 

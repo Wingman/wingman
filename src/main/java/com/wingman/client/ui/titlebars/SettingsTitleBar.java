@@ -1,6 +1,6 @@
 package com.wingman.client.ui.titlebars;
 
-import com.wingman.client.ui.util.AppletFX;
+import com.wingman.client.ui.skin.SkinManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -15,17 +15,12 @@ public class SettingsTitleBar extends TitleBar {
         super(parent);
 
         try {
-            String stylesheetPath = AppletFX
-                    .class
-                    .getResource("/skins/onyx/settingsTitleBar.css")
-                    .toExternalForm();
-
             contentPanel
                     .getScene()
                     .getStylesheets()
-                    .add(stylesheetPath);
+                    .add(SkinManager.getSettingsTitleBarStylesheetPath());
 
-            AppletFX.runAndWait(contentPanel, () -> {
+            SkinManager.runAndWait(contentPanel, () -> {
                 BorderPane contentPanelPane = (BorderPane) contentPanel
                         .getScene()
                         .getRoot();

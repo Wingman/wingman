@@ -6,7 +6,7 @@ import com.squareup.okhttp.ResponseBody;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.net.HttpClient;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.util.AppletFX;
+import com.wingman.client.ui.skin.SkinManager;
 import javafx.concurrent.Task;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.Label;
@@ -45,9 +45,9 @@ public class GameDownloader extends Task<Double> {
 
     public GameDownloader() {
         SwingUtilities.invokeLater(() -> {
-            JFXPanel progressBarPanel = AppletFX.createPanel();
+            JFXPanel progressBarPanel = SkinManager.createPanel();
 
-            AppletFX.runAndWait(progressBarPanel, () -> {
+            SkinManager.runAndWait(progressBarPanel, () -> {
                 BorderPane progressBarPanelPane = (BorderPane) progressBarPanel
                         .getScene()
                         .getRoot();

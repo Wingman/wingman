@@ -1,6 +1,6 @@
 package com.wingman.client.ui.titlebars;
 
-import com.wingman.client.ui.util.AppletFX;
+import com.wingman.client.ui.skin.SkinManager;
 import javafx.embed.swing.JFXPanel;
 
 import javax.swing.*;
@@ -18,7 +18,7 @@ public class TitleBar extends JMenuBar {
 
     public TitleBar(Component parent) {
         this.parent = parent;
-        this.contentPanel = AppletFX.createPanel();
+        this.contentPanel = SkinManager.createPanel();
 
         this.setBorder(null);
 

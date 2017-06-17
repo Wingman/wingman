@@ -2,7 +2,7 @@ package com.wingman.client.ui.titlebars;
 
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.ui.Client;
-import com.wingman.client.ui.util.AppletFX;
+import com.wingman.client.ui.skin.SkinManager;
 import com.wingman.client.util.FileUtil;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -27,17 +27,12 @@ public class FrameTitleBar extends TitleBar {
         super(parent);
 
         try {
-            String stylesheetPath = AppletFX
-                    .class
-                    .getResource("/skins/onyx/frameTitleBar.css")
-                    .toExternalForm();
-
             contentPanel
                     .getScene()
                     .getStylesheets()
-                    .add(stylesheetPath);
+                    .add(SkinManager.getFrameTitleBarStylesheetPath());
 
-            AppletFX.runAndWait(contentPanel, () -> {
+            SkinManager.runAndWait(contentPanel, () -> {
                 BorderPane contentPanelPane = (BorderPane) contentPanel
                         .getScene()
                         .getRoot();

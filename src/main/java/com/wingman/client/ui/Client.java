@@ -5,10 +5,11 @@ import com.wingman.client.api.settings.PropertiesSettings;
 import com.wingman.client.api.transformer.Transformers;
 import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
+import com.wingman.client.api.ui.skin.Skin;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.rs.Game;
+import com.wingman.client.ui.skin.SkinManager;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
-import com.wingman.client.ui.util.AppletFX;
 import com.wingman.client.ui.util.ComponentBorderResizer;
 import com.wingman.client.util.FileUtil;
 import javafx.embed.swing.JFXPanel;
@@ -44,7 +45,7 @@ public class Client {
             e.printStackTrace();
         }
 
-        setStylesheet();
+        applyOnyxSkin();
 
         if (clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED)) {
             try {
@@ -70,9 +71,9 @@ public class Client {
             e.printStackTrace();
         }
 
-        JFXPanel loadingImagePanel = AppletFX.createPanel();
+        JFXPanel loadingImagePanel = SkinManager.createPanel();
 
-        AppletFX.runAndWait(loadingImagePanel, () -> {
+        SkinManager.runAndWait(loadingImagePanel, () -> {
             BorderPane rootPane = (BorderPane) loadingImagePanel
                     .getScene()
                     .getRoot();
@@ -183,12 +184,22 @@ public class Client {
         new ComponentBorderResizer(frame);
     }
 
-    private void setStylesheet() {
-        String stylesheetPath = AppletFX
-                .class
-                .getResource("/skins/onyx/base.css")
-                .toExternalForm();
+    private void applyOnyxSkin() {
+        Skin onyxSkin = new Skin(
+                Client.class
+                        .getResource("/skins/onyx/base.css")
+                        .toExternalForm(),
+                Client.class
+                        .getResource("/skins/onyx/settingsScreen.css")
+                        .toExternalForm(),
+                Client.class
+                        .getResource("/skins/onyx/frameTitleBar.css")
+                        .toExternalForm(),
+                Client.class
+                        .getResource("/skins/onyx/settingsTitleBar.css")
+                        .toExternalForm()
+        );
 
-        AppletFX.setGlobalStylesheet(stylesheetPath);
+        SkinManager.applySkin(onyxSkin);
     }
 }
