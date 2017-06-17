@@ -16,6 +16,7 @@
 
 #titleText Label {
     -fx-padding: 3 0 0 0;
+    -fx-font-weight: bold;
 }
 
 #rightSide {
