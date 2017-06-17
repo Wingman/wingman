@@ -4,6 +4,8 @@ package com.wingman.client.api.generated;
 public interface LandscapeTile extends Node {
     InteractableObject[] getInteractableObjects();
 
+    ItemLayer getItemLayer();
+
     int[] getObjectFlags();
 
     int getPlane();
@@ -15,6 +17,8 @@ public interface LandscapeTile extends Node {
     @SuppressWarnings("all")
     interface Unsafe extends Node {
         void setInteractableObjects(InteractableObject[] value);
+
+        void setItemLayer(ItemLayer value);
 
         void setObjectFlags(int[] value);
 
