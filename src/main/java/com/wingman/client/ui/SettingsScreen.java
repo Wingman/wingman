@@ -135,6 +135,8 @@ public class SettingsScreen extends JDialog {
             builtHeader.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 if (selectedSection != null) {
                     deselectSection();
+                } else {
+                    selectSection(section);
                 }
 
                 event.consume();
@@ -221,7 +223,9 @@ public class SettingsScreen extends JDialog {
                         builtHeader = section.buildSelectedSectionHeader();
 
                         builtHeader.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                            if (selectedSection == null) {
+                            if (selectedSection != null) {
+                                deselectSection();
+                            } else {
                                 selectSection(section);
                             }
 
@@ -265,21 +269,9 @@ public class SettingsScreen extends JDialog {
                 if (settings != null) {
                     VBox itemBox = new VBox();
 
-                    for (int j = 0; j < settings.size(); j++) {
-                        SettingsItem item = settings.get(j);
-
-                        BorderPane itemPane = item.build();
-
-                        if (j % 2 != 0) {
-                            itemPane.getStyleClass()
-                                    .add("alternatedColor");
-                        } else {
-                            itemPane.getStyleClass()
-                                    .remove("alternatedColor");
-                        }
-
+                    for (SettingsItem item : settings) {
                         itemBox.getChildren()
-                                .add(itemPane);
+                                .add(item.build());
                     }
 
                     sectionList
