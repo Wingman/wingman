@@ -49,6 +49,11 @@ public class GroundItems {
     public void activate() {
         Overlay overlay = new Overlay(false) {
             @Override
+            public boolean shouldDraw() {
+                return GameAPI.getGameState() == GameState.PLAYING;
+            }
+
+            @Override
             public boolean shouldUpdate() {
                 return GameAPI.getGameState() == GameState.PLAYING;
             }

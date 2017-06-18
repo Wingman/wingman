@@ -39,53 +39,55 @@ public class CanvasUpdatedTransformer implements Transformer {
             List<Overlay> overlays = PluginManager.getAllOverlays();
 
             for (Overlay overlay : overlays) {
-                Dimension d = overlay.getDimension();
+                if (overlay.shouldDraw()) {
+                    Dimension d = overlay.getDimension();
 
-                int width = d.width;
-                int height = d.height;
+                    int width = d.width;
+                    int height = d.height;
 
-                int[] pixels = overlay.cachedPixels;
+                    int[] pixels = overlay.cachedPixels;
 
-                if (pixels == null || overlay.shouldUpdate()) {
-                    pixels = new int[width * height];
+                    if (pixels == null || overlay.shouldUpdate()) {
+                        pixels = new int[width * height];
 
-                    BufferedImage i = new BufferedImage(
-                            width, height,
-                            BufferedImage.TYPE_INT_ARGB);
+                        BufferedImage i = new BufferedImage(
+                                width, height,
+                                BufferedImage.TYPE_INT_ARGB);
 
-                    Graphics2D g = i.createGraphics();
-                    overlay.update(g);
-                    g.dispose();
+                        Graphics2D g = i.createGraphics();
+                        overlay.update(g);
+                        g.dispose();
 
-                    try {
-                        new PixelGrabber(i, 0, 0, width, height, pixels, 0, width)
-                                .grabPixels();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        try {
+                            new PixelGrabber(i, 0, 0, width, height, pixels, 0, width)
+                                    .grabPixels();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        overlay.cachedPixels = pixels;
                     }
 
-                    overlay.cachedPixels = pixels;
-                }
+                    Point p = overlay.getPosition();
 
-                Point p = overlay.getPosition();
+                    int startX = p.x;
+                    int startY = p.y;
 
-                int startX = p.x;
-                int startY = p.y;
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            int newPixel = pixels[y * width + x];
 
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        int newPixel = pixels[y * width + x];
+                            int a = (newPixel >> 24) & 0xFF;
+                            // If alpha > 0, pixel is filled
+                            if (a > 0) {
+                                int targetIdx = (y + startY) * gameWidth + x + startX;
 
-                        int a = (newPixel >> 24) & 0xFF;
-                        // If alpha > 0, pixel is filled
-                        if (a > 0) {
-                            int targetIdx = (y + startY) * gameWidth + x + startX;
-
-                            if (targetIdx < maxIdx) {
-                                if (isInGame && a < 255) {
-                                    gamePixels[targetIdx] = blendWithAlpha(newPixel, gamePixels[targetIdx], a);
-                                } else {
-                                    gamePixels[targetIdx] = newPixel;
+                                if (targetIdx < maxIdx) {
+                                    if (isInGame && a < 255) {
+                                        gamePixels[targetIdx] = blendWithAlpha(newPixel, gamePixels[targetIdx], a);
+                                    } else {
+                                        gamePixels[targetIdx] = newPixel;
+                                    }
                                 }
                             }
                         }

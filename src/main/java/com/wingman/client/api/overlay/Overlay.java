@@ -26,6 +26,10 @@ public class Overlay {
         return DEFAULT_DIMENSION;
     }
 
+    public boolean shouldDraw() {
+        return true;
+    }
+
     public boolean shouldUpdate() {
         return false;
     }
