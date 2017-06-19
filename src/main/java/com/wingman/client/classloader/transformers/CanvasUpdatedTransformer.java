@@ -119,58 +119,55 @@ public class CanvasUpdatedTransformer implements Transformer {
 
     @Override
     public boolean canTransform(String name) {
-        return name.equals(gameDrawingMode.owner)
-                || name.equals(graphicsBuffer);
+        return true;
     }
 
     @Override
     public ClassNode transform(ClassNode clazz) {
-        if (clazz.name.equals(gameDrawingMode.owner)) {
-            for (MethodNode m : clazz.methods) {
-                if (!"<clinit>".equals(m.name)) {
-                    continue;
-                }
-
-                Iterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
-                while (nodeIterator.hasNext()) {
-                    try {
-                        InsnNode i = (InsnNode) nodeIterator.next();
-
-                        FieldInsnNode i2 = (FieldInsnNode) i.getNext();
-                        if (i2.getOpcode() != Opcodes.PUTSTATIC
-                                || !i2.owner.equals(gameDrawingMode.owner)
-                                || !i2.name.equals(gameDrawingMode.name)) {
-                            continue;
-                        }
-
-                        m.instructions.set(i, new InsnNode(Opcodes.ICONST_1));
-                        break;
-                    } catch (ClassCastException | NullPointerException ignored) {
-                    }
-                }
-            }
-        } else {
+        if (clazz.name.equals(graphicsBuffer)) {
             for (MethodNode m : clazz.methods) {
                 if (m.name.equals(drawFullGameImage.name)
                         && m.desc.equals(drawFullGameImage.desc)) {
 
-                    Iterator<AbstractInsnNode> nodeIterator = m.instructions.iterator();
-                    while (nodeIterator.hasNext()) {
-                        try {
-                            FieldInsnNode fieldInsnNode = (FieldInsnNode) nodeIterator.next();
-                            if (!"Ljava/awt/Image;".equals(fieldInsnNode.desc)) {
+                    Iterator<AbstractInsnNode> iterator = m.instructions.iterator();
+
+                    while (iterator.hasNext()) {
+                        AbstractInsnNode i = iterator.next();
+
+                        if (i instanceof FieldInsnNode) {
+                            FieldInsnNode i2 = (FieldInsnNode) i;
+                            if (!"Ljava/awt/Image;".equals(i2.desc)) {
                                 continue;
                             }
 
-                            m.instructions.insertBefore(fieldInsnNode.getPrevious().getPrevious(),
+                            m.instructions.insertBefore(i2.getPrevious().getPrevious(),
                                     new MethodInsnNode(Opcodes.INVOKESTATIC,
                                             this.getClass().getName().replace(".", "/"),
                                             "runHook",
                                             "()V",
                                             false));
                             break;
-                        } catch (ClassCastException | NullPointerException ignored) {
                         }
+                    }
+                }
+            }
+        } else {
+            for (MethodNode m : clazz.methods) {
+                Iterator<AbstractInsnNode> iterator = m.instructions.iterator();
+
+                while (iterator.hasNext()) {
+                    AbstractInsnNode i = iterator.next();
+
+                    if (i instanceof FieldInsnNode) {
+                        FieldInsnNode i2 = (FieldInsnNode) i;
+
+                        if (i2.getOpcode() != Opcodes.GETSTATIC
+                                || !i2.owner.equals(gameDrawingMode.owner)
+                                || !i2.name.equals(gameDrawingMode.name)) {
+                            continue;
+                        }
+
+                        m.instructions.set(i2, new InsnNode(Opcodes.ICONST_2));
                     }
                 }
             }
