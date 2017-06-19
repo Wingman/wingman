@@ -8,7 +8,7 @@ public class Perspective {
 
     /*
         The engine divides the unit circle
-        into a number of units equal in size
+        into a number of units equal in size.
 
         This is presumably to gain extra precision when
         making use of the sine and cosine trigonometric
@@ -21,7 +21,15 @@ public class Perspective {
         If there are 2048 units, one unit
         is equivalent to 0.17578125 degrees.
      */
+
+    /**
+     * The amount of times a circle has been divided.
+     */
     private static final int CIRCLE_UNITS = 2048;
+
+    /**
+     * How large of a portion one circle unit takes up of a circle.
+     */
     private static final double CIRCLE_UNIT = (2 * Math.PI) / CIRCLE_UNITS;
 
     /*
@@ -29,7 +37,15 @@ public class Perspective {
         cosine functions in order to improve execution
         speed of methods that use the functions.
      */
+
+    /**
+     * Sine function lookup table.
+     */
     private static int[] SIN_TABLE = new int[CIRCLE_UNITS];
+
+    /**
+     * Cosine function lookup table.
+     */
     private static int[] COS_TABLE = new int[CIRCLE_UNITS];
 
     static {
@@ -57,7 +73,7 @@ public class Perspective {
         // Is the point inside the landscape?
         if (x >= 128 && y >= 128 && x <= 13056 && y <= 13056) {
             int z = Scene.getTileHeight(x, y, clientPlane);
-            // Translate relative to the the camera (the origin)
+            // Translate relative to the camera (the origin)
             x -= GameAPI.getCameraX();
             y -= GameAPI.getCameraY();
             z -= GameAPI.getCameraZ();
@@ -138,31 +154,66 @@ public class Perspective {
      * @return a {@link Point} on the mini-map corresponding to the position in 3D-space
      */
     public static Point worldToMiniMap(int x, int y) {
-        int angle = GameAPI.getMapScale() + GameAPI.getMapAngle() & 0x7FF;
-        x = x / 32 - GameAPI.getLocalPlayer().getX() / 32;
-        y = y / 32 - GameAPI.getLocalPlayer().getY() / 32;
+        x /= 32;
+        y /= 32;
 
-        int dist = x * x + y * y;
+        /*
+            Translate relative to the local player.
 
-        if (dist < 6400) {
+            If the local player is standing on top
+            of x and y, x and y will be 0 after
+            this translation.
+
+            If the local player is northwest of
+            x and y, x will be positive and y
+            will be negative after this translation.
+         */
+        x -= GameAPI.getLocalPlayer().getX() / 32;
+        y -= GameAPI.getLocalPlayer().getY() / 32;
+
+        // Make sure distance is less than sqrt(6400) = 80 units
+        if (x * x + y * y < 6400) {
+            int angle = GameAPI.getMapScale()
+                    + GameAPI.getMapAngle() & 0x7FF;
+
             int sin = SIN_TABLE[angle];
             int cos = COS_TABLE[angle];
 
-            sin = sin * 256 / (GameAPI.getMapOffset() + 256);
-            cos = cos * 256 / (GameAPI.getMapOffset() + 256);
+            /*
+                Modify sin & cos values to
+                conform to the map offset field.
 
-            int xx = y * sin + cos * x >> 16;
-            int yy = sin * x - y * cos >> 16;
+                If map offset is large, the distance
+                between passed in x and y and
+                the local player is small.
+             */
+            int mapOffset = GameAPI.getMapOffset();
 
-            int miniMapDiameter = !GameAPI.getResizableMode() ? 208 : 167;
+            sin = sin * 256 / (mapOffset + 256);
+            cos = cos * 256 / (mapOffset + 256);
 
-            int miniMapX = GameAPI.getAppletWidth() - miniMapDiameter;
+            /*
+                These are distances from the
+                center-point of the mini-map
+                to the passed in coordinates.
+             */
+            int screenX = sin * y + cos * x >> 16;
+            int screenY = sin * x - cos * y >> 16;
+
+            int miniMapWidth = 246;
+            int miniMapHeight = 170;
+
+            if (GameAPI.getResizableMode()) {
+                miniMapWidth = 164;
+            }
+
+            int miniMapX = GameAPI.getAppletWidth() - miniMapWidth;
 
             // Get center-point of the mini-map
-            x = (miniMapX + miniMapDiameter / 2) + xx;
-            y = (miniMapDiameter / 2 - 1) + yy;
+            screenX += miniMapX + miniMapWidth / 2;
+            screenY += miniMapHeight / 2;
 
-            return new Point(x, y);
+            return new Point(screenX, screenY);
         }
 
         return new Point(-1, -1);
