@@ -9,6 +9,7 @@ import com.squareup.okhttp.Response;
 import com.wingman.client.api.net.HttpClient;
 
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +24,7 @@ public class ItemPriceCache {
     private static Queue<Integer> cacheQueue = new ConcurrentLinkedQueue<>();
     private static CacheThread cacheThread;
 
-    public static int getItemPrice(int itemId) {
+    public static Optional<Integer> getItemPrice(int itemId) {
         Integer price = getCache()
                 .getIfPresent(itemId);
 
@@ -36,10 +37,10 @@ public class ItemPriceCache {
                 }
             }
 
-            return -1;
+            return Optional.empty();
         }
 
-        return price;
+        return Optional.of(price);
     }
 
     private static Cache<Integer, Integer> getCache() {

@@ -3,6 +3,8 @@ package com.wingman.defaultplugins.devutils.game;
 import com.wingman.client.api.generated.GameAPI;
 import com.wingman.client.api.generated.Widget;
 
+import java.util.Optional;
+
 /**
  * Provides API for getting data about the local player's inventory.
  */
@@ -10,85 +12,97 @@ public class Inventory {
 
     /**
      * @return an array containing item IDs for item slots, where an "item slot" is an array index;
-     *         or an empty array if the inventory can't be looked up
+     *         or nothing if the inventory can't be looked up
      */
-    public static int[] getItemIds() {
-        Widget widget = getWidget();
-
-        if (widget != null) {
-            return widget.getItemIds();
-        }
-
-        return new int[0];
+    public static Optional<int[]> getItemIds() {
+        return getWidget()
+                .map(Widget::getItemIds);
     }
 
     /**
      * @return an array containing item quantities for item slots, where an "item slot" is an array index;
-     *         or an empty array if the inventory can't be looked up
+     *         or nothing if the inventory can't be looked up
      */
-    public static int[] getItemQuantities() {
-        Widget widget = getWidget();
-
-        if (widget != null) {
-            return widget.getItemQuantities();
-        }
-
-        return new int[0];
+    public static Optional<int[]> getItemQuantities() {
+        return getWidget()
+                .map(Widget::getItemQuantities);
     }
 
     /**
      * @param itemId the item ID of the item to lookup
      * @return {@code true} if the item was successfully found in the inventory;
-     *         {@code false} if it was not found
+     *         {@code false} if it was not found;
+     *         or nothing if the inventory can't be looked up
      */
-    public static boolean containsItem(int itemId) {
-        for (int id : getItemQuantities()) {
-            if (id == itemId) {
-                return true;
+    public static Optional<Boolean> containsItem(int itemId) {
+        Optional<int[]> quantities = getItemQuantities();
+
+        if (quantities.isPresent()) {
+            for (int id : quantities.get()) {
+                if (id == itemId) {
+                    return Optional.of(true);
+                }
             }
+
+            return Optional.of(false);
         }
-        return false;
+
+        return Optional.empty();
     }
 
     /**
      * @param itemId the item ID of the item to count
-     * @return the amount of the item ID in the inventory
+     * @return the amount of the item ID in the inventory;
+     *         or nothing if the inventory can't be looked up
      */
-    public static int countItem(int itemId) {
-        int count = 0;
+    public static Optional<Integer> countItem(int itemId) {
+        Optional<int[]> ids = getItemIds();
+        Optional<int[]> quantities = getItemQuantities();
 
-        int[] ids = getItemIds();
-        int[] quantities = getItemQuantities();
+        if (ids.isPresent() && quantities.isPresent()) {
+            int count = 0;
 
-        for (int i = 0; i < ids.length; i++) {
-            if (ids[i] == itemId) {
-                count += quantities[i];
+            for (int i = 0; i < ids.get().length; i++) {
+                if (ids.get()[i] == itemId) {
+                    count += quantities.get()[i];
+                }
             }
+
+            return Optional.of(count);
         }
 
-        return count;
+        return Optional.empty();
     }
 
     /**
-     * @return the amount of slots that are occupied with an item
+     * @return the amount of slots that are occupied with an item;
+     *         or nothing if the inventory can't be looked up
      */
-    public static int getUsedSpace() {
-        int count = 0;
+    public static Optional<Integer> getUsedSpace() {
+        Optional<int[]> ids = getItemIds();
 
-        for (int id : getItemIds()) {
-            if (id != 0) {
-                count++;
+        if (ids.isPresent()) {
+            int count = 0;
+
+            for (int id : ids.get()) {
+                if (id != 0) {
+                    count++;
+                }
             }
+
+            return Optional.of(count);
         }
 
-        return count;
+        return Optional.empty();
     }
 
     /**
-     * @return the amount of slots that aren't occupied with an item
+     * @return the amount of slots that aren't occupied with an item;
+     *         or nothing if the inventory can't be looked up
      */
-    public static int getFreeSpace() {
-        return getCapacity() - getUsedSpace();
+    public static Optional<Integer> getFreeSpace() {
+        return getUsedSpace()
+                .map(usedSpace -> getCapacity() - usedSpace);
     }
 
     /**
@@ -100,13 +114,13 @@ public class Inventory {
 
     /**
      * @return the inventory widget;
-     *         or {@code null} if the widget couldn't be retrieved
+     *         or nothing if the widget couldn't be retrieved
      */
-    public static Widget getWidget() {
+    public static Optional<Widget> getWidget() {
         try {
-            return GameAPI.getWidgets()[149][0];
+            return Optional.of(GameAPI.getWidgets()[149][0]);
         } catch (Exception e) {
-            return null;
+            return Optional.empty();
         }
     }
 }

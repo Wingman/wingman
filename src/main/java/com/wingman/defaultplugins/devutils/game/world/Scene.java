@@ -4,6 +4,7 @@ import com.wingman.client.api.generated.GameAPI;
 import com.wingman.client.api.generated.LandscapeTile;
 
 import java.awt.*;
+import java.util.Optional;
 
 public class Scene {
 
@@ -13,11 +14,13 @@ public class Scene {
      * @param x the ground coordinate on the x axis
      * @param y the ground coordinate on the y axis
      * @param plane the client plane/ground level
-     * @return the offset from the ground of the tile
+     * @return the offset from the ground of the tile;
+     *         or nothing if the coordinate is outside the bounds
      */
-    public static int getTileHeight(int x, int y, int plane) {
+    public static Optional<Integer> getTileHeight(int x, int y, int plane) {
         int x2 = x >> 7;
         int y2 = y >> 7;
+
         if (x2 > 0 && y2 > 0 && x2 < 103 && y2 < 103) {
             if (plane < 3 && (GameAPI.getTileSettings()[1][x2][y2] & 0x2) == 2) {
                 plane++;
@@ -27,19 +30,26 @@ public class Scene {
 
             int aa = tileHeights[plane][x2][y2] * (128 - (x & 0x7F)) + tileHeights[plane][x2 + 1][y2] * (x & 0x7F) >> 7;
             int ab = tileHeights[plane][x2][y2 + 1] * (128 - (x & 0x7F)) + tileHeights[plane][x2 + 1][y2 + 1] * (x & 0x7F) >> 7;
-            return aa * (128 - (y & 0x7F)) + ab * (y & 0x7F) >> 7;
+
+            return Optional.of(aa * (128 - (y & 0x7F)) + ab * (y & 0x7F) >> 7);
         }
-        return 0;
+
+        return Optional.empty();
     }
 
     /**
      * Gets the coordinates of a tile, relative to the local player.
      *
      * @param tile the subject {@link LandscapeTile}
-     * @return the point in the 3D world the tile is at, relative to the local player
+     * @return the point in the 3D world the tile is at, relative to the local player;
+     *         or nothing if the tile coordinates couldn't be retrieved
      */
-    public static Point getTilePosition(LandscapeTile tile) {
-        return new Point(tile.getX() * 128, tile.getY() * 128);
+    public static Optional<Point> getTilePosition(LandscapeTile tile) {
+        try {
+            return Optional.of(new Point(tile.getX() * 128, tile.getY() * 128));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     /**

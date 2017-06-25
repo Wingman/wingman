@@ -11,10 +11,7 @@ import com.wingman.defaultplugins.devutils.util.external.ItemPriceCache;
 
 import java.awt.*;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @PluginDependency(
         id = "DevUtils-defaultplugins",
@@ -91,8 +88,10 @@ public class GroundItems {
                                 int x = itemLayer.getX();
                                 int y = itemLayer.getY();
 
-                                Point point = Perspective.worldToScreen(x, y, plane, itemLayer.getHeight());
-                                if (point.x != -1 && point.y != -1) {
+                                Optional<Point> point = Perspective
+                                        .worldToScreen(x, y, plane, itemLayer.getHeight());
+
+                                if (point.isPresent()) {
                                     ArrayList<Integer> itemIds = new ArrayList<>();
                                     Map<Integer, Integer> itemQuantities = new HashMap<>();
 
@@ -110,7 +109,7 @@ public class GroundItems {
                                         Integer id = itemIds.get(i);
                                         Integer qty = itemQuantities.get(id);
                                         String itemName;
-                                        long price;
+                                        long price = 0;
 
                                         if (id == 995) {
                                             price = qty;
@@ -128,29 +127,39 @@ public class GroundItems {
                                             itemName = GameAPI.getItemDefinition(id).getName();
                                             itemStringBuilder.append(itemName);
 
-                                            price = ItemPriceCache.getItemPrice(id) * qty;
-                                            if (price > 0) {
+                                            Optional<Integer> optionalPrice = ItemPriceCache.getItemPrice(id);
+
+                                            if (optionalPrice.isPresent()) {
+                                                price = optionalPrice.get() * qty;
                                                 itemStringBuilder.append(MessageFormat.format(" ({0})", formatValue(price)));
                                             }
                                         }
 
                                         String itemString = itemStringBuilder.toString();
                                         itemStringBuilder.setLength(0);
-                                        int screenX = point.x + 2 - (fontMetrics.stringWidth(itemString) / 2);
+                                        int screenX = point.get().x + 2 - (fontMetrics.stringWidth(itemString) / 2);
 
                                         g.setColor(Color.BLACK);
-                                        g.drawString(itemString, screenX + 1, point.y - (15 * i) + 1);
+                                        g.drawString(itemString, screenX + 1, point.get().y - (15 * i) + 1);
                                         g.setColor(getValueColor(price));
-                                        g.drawString(itemString, screenX, point.y - (15 * i));
+                                        g.drawString(itemString, screenX, point.get().y - (15 * i));
 
                                         if (miniMapDotEnabled) {
                                             if (price >= MINIMUM_EXPENSIVE) {
                                                 if (itemName != null) {
-                                                    Point miniMapPoint = Perspective.worldToMiniMap(x, y);
-                                                    g.setColor(Color.BLACK);
-                                                    g.drawString(itemName, miniMapPoint.x + 1, miniMapPoint.y + 1);
-                                                    g.setColor(getValueColor(price));
-                                                    g.drawString(itemName, miniMapPoint.x, miniMapPoint.y);
+                                                    Optional<Point> miniMapPoint = Perspective
+                                                            .worldToMiniMap(x, y);
+
+                                                    if (miniMapPoint.isPresent()) {
+                                                        g.setColor(Color.BLACK);
+                                                        g.drawString(itemName,
+                                                                miniMapPoint.get().x + 1,
+                                                                miniMapPoint.get().y + 1);
+                                                        g.setColor(getValueColor(price));
+                                                        g.drawString(itemName,
+                                                                miniMapPoint.get().x,
+                                                                miniMapPoint.get().y);
+                                                    }
                                                 }
                                             }
                                         }
