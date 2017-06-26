@@ -1,7 +1,6 @@
-package com.wingman.client;
+package com.wingman.client.settings;
 
 import com.google.common.collect.ImmutableMap;
-import com.wingman.client.api.settings.PropertiesSettings;
 
 import java.awt.*;
 import java.io.IOException;

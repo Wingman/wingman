@@ -1,6 +1,4 @@
-package com.wingman.client.api.settings;
-
-import com.wingman.client.ClientSettings;
+package com.wingman.client.settings;
 
 import java.io.File;
 import java.io.FileOutputStream;

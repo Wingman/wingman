@@ -3,13 +3,13 @@ package com.wingman.client.rs;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
-import com.wingman.client.ClientSettings;
 import com.wingman.client.api.generated.GameAPI;
 import com.wingman.client.api.generated.Static;
 import com.wingman.client.api.mapping.MappingsHelper;
 import com.wingman.client.classloader.TransformingClassLoader;
 import com.wingman.client.rs.listeners.CanvasMouseListener;
 import com.wingman.client.rs.listeners.CanvasMouseWheelListener;
+import com.wingman.client.settings.ClientSettings;
 
 import java.applet.Applet;
 import java.awt.*;

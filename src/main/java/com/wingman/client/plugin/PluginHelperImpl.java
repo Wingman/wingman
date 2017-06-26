@@ -1,9 +1,9 @@
 package com.wingman.client.plugin;
 
 import com.google.common.io.ByteStreams;
-import com.wingman.client.ClientSettings;
 import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.PluginHelper;
+import com.wingman.client.settings.ClientSettings;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
