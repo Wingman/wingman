@@ -4,7 +4,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 import com.wingman.client.api.net.HttpClient;
-import com.wingman.client.settings.ClientSettings;
+import com.wingman.client.ClientSettings;
 import com.wingman.client.ui.Client;
 import com.wingman.client.ui.skin.SkinManager;
 import javafx.concurrent.Task;
@@ -136,9 +136,6 @@ public class GameDownloader extends Task<Double> {
     /**
      * Gets the user-specified world saved in the client settings.
      * <p>
-     * More specifically, tries to parse the {@link ClientSettings#properties} value
-     * for the key {@link ClientSettings#PREFERRED_WORLD}.
-     * <p>
      * The parsed value must be in the format "358".
      * With other words, the value cannot be "58" for world 358. That will be parsed as the world "308".
      * <p>
@@ -149,10 +146,7 @@ public class GameDownloader extends Task<Double> {
      */
     private int getWorldFromSettings() {
         try {
-            return Integer.parseInt(Client
-                    .clientSettings
-                    .get(ClientSettings.PREFERRED_WORLD)
-                    .substring(1));
+            return Integer.parseInt(("" + ClientSettings.getPreferredWorld()).substring(1));
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }

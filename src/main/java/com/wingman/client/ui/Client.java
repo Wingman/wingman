@@ -6,8 +6,7 @@ import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.client.api.ui.skin.Skin;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.rs.Game;
-import com.wingman.client.settings.ClientSettings;
-import com.wingman.client.settings.PropertiesSettings;
+import com.wingman.client.ClientSettings;
 import com.wingman.client.ui.skin.SkinManager;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
@@ -32,22 +31,15 @@ public class Client {
     public static JPanel framePanel;
 
     public static SettingsScreen settingsScreen;
-    public static PropertiesSettings clientSettings;
 
     public static ClientTrayIcon clientTrayIcon;
 
     public Client() {
         frame = new JFrame();
 
-        try {
-            clientSettings = new ClientSettings();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         applyOnyxSkin();
 
-        if (clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED)) {
+        if (ClientSettings.areNotificationsEnabled()) {
             try {
                 clientTrayIcon = new ClientTrayIcon();
             } catch (IOException | AWTException e) {
@@ -138,20 +130,10 @@ public class Client {
                         .add(i);
             }
 
-            int settingsPreferredWorld = 311;
-            try {
-                settingsPreferredWorld = Integer.parseInt(clientSettings.get(ClientSettings.PREFERRED_WORLD));
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + settingsPreferredWorld);
-                clientSettings.save();
-            }
-
-            preferredWorld.setValue(settingsPreferredWorld);
-
+            preferredWorld.setValue(ClientSettings.getPreferredWorld());
             preferredWorld.valueProperty().addListener((observable, oldValue, newValue) -> {
-                clientSettings.update(ClientSettings.PREFERRED_WORLD, "" + newValue);
-                clientSettings.save();
+                ClientSettings.setPreferredWorld(newValue);
+                ClientSettings.saveToFile();
             });
 
             settingsItem.add(preferredWorld);
@@ -163,11 +145,10 @@ public class Client {
 
             CheckBox notificationsEnabled = new CheckBox();
 
-            notificationsEnabled.setSelected(clientSettings.getBoolean(ClientSettings.NOTIFICATIONS_ENABLED));
+            notificationsEnabled.setSelected(ClientSettings.areNotificationsEnabled());
             notificationsEnabled.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                String newState = newValue ? "true" : "false";
-                clientSettings.update(ClientSettings.NOTIFICATIONS_ENABLED, newState);
-                clientSettings.save();
+                ClientSettings.setNotificationsEnabled(newValue);
+                ClientSettings.saveToFile();
             });
 
             settingsItem.add(notificationsEnabled);

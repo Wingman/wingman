@@ -9,7 +9,7 @@ import com.wingman.client.api.mapping.MappingsHelper;
 import com.wingman.client.classloader.TransformingClassLoader;
 import com.wingman.client.rs.listeners.CanvasMouseListener;
 import com.wingman.client.rs.listeners.CanvasMouseWheelListener;
-import com.wingman.client.settings.ClientSettings;
+import com.wingman.client.ClientSettings;
 
 import java.applet.Applet;
 import java.awt.*;

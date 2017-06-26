@@ -10,7 +10,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.squareup.okhttp.Response;
 import com.wingman.client.api.net.HttpClient;
-import com.wingman.client.settings.ClientSettings;
+import com.wingman.client.ClientSettings;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;

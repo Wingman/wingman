@@ -6,7 +6,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
-import com.wingman.client.settings.ClientSettings;
 import com.wingman.client.ui.Client;
 import org.slf4j.LoggerFactory;
 import uk.org.lidalia.sysoutslf4j.context.SysOutOverSLF4J;
@@ -51,7 +50,6 @@ public final class Main {
 
         try {
             createDirectory(ClientSettings.PLUGINS_DIR.toFile());
-            createDirectory(ClientSettings.SETTINGS_DIR.toFile());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
