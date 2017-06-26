@@ -5,9 +5,14 @@ import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.Plugin;
 import com.wingman.client.api.plugin.PluginDependency;
 import com.wingman.client.api.plugin.PluginHelper;
+import com.wingman.client.api.ui.settingscreen.SettingsItem;
+import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.defaultplugins.devutils.enums.GameState;
 import com.wingman.defaultplugins.devutils.game.world.Perspective;
 import com.wingman.defaultplugins.devutils.util.external.ItemPriceCache;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Spinner;
 
 import java.awt.*;
 import java.text.MessageFormat;
@@ -28,26 +33,168 @@ public class GroundItems {
     @Plugin.Helper
     public PluginHelper helper;
 
-    private boolean miniMapDotEnabled = true;
-
-    private int MINIMUM_VERY_EXPENSIVE = 1_000_000;
-    private int MINIMUM_EXPENSIVE = 50_000;
-
-    private Color COLOR_VERY_EXPENSIVE = new Color(212, 175, 55);
-    private Color COLOR_EXPENSIVE = new Color(50, 205, 50);
-    private Color COLOR_UNTRADABLE = new Color(255, 20, 147);
-    private Color COLOR_LOW_PRICE = new Color(255, 255, 255);
+    private GroundItemsSettings settings;
 
     private Font textFont = new Font("Verdana", Font.PLAIN, 11);
     private FontMetrics fontMetrics = null;
     private final StringBuilder itemStringBuilder = new StringBuilder();
+
+    @Plugin.Setup
+    public void setup() {
+        settings = new GroundItemsSettings(helper);
+
+        SettingsSection settingsSection = new SettingsSection(
+                helper.getContainer().getInfo(),
+                newState -> {
+                    settings.setEnabled(newState);
+                    settings.saveToFile();
+                },
+                true
+        );
+
+        {
+            SettingsItem settingsItem = new SettingsItem("Display expensive items on the mini-map");
+
+            CheckBox checkBox = new CheckBox();
+
+            checkBox.setSelected(settings.isMiniMapDotEnabled());
+            checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                settings.setMiniMapDotEnabled(newValue);
+                settings.saveToFile();
+            });
+
+            settingsItem.add(checkBox);
+            settingsSection.add(settingsItem);
+        }
+
+        {
+            SettingsItem settingsItem = new SettingsItem("Minimum item price to be marked as expensive");
+
+            Spinner<Integer> spinner = new Spinner<>(0, Integer.MAX_VALUE,
+                    settings.getExpensive(), 1000);
+
+            spinner.valueProperty().addListener(((observable, oldValue, newValue) -> {
+                settings.setExpensive(newValue);
+                settings.saveToFile();
+            }));
+
+            settingsItem.add(spinner);
+            settingsSection.add(settingsItem);
+        }
+
+        {
+            SettingsItem settingsItem = new SettingsItem("Minimum item price to be marked as very expensive");
+
+            Spinner<Integer> spinner = new Spinner<>(0, Integer.MAX_VALUE,
+                    settings.getVeryExpensive(), 1000);
+
+            spinner.valueProperty().addListener(((observable, oldValue, newValue) -> {
+                settings.setVeryExpensive(newValue);
+                settings.saveToFile();
+            }));
+
+            settingsItem.add(spinner);
+            settingsSection.add(settingsItem);
+        }
+
+        {
+            SettingsItem settingsItem = new SettingsItem("Text color for items marked as very expensive");
+
+            ColorPicker colorPicker = new ColorPicker(javafx.scene.paint.Color.web(settings.getVeryExpensiveColor()));
+
+            colorPicker.setOnAction((e) -> {
+                javafx.scene.paint.Color color = colorPicker.getValue();
+
+                settings.setVeryExpensiveColor(String.format(
+                        "#%02X%02X%02X",
+                        (int)(color.getRed() * 255),
+                        (int)(color.getGreen() * 255),
+                        (int)(color.getBlue() * 255 ))
+                );
+
+                settings.saveToFile();
+            });
+
+            settingsItem.add(colorPicker);
+            settingsSection.add(settingsItem);
+        }
+
+        {
+            SettingsItem settingsItem = new SettingsItem("Text color for items marked as expensive");
+
+            ColorPicker colorPicker = new ColorPicker(javafx.scene.paint.Color.web(settings.getExpensiveColor()));
+
+            colorPicker.setOnAction((e) -> {
+                javafx.scene.paint.Color color = colorPicker.getValue();
+
+                settings.setExpensiveColor(String.format(
+                        "#%02X%02X%02X",
+                        (int)(color.getRed() * 255),
+                        (int)(color.getGreen() * 255),
+                        (int)(color.getBlue() * 255 ))
+                );
+
+                settings.saveToFile();
+            });
+
+            settingsItem.add(colorPicker);
+            settingsSection.add(settingsItem);
+        }
+
+        {
+            SettingsItem settingsItem = new SettingsItem("Text color for items marked as cheap");
+
+            ColorPicker colorPicker = new ColorPicker(javafx.scene.paint.Color.web(settings.getCheapColor()));
+
+            colorPicker.setOnAction((e) -> {
+                javafx.scene.paint.Color color = colorPicker.getValue();
+
+                settings.setCheapColor(String.format(
+                        "#%02X%02X%02X",
+                        (int)(color.getRed() * 255),
+                        (int)(color.getGreen() * 255),
+                        (int)(color.getBlue() * 255 ))
+                );
+
+                settings.saveToFile();
+            });
+
+            settingsItem.add(colorPicker);
+            settingsSection.add(settingsItem);
+        }
+
+        {
+            SettingsItem settingsItem = new SettingsItem("Text color for items marked as untradeable");
+
+            ColorPicker colorPicker = new ColorPicker(javafx.scene.paint.Color.web(settings.getUnTradeableColor()));
+
+            colorPicker.setOnAction((e) -> {
+                javafx.scene.paint.Color color = colorPicker.getValue();
+
+                settings.setUnTradeableColor(String.format(
+                        "#%02X%02X%02X",
+                        (int)(color.getRed() * 255),
+                        (int)(color.getGreen() * 255),
+                        (int)(color.getBlue() * 255 ))
+                );
+
+                settings.saveToFile();
+            });
+
+            settingsItem.add(colorPicker);
+            settingsSection.add(settingsItem);
+        }
+
+        helper.registerSettingsSection(settingsSection);
+    }
 
     @Plugin.Activate
     public void activate() {
         Overlay overlay = new Overlay(false) {
             @Override
             public boolean shouldDraw() {
-                return GameAPI.getGameState() == GameState.PLAYING;
+                return settings.isEnabled()
+                        && GameAPI.getGameState() == GameState.PLAYING;
             }
 
             @Override
@@ -144,8 +291,8 @@ public class GroundItems {
                                         g.setColor(getValueColor(price));
                                         g.drawString(itemString, screenX, point.get().y - (15 * i));
 
-                                        if (miniMapDotEnabled) {
-                                            if (price >= MINIMUM_EXPENSIVE) {
+                                        if (settings.isMiniMapDotEnabled()) {
+                                            if (price >= settings.getExpensive()) {
                                                 if (itemName != null) {
                                                     Optional<Point> miniMapPoint = Perspective
                                                             .worldToMiniMap(x, y);
@@ -186,14 +333,14 @@ public class GroundItems {
     }
 
     private Color getValueColor(long amount) {
-        if (amount >= MINIMUM_VERY_EXPENSIVE) {
-            return COLOR_VERY_EXPENSIVE;
-        } else if (amount >= MINIMUM_EXPENSIVE) {
-            return COLOR_EXPENSIVE;
+        if (amount >= settings.getVeryExpensive()) {
+            return Color.decode(settings.getVeryExpensiveColor());
+        } else if (amount >= settings.getExpensive()) {
+            return Color.decode(settings.getExpensiveColor());
         } else if (amount == 0) {
-            return COLOR_UNTRADABLE;
+            return Color.decode(settings.getUnTradeableColor());
         }
-        return COLOR_LOW_PRICE;
+        return Color.decode(settings.getCheapColor());
     }
 
     private String formatValue(long n) {

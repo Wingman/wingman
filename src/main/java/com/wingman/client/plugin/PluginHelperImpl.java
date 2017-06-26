@@ -3,14 +3,17 @@ package com.wingman.client.plugin;
 import com.google.common.io.ByteStreams;
 import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.PluginHelper;
+import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.client.settings.ClientSettings;
+import com.wingman.client.ui.Client;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 
 public class PluginHelperImpl implements PluginHelper {
@@ -28,7 +31,10 @@ public class PluginHelperImpl implements PluginHelper {
 
     @Override
     public Optional<InputStream> getResourceStream(String filePath) throws IOException {
-        String pluginId = container.getInfo().id().toLowerCase();
+        String pluginId = container
+                .getInfo()
+                .id()
+                .toLowerCase();
 
         InputStream resourceStream = container
                 .getInstance()
@@ -37,11 +43,15 @@ public class PluginHelperImpl implements PluginHelper {
                 .getResourceAsStream(pluginId + "/" + filePath);
 
         if (resourceStream == null) {
-            resourceStream = Files.newInputStream(ClientSettings
+            Path path = ClientSettings
                     .PLUGINS_DIR
                     .resolve("resources")
                     .resolve(pluginId)
-                    .resolve(filePath));
+                    .resolve(filePath);
+
+            if (Files.exists(path)) {
+                resourceStream = Files.newInputStream(path);
+            }
         }
 
         if (resourceStream != null) {
@@ -84,6 +94,45 @@ public class PluginHelperImpl implements PluginHelper {
     }
 
     @Override
+    public OutputStream getResourceOutputStream(String filePath) throws IOException {
+        String pluginId = container
+                .getInfo()
+                .id()
+                .toLowerCase();
+
+        URL resourceUrl = container
+                .getInstance()
+                .getClass()
+                .getClassLoader()
+                .getResource(pluginId + "/" + filePath);
+
+        File resourcePath;
+
+        if (resourceUrl == null) {
+            resourcePath = ClientSettings
+                    .PLUGINS_DIR
+                    .resolve("resources")
+                    .resolve(pluginId)
+                    .resolve(filePath)
+                    .toFile();
+        } else {
+            try {
+                resourcePath = new File(resourceUrl.toURI());
+            } catch (URISyntaxException e) {
+                // This should never happen
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (!resourcePath.exists()) {
+            resourcePath.getParentFile().mkdirs();
+            resourcePath.createNewFile();
+        }
+
+        return Files.newOutputStream(resourcePath.toPath());
+    }
+
+    @Override
     public void registerEventClass(Object classInstance) {
         PluginManager.registerEventClass(classInstance);
     }
@@ -91,5 +140,10 @@ public class PluginHelperImpl implements PluginHelper {
     @Override
     public void registerOverlay(Overlay overlay) {
         container.getOverlays().add(overlay);
+    }
+
+    @Override
+    public void registerSettingsSection(SettingsSection settingsSection) {
+        Client.settingsScreen.registerSection(settingsSection);
     }
 }
