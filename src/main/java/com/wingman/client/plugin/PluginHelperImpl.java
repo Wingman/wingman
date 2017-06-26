@@ -1,10 +1,10 @@
 package com.wingman.client.plugin;
 
 import com.google.common.io.ByteStreams;
+import com.wingman.client.ClientSettings;
 import com.wingman.client.api.overlay.Overlay;
 import com.wingman.client.api.plugin.PluginHelper;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
-import com.wingman.client.ClientSettings;
 import com.wingman.client.ui.Client;
 
 import javax.imageio.ImageIO;

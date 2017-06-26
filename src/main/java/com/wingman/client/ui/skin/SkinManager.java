@@ -2,6 +2,7 @@ package com.wingman.client.ui.skin;
 
 import com.sun.javafx.application.PlatformImpl;
 import com.wingman.client.api.ui.skin.Skin;
+import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
@@ -32,16 +33,16 @@ public class SkinManager {
                 Skin previousSkin = currentSkin;
                 currentSkin = skin;
 
+                Application.setUserAgentStylesheet(skin.getBaseStylesheetPath());
+
                 if (previousSkin != null) {
                     String[] previousStyleSheets = {
-                            previousSkin.getBaseStylesheetPath(),
                             previousSkin.getSettingsScreenStylesheetPath(),
                             previousSkin.getFrameTitleBarStylesheetPath(),
                             previousSkin.getSettingsTitleBarStylesheetPath()
                     };
 
                     String[] newStyleSheets = {
-                            skin.getBaseStylesheetPath(),
                             skin.getSettingsScreenStylesheetPath(),
                             skin.getFrameTitleBarStylesheetPath(),
                             skin.getSettingsTitleBarStylesheetPath()
@@ -87,8 +88,7 @@ public class SkinManager {
                 Scene scene = new Scene(new BorderPane());
 
                 scene.getStylesheets()
-                        .addAll(currentSkin.getBaseStylesheetPath(),
-                                "https://fonts.googleapis.com/css?family=Overpass:300,400,600,700,800,900");
+                        .addAll("https://fonts.googleapis.com/css?family=Overpass:300,400,600,700,800,900");
 
                 panel.setScene(scene);
 

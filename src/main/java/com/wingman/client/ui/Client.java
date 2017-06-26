@@ -1,12 +1,12 @@
 package com.wingman.client.ui;
 
+import com.wingman.client.ClientSettings;
 import com.wingman.client.api.transformer.Transformers;
 import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.api.ui.settingscreen.SettingsSection;
 import com.wingman.client.api.ui.skin.Skin;
 import com.wingman.client.plugin.PluginManager;
 import com.wingman.client.rs.Game;
-import com.wingman.client.ClientSettings;
 import com.wingman.client.ui.skin.SkinManager;
 import com.wingman.client.ui.titlebars.FrameTitleBar;
 import com.wingman.client.ui.util.ComponentBorderResizer;
@@ -166,6 +166,8 @@ public class Client {
     }
 
     private void applyOnyxSkin() {
+        new JFXPanel(); // hack to initialize the FX toolkit
+
         Skin onyxSkin = new Skin(
                 Client.class
                         .getResource("/skins/onyx/base.css")

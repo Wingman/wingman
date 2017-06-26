@@ -2,6 +2,7 @@ package com.wingman.client.plugin;
 
 import com.github.zafarkhaja.semver.Version;
 import com.google.common.io.Files;
+import com.wingman.client.ClientSettings;
 import com.wingman.client.api.event.AbstractEventListener;
 import com.wingman.client.api.event.Event;
 import com.wingman.client.api.event.EventCallback;
@@ -15,7 +16,6 @@ import com.wingman.client.plugin.exceptions.PluginActivationException;
 import com.wingman.client.plugin.exceptions.PluginDeActivationException;
 import com.wingman.client.plugin.exceptions.PluginSetupException;
 import com.wingman.client.plugin.toposort.PluginNode;
-import com.wingman.client.ClientSettings;
 import org.reflections.Reflections;
 
 import java.io.File;
