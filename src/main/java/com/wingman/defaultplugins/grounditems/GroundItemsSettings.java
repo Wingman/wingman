@@ -53,7 +53,6 @@ public class GroundItemsSettings {
     public GroundItemsSettings(PluginHelper helper) {
         this.helper = helper;
         loadFromFile();
-        System.out.println(getExpensive());
     }
 
     private void loadFromFile() {
