@@ -13,7 +13,6 @@ import com.wingman.client.ui.util.ComponentBorderResizer;
 import com.wingman.client.util.FileUtil;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
 
 import javax.imageio.ImageIO;
@@ -31,6 +30,7 @@ public class Client {
     public static JPanel framePanel;
 
     public static SettingsScreen settingsScreen;
+    public static SettingsSection clientSettingsSection;
 
     public static ClientTrayIcon clientTrayIcon;
 
@@ -117,28 +117,7 @@ public class Client {
      * Registers a {@link SettingsSection} with client related settings.
      */
     private void addClientSettings() {
-        SettingsSection settingsSection = new SettingsSection("Wingman", "Client related settings");
-
-        {
-            SettingsItem settingsItem = new SettingsItem("Preferred game world");
-
-            ComboBox<Integer> preferredWorld = new ComboBox<>();
-
-            for (int i = 301; i <= 399; i++) {
-                preferredWorld
-                        .getItems()
-                        .add(i);
-            }
-
-            preferredWorld.setValue(ClientSettings.getPreferredWorld());
-            preferredWorld.valueProperty().addListener((observable, oldValue, newValue) -> {
-                ClientSettings.setPreferredWorld(newValue);
-                ClientSettings.saveToFile();
-            });
-
-            settingsItem.add(preferredWorld);
-            settingsSection.add(settingsItem);
-        }
+        clientSettingsSection = new SettingsSection("Wingman", "Client related settings");
 
         {
             SettingsItem settingsItem = new SettingsItem("Enable notifications");
@@ -152,10 +131,10 @@ public class Client {
             });
 
             settingsItem.add(notificationsEnabled);
-            settingsSection.add(settingsItem);
+            clientSettingsSection.add(settingsItem);
         }
 
-        settingsScreen.registerSection(settingsSection);
+        settingsScreen.registerSection(clientSettingsSection);
     }
 
     /**

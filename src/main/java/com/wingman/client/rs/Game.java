@@ -41,7 +41,7 @@ public class Game {
                 monitor.wait();
 
                 runeScapeUrl = downloader.getRuneScapeUrl();
-                pageSource = downloader.getPageSource();
+                pageSource = downloader.getConfigSource();
                 archiveName = downloader.getArchiveName();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

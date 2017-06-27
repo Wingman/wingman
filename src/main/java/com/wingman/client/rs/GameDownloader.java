@@ -5,10 +5,14 @@ import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.net.HttpClient;
+import com.wingman.client.api.net.world.WorldInfo;
+import com.wingman.client.api.net.world.WorldInfoDownloader;
+import com.wingman.client.api.ui.settingscreen.SettingsItem;
 import com.wingman.client.ui.Client;
 import com.wingman.client.ui.skin.SkinManager;
 import javafx.concurrent.Task;
 import javafx.embed.swing.JFXPanel;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
@@ -20,6 +24,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,7 +46,7 @@ public class GameDownloader extends Task<Double> {
     private Label progressLabel = new Label();
 
     private String runeScapeUrl;
-    private String pageSource;
+    private String configSource;
     private String archiveName;
     private int remoteArchiveSize;
 
@@ -79,15 +86,15 @@ public class GameDownloader extends Task<Double> {
     protected Double call() throws Exception {
         updateValue(0D);
 
-        int world = getWorldFromSettings();
+        WorldInfo world = getPreferredWorld();
 
-        updateMessage("Downloading game info from world 3" + world + "..");
+        updateMessage("Downloading game info from world " + world.id + "..");
 
-        pageSource = getPageSource(world, false);
+        configSource = getConfigSource(world.host);
 
         Matcher archiveMatcher = Pattern
                 .compile("initial_jar=([\\S]+)")
-                .matcher(pageSource);
+                .matcher(configSource);
 
         if (archiveMatcher.find()) {
             archiveName = archiveMatcher.group(1);
@@ -108,50 +115,60 @@ public class GameDownloader extends Task<Double> {
         return ProgressBar.INDETERMINATE_PROGRESS;
     }
 
-    /**
-     * Downloads the page source from the official OldSchool RuneScape web client page.
-     *
-     * @param world the world to load page source from
-     * @param failedOnce {@code true} if the client should directly fall back to the default world if the request fails,
-     *                   {@code false} if it should retry once before falling back to the default world
-     * @return the page source of the OldSchool RuneScape web client page
-     */
-    private String getPageSource(int world, boolean failedOnce) {
-        runeScapeUrl = "http://oldschool" + world + ".runescape.com/";
+    private WorldInfo getPreferredWorld() throws IOException {
+        SettingsItem settingsItem = new SettingsItem("Preferred game world");
 
-        try {
-            return httpClient
-                    .downloadUrlSync(runeScapeUrl + "jav_config.ws")
-                    .body()
-                    .string();
-        } catch (IOException e) {
-            if (!failedOnce) {
-                return getPageSource(1, true);
-            } else {
-                throw new RuntimeException(e);
+        ComboBox<Integer> comboBox = new ComboBox<>();
+
+        List<WorldInfo> worlds = WorldInfoDownloader
+                .downloadWorldInfo();
+
+        // Sort the world list by world ID
+        worlds.sort((Comparator.comparingInt(o -> o.id)));
+
+        WorldInfo preferredWorld = null;
+
+        for (WorldInfo world : worlds) {
+            comboBox.getItems()
+                    .add(world.id);
+
+            if (world.id == ClientSettings.getPreferredWorld()) {
+                preferredWorld = world;
             }
         }
+
+        if (preferredWorld == null) {
+            // Use a random world in the list if the
+            // currently preferred world is offline
+            Collections.shuffle(worlds);
+            preferredWorld = worlds.get(0);
+        }
+
+        comboBox.setValue(ClientSettings.getPreferredWorld());
+        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            ClientSettings.setPreferredWorld(newValue);
+            ClientSettings.saveToFile();
+        });
+
+        settingsItem.add(comboBox);
+        Client.clientSettingsSection.add(settingsItem);
+
+        return preferredWorld;
     }
 
     /**
-     * Gets the user-specified world saved in the client settings.
-     * <p>
-     * The parsed value must be in the format "358".
-     * With other words, the value cannot be "58" for world 358. That will be parsed as the world "308".
-     * <p>
-     * If the parsing of the value as a number fails, the default world "1" (301) will be returned.
+     * Downloads the page source from the official OldSchool RuneScape web client page.
      *
-     * @return the saved (and preferred) world from {@link ClientSettings},
-     *         or 1 (world 301) if the lookup failed
+     * @param host the host to load page source from
+     * @return the page source of the OldSchool RuneScape web client page
      */
-    private int getWorldFromSettings() {
-        try {
-            return Integer.parseInt(("" + ClientSettings.getPreferredWorld()).substring(1));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
+    private String getConfigSource(String host) throws IOException {
+        runeScapeUrl = "http://" + host + "/";
 
-        return 1;
+        return httpClient
+                .downloadUrlSync(runeScapeUrl + "jav_config.ws")
+                .body()
+                .string();
     }
 
     /**
@@ -279,8 +296,8 @@ public class GameDownloader extends Task<Double> {
         return runeScapeUrl;
     }
 
-    public String getPageSource() {
-        return pageSource;
+    public String getConfigSource() {
+        return configSource;
     }
 
     public String getArchiveName() {
