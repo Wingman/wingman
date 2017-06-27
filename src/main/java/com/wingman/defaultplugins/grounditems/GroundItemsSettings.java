@@ -32,12 +32,27 @@ public class GroundItemsSettings {
                                 .getAsJsonPrimitive();
 
                         Field field = Settings.class.getDeclaredField(e.getKey());
+                        field.setAccessible(true);
 
                         if (value.isBoolean()) {
                             field.set(settings, value.getAsBoolean());
                         } else if (value.isNumber()) {
-                            field.set(settings, value.getAsNumber());
-                        }else if (value.isString()) {
+                            Number number = value.getAsNumber();
+
+                            if (field.getGenericType() == int.class) {
+                                field.set(settings, number.intValue());
+                            } else if (field.getGenericType() == long.class) {
+                                field.set(settings, number.longValue());
+                            } else if (field.getGenericType() == float.class) {
+                                field.set(settings, number.floatValue());
+                            } else if (field.getGenericType() == double.class) {
+                                field.set(settings, number.doubleValue());
+                            } else if (field.getGenericType() == short.class) {
+                                field.set(settings, number.shortValue());
+                            } else if (field.getGenericType() == byte.class) {
+                                field.set(settings, number.byteValue());
+                            }
+                        } else if (value.isString()) {
                             field.set(settings, value.getAsString());
                         }
                     } catch (NoSuchFieldException | IllegalAccessException ignored) {
