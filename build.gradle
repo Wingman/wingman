@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     compile 'org.ow2.asm:asm-debug-all:5.2'
-    compile 'org.reflections:reflections:0.9.10'
+    compile 'io.github.lukehutch:fast-classpath-scanner:2.2.1'
 
     compile 'com.squareup.okhttp:okhttp:2.7.5'
     compile 'com.squareup.okio:okio:1.11.0'

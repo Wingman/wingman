@@ -16,7 +16,7 @@ import com.wingman.client.plugin.exceptions.PluginActivationException;
 import com.wingman.client.plugin.exceptions.PluginDeActivationException;
 import com.wingman.client.plugin.exceptions.PluginSetupException;
 import com.wingman.client.plugin.toposort.PluginNode;
-import org.reflections.Reflections;
+import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +30,7 @@ public final class PluginManager {
 
     private static List<PluginContainerImpl> plugins = new ArrayList<>();
 
-    private static Reflections pluginClassLoaderReflections;
+    private static FastClasspathScanner classPathScanner;
     private static Set<Class<? extends Event>> eventClasses = new HashSet<>();
 
     /**
@@ -43,10 +43,16 @@ public final class PluginManager {
     public static void findAndSetupPlugins() throws IOException {
         System.out.println("Finding and setting up plugins");
 
-        pluginClassLoaderReflections = new Reflections(getPluginClassLoader());
+        // Don't include "com.wingman.client" when looking for plugins
+        classPathScanner = new FastClasspathScanner("-com.wingman.client");
+        classPathScanner.overrideClassLoaders(getPluginClassLoader());
 
-        Set<Class<?>> pluginClasses = pluginClassLoaderReflections
-                .getTypesAnnotatedWith(Plugin.class);
+        Set<Class<?>> pluginClasses = new HashSet<>();
+
+        classPathScanner
+                .matchClassesWithAnnotation(Plugin.class, pluginClasses::add)
+                .scan();
+
         plugins = parsePlugins(pluginClasses);
 
         parsePluginDependencies();
@@ -54,9 +60,11 @@ public final class PluginManager {
 
         setupPlugins();
 
-        pluginClassLoaderReflections = null;
+        classPathScanner = null;
 
         bakeEventListeners();
+
+        eventClasses = null;
     }
 
     /**
@@ -253,14 +261,15 @@ public final class PluginManager {
                         if (Event.class.isAssignableFrom(checkClass)) {
                             final Class<? extends Event> eventClass = checkClass.asSubclass(Event.class);
 
-                            Set subTypesOfEventClass = pluginClassLoaderReflections
-                                    .getSubTypesOf(eventClass);
+                            Set<Class<?>> subClassesOfEventClass = new HashSet<>();
 
-                            if (!subTypesOfEventClass.isEmpty()) {
-                                for (Object subClassObject : subTypesOfEventClass) {
-                                    Class<? extends Event> subClass = (Class<? extends Event>) subClassObject;
-                                    registerEventClass(instance, method, subClass);
-                                }
+                            classPathScanner
+                                    .matchSubclassesOf(eventClass, subClassesOfEventClass::add)
+                                    .scan();
+                            
+                            for (Class<?> subClass : subClassesOfEventClass) {
+                                Class<? extends Event> subEventClass = (Class<? extends Event>) subClass;
+                                registerEventClass(instance, method, subEventClass);
                             }
 
                             registerEventClass(instance, method, eventClass);
@@ -278,24 +287,26 @@ public final class PluginManager {
                                            Class<? extends Event> eventClass)
             throws ReflectiveOperationException {
 
-        try {
-            EventListenerList eventListenerList = (EventListenerList) eventClass
-                    .getDeclaredField("eventListenerList")
-                    .get(null);
+        if (eventClasses != null) {
+            try {
+                EventListenerList eventListenerList = (EventListenerList) eventClass
+                        .getDeclaredField("eventListenerList")
+                        .get(null);
 
-            eventClasses.add(eventClass);
+                eventClasses.add(eventClass);
 
-            eventListenerList.register(new AbstractEventListener() {
-                @Override
-                public void runEvent(Event event) {
-                    try {
-                        method.invoke(instance, event);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
+                eventListenerList.register(new AbstractEventListener() {
+                    @Override
+                    public void runEvent(Event event) {
+                        try {
+                            method.invoke(instance, event);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
-                }
-            });
-        } catch (NoSuchFieldException ignored) {
+                });
+            } catch (NoSuchFieldException ignored) {
+            }
         }
     }
 
