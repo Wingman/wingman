@@ -21,13 +21,13 @@ dependencies {
     compile 'io.github.lukehutch:fast-classpath-scanner:2.2.1'
 
     compile 'com.squareup.okhttp:okhttp:2.7.5'
-    compile 'com.squareup.okio:okio:1.11.0'
+    compile 'com.squareup.okio:okio:1.13.0'
 
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.google.guava:guava:21.0'
+    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.google.guava:guava:22.0'
     compile 'com.github.zafarkhaja:java-semver:0.9.0'
 
-    compile 'ch.qos.logback:logback-classic:1.1.9'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
     compile 'uk.org.lidalia:sysout-over-slf4j:1.0.2'
 }
 
