@@ -78,7 +78,9 @@ public final class MappingsHelper {
             HttpClient httpClient = new HttpClient();
 
             if (mappingsFile.exists()) {
-                HashCode localHashCode = Files.hash(mappingsFile, Hashing.md5());
+                HashCode localHashCode = Files
+                        .asByteSource(mappingsFile)
+                        .hash(Hashing.sha256());
 
                 Response response = httpClient
                         .downloadUrlSync("https://wingman.github.io/download/mappings.hash");

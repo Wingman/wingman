@@ -61,7 +61,8 @@ public class Game {
                  */
 
                 HashCode gamepackHashCode = Files
-                        .hash(ClientSettings.APPLET_JAR_FILE.toFile(), Hashing.md5());
+                        .asByteSource(ClientSettings.APPLET_JAR_FILE.toFile())
+                        .hash(Hashing.sha256());
 
                 hasCorrectMappings = MappingsHelper
                         .gamepackHash
