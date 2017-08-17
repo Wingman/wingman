@@ -134,14 +134,6 @@ public abstract class GameAPI {
         return getterInstance.getMapAngle();
     }
 
-    public static int getMapOffset() {
-        return getterInstance.getMapOffset();
-    }
-
-    public static int getMapScale() {
-        return getterInstance.getMapScale();
-    }
-
     public static Map getMessageContainers() {
         return getterInstance.getMessageContainers();
     }
@@ -300,14 +292,6 @@ public abstract class GameAPI {
 
         public static void setMapAngle(int value) {
             setterInstance.setMapAngle(value);
-        }
-
-        public static void setMapOffset(int value) {
-            setterInstance.setMapOffset(value);
-        }
-
-        public static void setMapScale(int value) {
-            setterInstance.setMapScale(value);
         }
 
         public static void setMessageContainers(Map value) {

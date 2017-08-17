@@ -68,10 +68,6 @@ public interface Static {
 
     int getMapAngle();
 
-    int getMapOffset();
-
-    int getMapScale();
-
     Map getMessageContainers();
 
     NPC[] getNpcs();
@@ -151,10 +147,6 @@ public interface Static {
         void setLoopCycle(int value);
 
         void setMapAngle(int value);
-
-        void setMapOffset(int value);
-
-        void setMapScale(int value);
 
         void setMessageContainers(Map value);
 
