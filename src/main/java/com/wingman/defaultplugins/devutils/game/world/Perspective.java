@@ -181,24 +181,10 @@ public class Perspective {
 
         // Make sure distance is less than sqrt(6400) = 80 units
         if (x * x + y * y < 6400) {
-            int angle = GameAPI.getMapScale()
-                    + GameAPI.getMapAngle() & 0x7FF;
+            int angle = GameAPI.getMapAngle() & 0x7FF;
 
             int sin = SIN_TABLE[angle];
             int cos = COS_TABLE[angle];
-
-            /*
-                Modify sin & cos values to
-                conform to the map offset field.
-
-                If map offset is large, the distance
-                between passed in x and y and
-                the local player is small.
-             */
-            int mapOffset = GameAPI.getMapOffset();
-
-            sin = sin * 256 / (mapOffset + 256);
-            cos = cos * 256 / (mapOffset + 256);
 
             /*
                 These are distances from the
