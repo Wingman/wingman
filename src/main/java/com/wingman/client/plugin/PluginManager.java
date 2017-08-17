@@ -408,6 +408,20 @@ public final class PluginManager {
         return overlays;
     }
 
+    public static List<Overlay> getOverlays(Overlay.DrawOrder drawOrder) {
+        List<Overlay> overlays = new ArrayList<>();
+
+        for (PluginContainerImpl plugin : plugins) {
+            for (Overlay overlay : plugin.getOverlays()) {
+                if (overlay.drawOrder == drawOrder) {
+                    overlays.add(overlay);
+                }
+            }
+        }
+
+        return overlays;
+    }
+
     private PluginManager() {
         // This class should not be instantiated
     }

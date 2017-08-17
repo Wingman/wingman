@@ -190,7 +190,7 @@ public class GroundItems {
 
     @Plugin.Activate
     public void activate() {
-        Overlay overlay = new Overlay(false) {
+        Overlay overlay = new Overlay(false, Overlay.DrawOrder.UNDER_2D_UI) {
             @Override
             public boolean shouldDraw() {
                 return settings.isEnabled()

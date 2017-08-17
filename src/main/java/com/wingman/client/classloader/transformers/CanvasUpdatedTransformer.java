@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class CanvasUpdatedTransformer implements Transformer {
 
@@ -25,69 +26,114 @@ public class CanvasUpdatedTransformer implements Transformer {
 
     private FieldInfo gameDrawingMode;
 
-    public static void runHook() {
+    public static void drawUnderUI() {
         AbstractGraphicsBuffer graphicsBuffer = GameAPI.getGraphicsBuffer();
 
         if (graphicsBuffer != null) {
-            int[] gamePixels = graphicsBuffer.getPixels();
-            int gameWidth = graphicsBuffer.getWidth();
+            List<Overlay> overlays = PluginManager
+                    .getOverlays(Overlay.DrawOrder.UNDER_2D_UI);
 
-            int maxIdx = gamePixels.length;
+            drawOverlays(graphicsBuffer, overlays, true, !GameAPI.getResizableMode());
+        }
+    }
 
+    public static void drawAlwaysOnTop() {
+        AbstractGraphicsBuffer graphicsBuffer = GameAPI.getGraphicsBuffer();
+
+        if (graphicsBuffer != null) {
             boolean isInGame = GameAPI.getGameState() > 20;
 
-            List<Overlay> overlays = PluginManager.getAllOverlays();
+            List<Overlay> overlays;
 
-            for (Overlay overlay : overlays) {
-                if (overlay.shouldDraw()) {
-                    Dimension d = overlay.getDimension();
+            if (isInGame) {
+                overlays = PluginManager
+                        .getOverlays(Overlay.DrawOrder.ALWAYS_ON_TOP);
+            } else {
+                // Draw all registered overlays if we're in the login screen
+                overlays = PluginManager
+                        .getAllOverlays();
+            }
 
-                    int width = d.width;
-                    int height = d.height;
+            drawOverlays(graphicsBuffer, overlays, isInGame, false);
+        }
+    }
 
-                    int[] pixels = overlay.cachedPixels;
+    private static void drawOverlays(AbstractGraphicsBuffer graphicsBuffer,
+                                     List<Overlay> overlays,
+                                     boolean isInGame,
+                                     boolean useFixedModeBounds) {
 
-                    if (pixels == null || overlay.shouldUpdate()) {
-                        pixels = new int[width * height];
+        int[] gamePixels = graphicsBuffer.getPixels();
+        int gameWidth = graphicsBuffer.getWidth();
 
-                        BufferedImage i = new BufferedImage(
-                                width, height,
-                                BufferedImage.TYPE_INT_ARGB);
+        int maxIdx = gamePixels.length;
 
-                        Graphics2D g = i.createGraphics();
-                        overlay.update(g);
-                        g.dispose();
+        for (Overlay overlay : overlays) {
+            if (overlay.shouldDraw()) {
+                Dimension d = overlay.getDimension();
 
-                        try {
-                            new PixelGrabber(i, 0, 0, width, height, pixels, 0, width)
-                                    .grabPixels();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                int width = d.width;
+                int height = d.height;
 
-                        overlay.cachedPixels = pixels;
+                int[] pixels = overlay.cachedPixels;
+
+                if (pixels == null || overlay.shouldUpdate()) {
+                    pixels = new int[width * height];
+
+                    BufferedImage i = new BufferedImage(
+                            width, height,
+                            BufferedImage.TYPE_INT_ARGB);
+
+                    // Extract the overlay's pixels
+                    Graphics2D g = i.createGraphics();
+                    overlay.update(g);
+                    g.dispose();
+
+                    try {
+                        new PixelGrabber(i, 0, 0, width, height, pixels, 0, width)
+                                .grabPixels();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
 
-                    Point p = overlay.getPosition();
+                    overlay.cachedPixels = pixels;
+                }
 
-                    int startX = p.x;
-                    int startY = p.y;
+                Point p = overlay.getPosition();
 
-                    for (int x = 0; x < width; x++) {
-                        for (int y = 0; y < height; y++) {
-                            int newPixel = pixels[y * width + x];
+                int startX = p.x;
+                int startY = p.y;
 
-                            int a = (newPixel >> 24) & 0xFF;
-                            // If alpha > 0, pixel is filled
-                            if (a > 0) {
-                                int targetIdx = (y + startY) * gameWidth + x + startX;
+                // Set up drawing bounds
+                int minX = 0;
+                int minY = 0;
 
-                                if (targetIdx < maxIdx) {
-                                    if (isInGame && a < 255) {
-                                        gamePixels[targetIdx] = blendWithAlpha(newPixel, gamePixels[targetIdx], a);
-                                    } else {
-                                        gamePixels[targetIdx] = newPixel;
-                                    }
+                int maxX = width;
+                int maxY = height;
+
+                if (useFixedModeBounds) {
+                    minX = 4;
+                    minY = 4;
+
+                    maxX = Math.min(516, maxX);
+                    maxY = Math.min(338, maxY);
+                }
+
+                // Start drawing on the game canvas
+                for (int x = minX; x < maxX; x++) {
+                    for (int y = minY; y < maxY; y++) {
+                        int newPixel = pixels[y * width + x];
+
+                        int a = (newPixel >> 24) & 0xFF;
+                        // If alpha > 0, pixel is filled
+                        if (a > 0) {
+                            int targetIdx = (y + startY) * gameWidth + x + startX;
+
+                            if (targetIdx < maxIdx) {
+                                if (isInGame && a < 255) {
+                                    gamePixels[targetIdx] = blendWithAlpha(newPixel, gamePixels[targetIdx], a);
+                                } else {
+                                    gamePixels[targetIdx] = newPixel;
                                 }
                             }
                         }
@@ -143,7 +189,7 @@ public class CanvasUpdatedTransformer implements Transformer {
                             m.instructions.insertBefore(i2.getPrevious().getPrevious(),
                                     new MethodInsnNode(Opcodes.INVOKESTATIC,
                                             this.getClass().getName().replace(".", "/"),
-                                            "runHook",
+                                            "drawAlwaysOnTop",
                                             "()V",
                                             false));
                             break;
@@ -151,23 +197,65 @@ public class CanvasUpdatedTransformer implements Transformer {
                     }
                 }
             }
-        } else {
-            for (MethodNode m : clazz.methods) {
-                Iterator<AbstractInsnNode> iterator = m.instructions.iterator();
+        }
 
-                while (iterator.hasNext()) {
-                    AbstractInsnNode i = iterator.next();
+        for (MethodNode m : clazz.methods) {
+            ListIterator<AbstractInsnNode> iterator = m.instructions.iterator();
 
-                    if (i instanceof FieldInsnNode) {
-                        FieldInsnNode i2 = (FieldInsnNode) i;
+            while (iterator.hasNext()) {
+                AbstractInsnNode i = iterator.next();
 
-                        if (i2.getOpcode() != Opcodes.GETSTATIC
-                                || !i2.owner.equals(gameDrawingMode.owner)
-                                || !i2.name.equals(gameDrawingMode.name)) {
+                if (i instanceof FieldInsnNode) {
+                    FieldInsnNode i2 = (FieldInsnNode) i;
+
+                    if (i2.getOpcode() != Opcodes.GETSTATIC
+                            || !i2.owner.equals(gameDrawingMode.owner)
+                            || !i2.name.equals(gameDrawingMode.name)) {
+                        continue;
+                    }
+
+                    m.instructions.set(i2, new InsnNode(Opcodes.ICONST_2));
+                } else if (i instanceof JumpInsnNode) {
+                    try {
+                        /*
+                            #152
+                            GETFIELD hi.eu : I
+                            LDC 631331557
+                            IMUL
+                            LDC 1
+                            BASTORE <-- end
+                            ILOAD 2
+                            ILOAD 3
+                            ILOAD 4
+                            ILOAD 5
+                            INVOKESTATIC jz.dm (IIII)V
+                            GOTO L3 <-- start
+                         */
+
+                        if (i.getOpcode() != Opcodes.GOTO) {
                             continue;
                         }
 
-                        m.instructions.set(i2, new InsnNode(Opcodes.ICONST_2));
+                        MethodInsnNode i2 = (MethodInsnNode) i.getPrevious();
+
+                        VarInsnNode i3 = (VarInsnNode) i2.getPrevious();
+                        VarInsnNode i4 = (VarInsnNode) i3.getPrevious();
+                        VarInsnNode i5 = (VarInsnNode) i4.getPrevious();
+                        VarInsnNode i6 = (VarInsnNode) i5.getPrevious();
+
+                        InsnNode i7 = (InsnNode) i6.getPrevious();
+                        if (i7.getOpcode() != Opcodes.BASTORE) {
+                            continue;
+                        }
+
+                        iterator.previous();
+                        iterator.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+                                this.getClass().getName().replace(".", "/"),
+                                "drawUnderUI",
+                                "()V",
+                                false));
+                        iterator.next();
+                    } catch (ClassCastException | NullPointerException ignored) {
                     }
                 }
             }
