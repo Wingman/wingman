@@ -30,6 +30,10 @@ public abstract class GameAPI {
         getterInstance.pushMessage(type, prefix, message, suffix);
     }
 
+    public static void renderCharacter2D(Character character, int characterIdx, int boundX, int boundY, int boundW, int boundH) {
+        getterInstance.renderCharacter2D(character, characterIdx, boundX, boundY, boundW, boundH);
+    }
+
     public static void updateCharacterMovement(Character character, int arg1) {
         getterInstance.updateCharacterMovement(character, arg1);
     }
