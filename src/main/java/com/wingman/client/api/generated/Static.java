@@ -16,6 +16,8 @@ public interface Static {
 
     void pushMessage(int type, String prefix, String message, String suffix);
 
+    void renderCharacter2D(Character character, int characterIdx, int boundX, int boundY, int boundW, int boundH);
+
     void updateCharacterMovement(Character character, int arg1);
 
     void updateItemLayer(int x, int y);
