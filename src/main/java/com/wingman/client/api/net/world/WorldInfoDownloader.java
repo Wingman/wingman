@@ -1,6 +1,6 @@
 package com.wingman.client.api.net.world;
 
-import com.squareup.okhttp.Response;
+import okhttp3.Response;
 import com.wingman.client.api.net.HttpClient;
 
 import java.io.IOException;

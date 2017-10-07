@@ -8,7 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
-import com.squareup.okhttp.Response;
+import okhttp3.Response;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.net.HttpClient;
 import org.objectweb.asm.Type;

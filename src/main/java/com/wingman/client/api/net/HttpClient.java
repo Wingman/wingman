@@ -1,9 +1,6 @@
 package com.wingman.client.api.net;
 
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import okhttp3.*;
 import okio.BufferedSink;
 import okio.Okio;
 
@@ -44,12 +41,12 @@ public class HttpClient extends OkHttpClient {
     public void downloadFileAsync(String url, final Path savePath) throws IOException {
         downloadUrlAsync(url, new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 throw new RuntimeException(e);
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 BufferedSink sink = Okio.buffer(Okio.sink(savePath.toFile()));
                 sink.writeAll(response.body().source());
                 sink.close();

@@ -1,8 +1,8 @@
 package com.wingman.client.rs;
 
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import com.wingman.client.ClientSettings;
 import com.wingman.client.api.net.HttpClient;
 import com.wingman.client.api.net.world.WorldInfo;

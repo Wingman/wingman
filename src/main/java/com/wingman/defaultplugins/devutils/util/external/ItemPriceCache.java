@@ -5,7 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.squareup.okhttp.Response;
+import okhttp3.Response;
 import com.wingman.client.api.net.HttpClient;
 
 import java.util.Iterator;
