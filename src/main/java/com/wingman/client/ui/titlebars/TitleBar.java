@@ -4,6 +4,7 @@ import com.wingman.client.ui.skin.SkinManager;
 import javafx.embed.swing.JFXPanel;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -20,7 +21,7 @@ public class TitleBar extends JMenuBar {
         this.parent = parent;
         this.contentPanel = SkinManager.createPanel();
 
-        this.setBorder(null);
+        this.setBorder(new LineBorder(Color.BLACK, 0));
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS) {
             @Override

@@ -1,8 +1,8 @@
 package com.wingman.client.ui.skin;
 
-import com.sun.javafx.application.PlatformImpl;
 import com.wingman.client.api.ui.skin.Skin;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class SkinManager {
 
@@ -83,7 +84,7 @@ public class SkinManager {
 
         JFXPanel panel = new JFXPanel();
 
-        PlatformImpl.runAndWait(() -> {
+        runAndWait(panel, () -> {
             synchronized (SYNC_OBJECT) {
                 Scene scene = new Scene(new BorderPane());
 
@@ -111,7 +112,24 @@ public class SkinManager {
      *                 executed on the JavaFX Application Thread
      */
     public static void runAndWait(JFXPanel panel, Runnable runnable) {
-        PlatformImpl.runAndWait(runnable);
+        if (Platform.isFxApplicationThread()) {
+            runnable.run();
+        } else {
+            CountDownLatch doneLatch = new CountDownLatch(1);
+
+            Platform.runLater(() -> {
+                try {
+                    runnable.run();
+                } finally {
+                    doneLatch.countDown();
+                }
+            });
+
+            try {
+                doneLatch.await();
+            } catch (InterruptedException ignored) {
+            }
+        }
 
 		/*
 			Hacky way of making it so the

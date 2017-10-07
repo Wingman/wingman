@@ -31,7 +31,7 @@ import java.nio.charset.Charset;
     Please use these VM arguments when running the client.
     They come from the official Old School launcher.
 
-    -Xmx384m -Xss2m -Xincgc
+    -Xmx384m -Xss2m
     -Dsun.java2d.noddraw=true
     -XX:CompileThreshold=1500
     -XX:+UseConcMarkSweepGC
