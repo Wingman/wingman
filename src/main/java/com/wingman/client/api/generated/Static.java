@@ -6,8 +6,6 @@ import java.util.Map;
 public interface Static {
     boolean decodeExternalPlayerMovement(BitBuffer bitBuffer, int playerId);
 
-    void decodeNpcUpdate(boolean isLargeScene);
-
     ItemDefinition getItemDefinition(int itemId);
 
     NPCDefinition getNpcDefinition(int npcId);

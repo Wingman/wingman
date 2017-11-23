@@ -10,10 +10,6 @@ public abstract class GameAPI {
         return getterInstance.decodeExternalPlayerMovement(bitBuffer, playerId);
     }
 
-    public static void decodeNpcUpdate(boolean isLargeScene) {
-        getterInstance.decodeNpcUpdate(isLargeScene);
-    }
-
     public static ItemDefinition getItemDefinition(int itemId) {
         return getterInstance.getItemDefinition(itemId);
     }
