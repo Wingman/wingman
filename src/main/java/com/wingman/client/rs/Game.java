@@ -15,6 +15,7 @@ import java.applet.Applet;
 import java.awt.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 
 public class Game {
 
@@ -75,12 +76,22 @@ public class Game {
                 System.out.println("Mappings are outdated, turning off features depending on them..");
             }
 
-            TransformingClassLoader classLoader = new TransformingClassLoader(
-                    new URL[]{ClientSettings.APPLET_JAR_FILE.toUri().toURL()},
-                    this.getClass().getClassLoader()
-            );
+            ClassLoader classLoader;
+            Object clientInstance;
 
-            Object clientInstance = classLoader
+            if (hasCorrectMappings) {
+                classLoader = new TransformingClassLoader(
+                        new URL[]{ClientSettings.APPLET_JAR_FILE.toUri().toURL()},
+                        this.getClass().getClassLoader()
+                );
+            } else {
+                classLoader = new URLClassLoader(
+                        new URL[]{ClientSettings.APPLET_JAR_FILE.toUri().toURL()},
+                        this.getClass().getClassLoader()
+                );
+            }
+
+            clientInstance = classLoader
                     .loadClass("client")
                     .newInstance();
 
