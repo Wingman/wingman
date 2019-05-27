@@ -10,8 +10,6 @@ public interface Player extends Character {
 
     boolean getHidden();
 
-    String getName();
-
     int getOverHeadIcon();
 
     int getSkullIcon();
@@ -27,8 +25,6 @@ public interface Player extends Character {
         void setCombatLevel(int value);
 
         void setHidden(boolean value);
-
-        void setName(String value);
 
         void setOverHeadIcon(int value);
 
